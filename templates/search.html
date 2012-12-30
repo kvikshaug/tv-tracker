@@ -8,26 +8,22 @@
   <div class="span6">
 
     <table class="table">
-      {% for series in series_search_results %}
+      {% for show in series_search_results %}
         <tr>
           <td>
-            <form action="{% url app.views.search %}" method="post" style="margin: 0;">
-              {% csrf_token %}
-              <input type="hidden" name="id" value="{{ series.id }}">
-              <button type="submit" class="btn"><i class="icon-ok"></i></button>
-            </form>
+            <a href="{% url app.views.add_show show.id %}" class="btn"><i class="icon-ok"></i></a>
           </td>
           <td>
-            <a href="http://thetvdb.com/?tab=series&amp;id={{ series.id }}">{{ series.name }}</a>
+            <a href="http://thetvdb.com/?tab=series&amp;id={{ show.id }}">{{ show.name }}</a>
           </td>
           <td>
-            {% if series.first_aired %}
-              {{ series.first_aired|date:"Y" }}
+            {% if show.first_aired %}
+              {{ show.first_aired|date:"Y" }}
             {% endif %}
           </td>
           <td>
-            {% if series.imdb %}
-              <a href="http://www.imdb.com/title/{{ series.imdb }}/">iMDB</a>
+            {% if show.imdb %}
+              <a href="http://www.imdb.com/title/{{ show.imdb }}/">iMDB</a>
             {% endif %}
           </td>
         </tr>

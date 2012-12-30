@@ -8,18 +8,19 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         
-        # Adding model 'Series'
-        db.create_table('app_series', (
+        # Adding model 'Show'
+        db.create_table('app_show', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('tvdbid', self.gf('django.db.models.fields.IntegerField')(unique=True)),
             ('name', self.gf('django.db.models.fields.TextField')()),
         ))
-        db.send_create_signal('app', ['Series'])
+        db.send_create_signal('app', ['Show'])
 
         # Adding model 'Season'
         db.create_table('app_season', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('number', self.gf('django.db.models.fields.IntegerField')()),
-            ('series', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['app.Series'])),
+            ('show', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['app.Show'])),
         ))
         db.send_create_signal('app', ['Season'])
 
@@ -34,8 +35,8 @@ class Migration(SchemaMigration):
 
     def backwards(self, orm):
         
-        # Deleting model 'Series'
-        db.delete_table('app_series')
+        # Deleting model 'Show'
+        db.delete_table('app_show')
 
         # Deleting model 'Season'
         db.delete_table('app_season')
@@ -55,12 +56,13 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'Season'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'number': ('django.db.models.fields.IntegerField', [], {}),
-            'series': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['app.Series']"})
+            'show': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['app.Show']"})
         },
-        'app.series': {
-            'Meta': {'object_name': 'Series'},
+        'app.show': {
+            'Meta': {'object_name': 'Show'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.TextField', [], {})
+            'name': ('django.db.models.fields.TextField', [], {}),
+            'tvdbid': ('django.db.models.fields.IntegerField', [], {'unique': 'True'})
         }
     }
 

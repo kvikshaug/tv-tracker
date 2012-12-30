@@ -1,11 +1,12 @@
 from django.db import models
 
-class Series(models.Model):
+class Show(models.Model):
+    tvdbid = models.IntegerField(unique=True)
     name = models.TextField()
 
 class Season(models.Model):
     number = models.IntegerField()
-    series = models.ForeignKey(Series)
+    show = models.ForeignKey(Show)
 
 class Episode(models.Model):
     number = models.IntegerField()

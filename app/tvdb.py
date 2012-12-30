@@ -4,7 +4,7 @@ import requests
 
 API_PATH = "http://thetvdb.com/api"
 
-class SeriesSearch():
+class ShowSearched():
     def __init__(self, id, name, first_aired, imdb):
         self.id = id
         self.name = name
@@ -26,6 +26,6 @@ def search_series(query):
         imdb = s.find('IMDB_ID')
         if imdb is not None:
             imdb = imdb.text
-        o = SeriesSearch(id, name, first_aired, imdb)
+        o = ShowSearched(id, name, first_aired, imdb)
         results.append(o)
     return results
