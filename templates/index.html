@@ -7,12 +7,20 @@
     <th>Show</th>
     <th>Last seen</th>
     <th>Newest</th>
+    <th>Next</th>
   </tr>
   {% for show in series %}
     <tr>
       <td><a href="{% url app.views.show show.id %}">{{ show.name }}</a></td>
       <td>{{ show.last_seen }}</td>
       <td>{{ show.get_newest_episode.get_number }}</td>
+      <td>
+        {% if show.get_next_episode %}
+          {{ show.get_next_episode.get_number }} ({{ show.get_next_episode.get_days_remaining }} days: {{ show.get_next_episode.air_date|date:"d.m.Y" }})
+        {% else %}
+          N/A
+        {% endif %}
+      </td>
     </tr>
   {% endfor %}
 </table>

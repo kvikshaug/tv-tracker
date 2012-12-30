@@ -1,5 +1,7 @@
 from django.db import models
 
+from datetime import datetime
+
 class Show(models.Model):
     tvdbid = models.IntegerField(unique=True)
     name = models.TextField()
@@ -30,6 +32,13 @@ class Show(models.Model):
         season = self.seasons.all().order_by('-number')[0]
         return season.episodes.all().order_by('-number')[0]
 
+    def get_next_episode(self):
+        future_episodes = Episode.objects.filter(season__show=self, air_date__gte=datetime.now()).order_by('air_date')
+        if future_episodes.exists():
+            return future_episodes[0]
+        else:
+            return None
+
 class Season(models.Model):
     number = models.IntegerField()
     show = models.ForeignKey(Show, related_name='seasons')
@@ -48,3 +57,6 @@ class Episode(models.Model):
         else:
             lazy_zero = ''
         return "%sx%s%s" % (self.season.number, lazy_zero, self.number)
+
+    def get_days_remaining(self):
+        return (self.air_date - datetime.now()).days
