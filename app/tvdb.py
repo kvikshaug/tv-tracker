@@ -26,6 +26,5 @@ def search_series(query):
         imdb = s.find('IMDB_ID')
         if imdb is not None:
             imdb = imdb.text
-        o = ShowSearched(id, name, first_aired, imdb)
-        results.append(o)
+        results.append(ShowSearched(id, name, first_aired, imdb))
     return results
