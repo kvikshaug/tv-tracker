@@ -61,6 +61,9 @@ INSTALLED_APPS = (
     # Django admin
     'django.contrib.admin',
     'django.contrib.admindocs',
+
+    # Project-related 3rd party apps
+    'south',
 )
 
 LOGGING = {
