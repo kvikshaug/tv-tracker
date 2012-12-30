@@ -28,12 +28,7 @@ class Show(models.Model):
 
     def get_newest_episode(self):
         season = self.seasons.all().order_by('-number')[0]
-        episode = season.episodes.all().order_by('-number')[0]
-        if episode.number < 10:
-            lazy_zero = '0'
-        else:
-            lazy_zero = ''
-        return '%sx%s%s' % (season.number, lazy_zero, episode.number)
+        return season.episodes.all().order_by('-number')[0]
 
 class Season(models.Model):
     number = models.IntegerField()
@@ -46,3 +41,10 @@ class Episode(models.Model):
     number = models.IntegerField()
     air_date = models.DateTimeField()
     season = models.ForeignKey(Season, related_name='episodes')
+
+    def get_number(self):
+        if self.number < 10:
+            lazy_zero = '0'
+        else:
+            lazy_zero = ''
+        return "%sx%s%s" % (self.season.number, lazy_zero, self.number)

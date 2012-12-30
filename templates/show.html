@@ -34,10 +34,7 @@
           {% for episode in season.get_episodes %}
             <tr class="{% if season.number > show.get_seen_season %}available{% elif season.number < show.get_seen_season %}seen{% else %}{% if episode.number > show.get_seen_episode %}available{% else %}seen{% endif %}{% endif %}">
               <td>
-                {{ season.number }}
-                x
-                {# Should be a filter or something else, but meh, just prepende 0 if < 10 #}
-                {% if episode.number < 10 %}0{% endif %}{{ episode.number }}
+                {{ episode.get_number }}
               </td>
               <td>
                 {% if season.number > show.get_seen_season %}
