@@ -8,6 +8,7 @@
     <th>Last seen</th>
     <th>Newest</th>
     <th>Next</th>
+    <th>Status</th>
   </tr>
   {% for show in series %}
     <tr>
@@ -21,6 +22,7 @@
           N/A
         {% endif %}
       </td>
+      <td>{{ show.status }}</td>
     </tr>
   {% endfor %}
 </table>
