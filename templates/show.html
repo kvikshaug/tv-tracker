@@ -1,0 +1,34 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+{% if show.banner %}
+  <p class="banner">
+    <img src="http://thetvdb.com/banners/{{ show.banner }}">
+  </p>
+{% endif %}
+
+
+<div class="row">
+  <div class="offset3 span6">
+    <table class="table">
+      {% for season in show.get_seasons %}
+        <tr>
+          <th>Season {{ season.number }}</th>
+        </tr>
+        {% for episode in season.get_episodes %}
+          <tr>
+            <td>
+              {{ season.number }}
+              x
+              {# Should be a filter or something else, but meh, just prepende 0 if < 10 #}
+              {% if episode.number < 10 %}0{% endif %}{{ episode.number }}
+            </td>
+          </tr>
+        {% endfor %}
+      {% endfor %}
+    </table>
+  </div>
+</div>
+
+{% endblock %}

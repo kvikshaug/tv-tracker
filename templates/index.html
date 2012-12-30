@@ -5,7 +5,7 @@
 <table class="table">
   {% for show in series %}
     <tr>
-      <td>{{ show.name }}</td>
+      <td><a href="{% url app.views.show show.id %}">{{ show.name }}</a></td>
     </tr>
   {% endfor %}
 </table>

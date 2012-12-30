@@ -3,3 +3,7 @@ header input.new-series {
   height: 28px;
   font-size: 16px;
 }
+
+p.banner {
+  text-align: center;
+}

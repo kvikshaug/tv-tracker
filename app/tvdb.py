@@ -85,3 +85,5 @@ def add_show(id):
                 number=episode_number,
                 season=season)
             episode.save()
+
+    return show

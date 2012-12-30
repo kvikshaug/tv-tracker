@@ -8,9 +8,15 @@ class Show(models.Model):
     first_aired = models.DateTimeField(null=True)
     imdb = models.TextField()
 
+    def get_seasons(self):
+        return self.seasons.all().order_by('-number')
+
 class Season(models.Model):
     number = models.IntegerField()
     show = models.ForeignKey(Show, related_name='seasons')
+
+    def get_episodes(self):
+        return self.episodes.all().order_by('-number')
 
 class Episode(models.Model):
     number = models.IntegerField()
