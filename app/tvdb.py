@@ -72,7 +72,7 @@ def add_show(id):
             continue
 
         try:
-            season = Season.objects.get(number=season_number)
+            season = Season.objects.get(show=show, number=season_number)
         except Season.DoesNotExist:
             season = Season(
                 number=season_number,
