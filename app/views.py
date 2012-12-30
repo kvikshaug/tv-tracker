@@ -12,8 +12,10 @@ def search(request):
     if request.method == 'GET':
         q = request.GET.get('query', '')
         if len(q) >= 3:
-            results = tvdb.search_series(q)
-        context = {'series_search_query': q}
+            series = tvdb.search_series(q)
+        context = {
+            'series_search_query': q,
+            'series_search_results': series}
         return render(request, 'search.html', context)
     elif request.method == 'POST':
         # TBD
