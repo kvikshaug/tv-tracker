@@ -5,11 +5,10 @@ import requests
 API_PATH = "http://thetvdb.com/api"
 
 class SeriesSearch():
-    def __init__(self, id, name, first_aired, banner, imdb):
+    def __init__(self, id, name, first_aired, imdb):
         self.id = id
         self.name = name
         self.first_aired = first_aired
-        self.banner = banner
         self.imdb = imdb
 
 def search_series(query):
@@ -24,12 +23,9 @@ def search_series(query):
         first_aired = s.find('FirstAired')
         if first_aired is not None:
             first_aired = datetime.strptime(first_aired.text, "%Y-%m-%d")
-        banner = s.find('banner')
-        if banner is not None:
-            banner = banner.text
         imdb = s.find('IMDB_ID')
         if imdb is not None:
             imdb = imdb.text
-        o = SeriesSearch(id, name, first_aired, banner, imdb)
+        o = SeriesSearch(id, name, first_aired, imdb)
         results.append(o)
     return results
