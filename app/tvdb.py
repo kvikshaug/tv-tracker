@@ -60,6 +60,7 @@ def add_show(id):
     show = Show(
         tvdbid=id,
         name=name,
+        status=status,
         banner=banner,
         first_aired=first_aired,
         imdb=imdb)
