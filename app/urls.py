@@ -6,4 +6,5 @@ urlpatterns = patterns('app.views',
     url(ur'^serie/(?P<show>\d+)/$', 'show'),
     url(ur'^søk/$', 'search'),
     url(ur'^ny/(?P<id>\d+)/$', 'add_show'),
+    url(ur'^sist-sett/$', 'last_seen'),
 )

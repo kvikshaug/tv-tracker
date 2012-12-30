@@ -11,6 +11,18 @@
 {% endif %}
 
 <div class="row">
+  <div class="offset4 span4">
+    <form action="{% url app.views.last_seen %}" method="post" class="last-seen">
+      {% csrf_token %}
+      <input type="hidden" name="show" value="{{ show.id }}">
+      Seen:
+      <input type="text" name="last-seen" value="{{ show.last_seen }}" class="last-seen input-small">
+      <button type="submit" class="btn"><i class="icon-ok"></i></button>
+    </form>
+  </div>
+</div>
+
+<div class="row">
   <div class="offset3 span6">
     <table class="table">
       {% for season in show.get_seasons %}

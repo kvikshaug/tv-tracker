@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.core.urlresolvers import reverse
 
 import json
+import re
 
 from app import tvdb
 from app.models import Show, Season, Episode
@@ -28,4 +29,11 @@ def search(request):
 
 def add_show(request, id):
     show = tvdb.add_show(id)
+    return HttpResponseRedirect(reverse('app.views.show', args=[show.id]))
+
+def last_seen(request):
+    show = Show.objects.get(id=request.POST['show'])
+    if request.POST['last-seen'] == '' or re.match('^\d+x\d+$', request.POST['last-seen']):
+        show.last_seen = request.POST['last-seen']
+    show.save()
     return HttpResponseRedirect(reverse('app.views.show', args=[show.id]))
