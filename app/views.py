@@ -10,5 +10,9 @@ def index(request):
 
 
 def search(request):
-    result = tvdb.search_series(request.POST['query'])
-    return HttpResponse(json.dumps(result))
+    if request.method == 'GET':
+        context = {'series_search_query': request.GET.get('query', '')}
+        return render(request, 'search.html', context)
+    elif request.method == 'POST':
+        result = tvdb.search_series(request.POST['query'])
+        return HttpResponse(json.dumps(result))

@@ -16,9 +16,6 @@
   {# Setup #}
   <script src="/static/js/setup.js"></script>
 
-  {# Custom "libs" #}
-  <script src="/static/js/search-series.js"></script>
-
   {# Dynamic (runs on document.ready) #}
   <script src="/static/js/main.js"></script>
 
@@ -32,7 +29,9 @@
           <h1>TV DB</h1>
         </div>
         <div class="span4">
-          <input type="text" name="new-series" placeholder="Add new series..." class="input-xlarge">
+          <form action="{% url app.views.search %}" method="get">
+            <input type="text" name="query" placeholder="Add new series..." value="{{ series_search_query }}" class="new-series input-xlarge">
+          </form>
         </div>
       </div>
     </header>
