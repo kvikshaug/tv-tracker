@@ -15,7 +15,7 @@ DATABASES = {
 
 SITE_ID = 1
 TIME_ZONE = 'Europe/Oslo'
-LANGUAGE_CODE = 'nb' # See http://www.i18nguy.com/unicode/language-identifiers.html
+LANGUAGE_CODE = 'en-us' # See http://www.i18nguy.com/unicode/language-identifiers.html
 USE_I18N = True
 USE_L10N = True
 STATIC_URL = '/static/'
@@ -57,10 +57,10 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Uncomment the next line to enable the admin:
-    # 'django.contrib.admin',
-    # Uncomment the next line to enable admin documentation:
-    # 'django.contrib.admindocs',
+
+    # Django admin
+    'django.contrib.admin',
+    'django.contrib.admindocs',
 )
 
 LOGGING = {
