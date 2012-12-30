@@ -30,7 +30,7 @@
           <th>Season {{ season.number }}</th>
         </tr>
         {% for episode in season.get_episodes %}
-          <tr class="episode{% if show.get_seen_season < season.number %} hide{% endif %}" data-season="{{ season.number }}">
+          <tr class="episode{% if season.number > show.get_seen_season%} hide{% endif %}" data-season="{{ season.number }}">
             <td>
               {{ season.number }}
               x
