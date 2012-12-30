@@ -14,6 +14,18 @@ class Show(models.Model):
     def get_seasons(self):
         return self.seasons.all().order_by('-number')
 
+    def get_seen_season(self):
+        if self.last_seen == '':
+            return 0
+        else:
+            return int(self.last_seen.split('x')[0])
+
+    def get_seen_episode(self):
+        if self.last_seen == '':
+            return 0
+        else:
+            return int(self.last_seen.split('x')[1])
+
 class Season(models.Model):
     number = models.IntegerField()
     show = models.ForeignKey(Show, related_name='seasons')

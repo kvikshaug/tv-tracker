@@ -24,13 +24,13 @@
 
 <div class="row">
   <div class="offset3 span6">
-    <table class="table">
+    <table class="table episodes">
       {% for season in show.get_seasons %}
-        <tr>
+        <tr class="season" data-season="{{ season.number }}">
           <th>Season {{ season.number }}</th>
         </tr>
         {% for episode in season.get_episodes %}
-          <tr>
+          <tr class="episode{% if show.get_seen_season < season.number %} hide{% endif %}" data-season="{{ season.number }}">
             <td>
               {{ season.number }}
               x
