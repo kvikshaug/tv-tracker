@@ -8,11 +8,13 @@ from app import tvdb
 def index(request):
     return render(request, 'index.html')
 
-
 def search(request):
     if request.method == 'GET':
-        context = {'series_search_query': request.GET.get('query', '')}
+        q = request.GET.get('query', '')
+        if len(q) >= 3:
+            results = tvdb.search_series(q)
+        context = {'series_search_query': q}
         return render(request, 'search.html', context)
     elif request.method == 'POST':
-        result = tvdb.search_series(request.POST['query'])
-        return HttpResponse(json.dumps(result))
+        # TBD
+        pass
