@@ -64,6 +64,9 @@ INSTALLED_APPS = (
 
     # Project-related 3rd party apps
     'south',
+
+    # Project-related apps
+    'app',
 )
 
 LOGGING = {
