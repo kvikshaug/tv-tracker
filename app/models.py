@@ -60,3 +60,20 @@ class Episode(models.Model):
 
     def get_days_remaining(self):
         return (self.air_date - datetime.now()).days
+
+    def get_status(self):
+        seen_season = self.season.show.get_seen_season()
+        seen_episode = self.season.show.get_seen_episode()
+
+        if self.air_date > datetime.now():
+            return 'unaired'
+        else:
+            if self.season.number > seen_season:
+                return 'available'
+            elif self.season.number == seen_season:
+                if self.number > seen_episode:
+                    return 'available'
+                else:
+                    return 'seen'
+            else:
+                return 'seen'

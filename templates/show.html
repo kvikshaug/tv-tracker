@@ -32,22 +32,12 @@
 
         <table class="table episodes" data-season="{{ season.number }}">
           {% for episode in season.get_episodes %}
-            <tr class="{% if season.number > show.get_seen_season %}available{% elif season.number < show.get_seen_season %}seen{% else %}{% if episode.number > show.get_seen_episode %}available{% else %}seen{% endif %}{% endif %}">
+            <tr class="{{ episode.get_status }}">
               <td>
                 {{ episode.get_number }}
               </td>
               <td>
-                {% if season.number > show.get_seen_season %}
-                  Available
-                {% elif season.number < show.get_seen_season %}
-                  Seen
-                {% else %}
-                  {% if episode.number > show.get_seen_episode %}
-                    Available
-                  {% else %}
-                    Seen
-                  {% endif %}
-                {% endif %}
+                {{ episode.get_status|title }}
               </td>
             </tr>
           {% endfor %}
