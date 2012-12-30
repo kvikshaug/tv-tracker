@@ -1,7 +1,22 @@
 (function(SearchSeries, $, undefined) {
 
-    SearchSeries.search = function(opts) {
-        alert("TBD: Searching for " + opts.name);
+    $(document).ready(function() {
+        $("header input[name='new-series']").typeahead({
+            source: SearchSeries.search,
+            minLength: 3
+        });
+    });
+
+    SearchSeries.search = function(query, process) {
+        $.ajax({
+            url: '/søk/',
+            data: 'query=' + encodeURIComponent(query)
+        }).done(function(result) {
+            process(JSON.parse(result))
+        }).fail(function(result) {
+            alert("AJAX query failed, 500 from server? Result: " + result)
+            process([]);
+        });
     }
 
 }(window.SearchSeries = window.SearchSeries || {}, jQuery ));
