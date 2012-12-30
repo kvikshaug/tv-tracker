@@ -14,7 +14,7 @@
         }).done(function(result) {
             process(JSON.parse(result))
         }).fail(function(result) {
-            alert("AJAX query failed, 500 from server? Result: " + result)
+            alert("AJAX query failed, 500 from server? Response:\n\n" + result.responseText)
             process([]);
         });
     }
