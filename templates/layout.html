@@ -9,9 +9,13 @@
 
   <link rel="stylesheet" href="/static/css/main.css" media="screen">
 
+  {# Libs #}
   <script src="/static/lib/jquery/jquery-1.8.3.min.js"></script>
 
-  {# "Libs" #}
+  {# Setup #}
+  <script src="/static/js/setup.js"></script>
+
+  {# Custom "libs" #}
   <script src="/static/js/search-series.js"></script>
 
   {# Dynamic (runs on document.ready) #}
@@ -35,5 +39,9 @@
     {% block body %}{% endblock %}
 
   </div>
+
+{# Global csrf_token - used by AJAX-requests #}
+{% csrf_token %}
+
 </body>
 </html>
