@@ -8,6 +8,9 @@ class Show(models.Model):
     first_aired = models.DateTimeField(null=True)
     imdb = models.TextField()
 
+    last_seen = models.CharField(max_length=255)
+    comments = models.TextField()
+
     def get_seasons(self):
         return self.seasons.all().order_by('-number')
 
