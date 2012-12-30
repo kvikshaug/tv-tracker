@@ -4,7 +4,9 @@
 
 {% if show.banner %}
   <p class="banner">
-    <img src="http://thetvdb.com/banners/{{ show.banner }}">
+    <a href="http://thetvdb.com/?tab=series&amp;id={{ show.tvdbid }}">
+      <img src="http://thetvdb.com/banners/{{ show.banner }}">
+    </a>
   </p>
 {% endif %}
 
