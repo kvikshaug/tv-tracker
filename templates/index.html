@@ -1,5 +1,13 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-  <p>Content TBD</p>
+
+<table class="table">
+  {% for show in series %}
+    <tr>
+      <td>{{ show.name }}</td>
+    </tr>
+  {% endfor %}
+</table>
+
 {% endblock %}

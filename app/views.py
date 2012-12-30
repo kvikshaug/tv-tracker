@@ -5,9 +5,11 @@ from django.core.urlresolvers import reverse
 import json
 
 from app import tvdb
+from app.models import Show, Season, Episode
 
 def index(request):
-    return render(request, 'index.html')
+    context = {'series': Show.objects.all().order_by('name')}
+    return render(request, 'index.html', context)
 
 def search(request):
     q = request.GET.get('query', '')
