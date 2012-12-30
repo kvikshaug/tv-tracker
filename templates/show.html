@@ -24,23 +24,38 @@
 
 <div class="row">
   <div class="offset3 span6">
-    <table class="table episodes">
       {% for season in show.get_seasons %}
-        <tr class="season" data-season="{{ season.number }}">
-          <th>Season {{ season.number }}</th>
-        </tr>
-        {% for episode in season.get_episodes %}
-          <tr class="episode{% if season.number > show.get_seen_season%} hide{% endif %}" data-season="{{ season.number }}">
-            <td>
-              {{ season.number }}
-              x
-              {# Should be a filter or something else, but meh, just prepende 0 if < 10 #}
-              {% if episode.number < 10 %}0{% endif %}{{ episode.number }}
-            </td>
-          </tr>
-        {% endfor %}
+        <h4 class="season" data-season="{{ season.number }}">
+          Season {{ season.number }}
+          <span class="count pull-right">({{ season.episodes.all|length }})</span>
+        </h4>
+
+        <table class="table episodes" data-season="{{ season.number }}">
+          {% for episode in season.get_episodes %}
+            <tr class="{% if season.number > show.get_seen_season %}available{% elif season.number < show.get_seen_season %}seen{% else %}{% if episode.number > show.get_seen_episode %}available{% else %}seen{% endif %}{% endif %}">
+              <td>
+                {{ season.number }}
+                x
+                {# Should be a filter or something else, but meh, just prepende 0 if < 10 #}
+                {% if episode.number < 10 %}0{% endif %}{{ episode.number }}
+              </td>
+              <td>
+                {% if season.number > show.get_seen_season %}
+                  Available
+                {% elif season.number < show.get_seen_season %}
+                  Seen
+                {% else %}
+                  {% if episode.number > show.get_seen_episode %}
+                    Available
+                  {% else %}
+                    Seen
+                  {% endif %}
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </table>
       {% endfor %}
-    </table>
   </div>
 </div>
 

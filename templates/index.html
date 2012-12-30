@@ -3,9 +3,16 @@
 {% block body %}
 
 <table class="table">
+  <tr>
+    <th>Show</th>
+    <th>Last seen</th>
+    <th>Newest</th>
+  </tr>
   {% for show in series %}
     <tr>
       <td><a href="{% url app.views.show show.id %}">{{ show.name }}</a></td>
+      <td>{{ show.last_seen }}</td>
+      <td>{{ show.get_newest_episode }}</td>
     </tr>
   {% endfor %}
 </table>

@@ -21,6 +21,22 @@ p.banner {
   text-align: center;
 }
 
-table.episodes tr.season {
+h4.season {
   cursor: pointer;
+}
+
+h4.season span.count {
+  font-weight: normal;
+}
+
+table.episodes tr.unaired {
+  color: red;
+}
+
+table.episodes tr.available {
+  color: green;
+}
+
+table.episodes tr.seen {
+  color: gray;
 }
