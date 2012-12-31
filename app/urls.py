@@ -7,4 +7,5 @@ urlpatterns = patterns('app.views',
     url(ur'^søk/$', 'search'),
     url(ur'^ny/(?P<id>\d+)/$', 'add_show'),
     url(ur'^sist-sett/$', 'last_seen'),
+    url(ur'^synkroniser/$', 'sync_series'),
 )

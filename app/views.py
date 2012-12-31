@@ -37,3 +37,8 @@ def last_seen(request):
         show.last_seen = request.POST['last-seen']
     show.save()
     return HttpResponseRedirect(reverse('app.views.show', args=[show.id]))
+
+def sync_series(request):
+    for show in Show.objects.all():
+        tvdb.add_show(show.tvdbid)
+    return HttpResponseRedirect(reverse('app.views.index'))

@@ -57,13 +57,23 @@ def add_show(id):
     else:
         imdb = imdb.text
 
-    show = Show(
-        tvdbid=id,
-        name=name,
-        status=status,
-        banner=banner,
-        first_aired=first_aired,
-        imdb=imdb)
+    try:
+        show = Show.objects.get(tvdbid=id)
+        show.tvdbid = id
+        show.name = name
+        show.status = status
+        show.banner = banner
+        show.first_aired = first_aired
+        show.imdb = imdb
+    except Show.DoesNotExist:
+        show = Show(
+            tvdbid=id,
+            name=name,
+            status=status,
+            banner=banner,
+            first_aired=first_aired,
+            imdb=imdb)
+
     show.save()
 
     for e in xml.findall("Episode"):
@@ -82,11 +92,14 @@ def add_show(id):
 
         episode_number = e.find("EpisodeNumber").text
         first_aired = datetime.strptime(e.find("FirstAired").text, "%Y-%m-%d")
-        if not Episode.objects.filter(number=episode_number, season=season).exists():
+        try:
+            episode = Episode.objects.get(number=episode_number, season=season)
+            episode.air_date = first_aired
+        except Episode.DoesNotExist:
             episode = Episode(
                 number=episode_number,
                 air_date=first_aired,
                 season=season)
-            episode.save()
+        episode.save()
 
     return show
