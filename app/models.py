@@ -48,7 +48,7 @@ class Season(models.Model):
 
 class Episode(models.Model):
     number = models.IntegerField()
-    air_date = models.DateTimeField()
+    air_date = models.DateTimeField(null=True)
     season = models.ForeignKey(Season, related_name='episodes')
 
     def get_number(self):

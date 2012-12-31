@@ -91,7 +91,9 @@ def add_show(id):
             season.save()
 
         episode_number = e.find("EpisodeNumber").text
-        first_aired = datetime.strptime(e.find("FirstAired").text, "%Y-%m-%d")
+        first_aired = e.find("FirstAired").text
+        if first_aired is not None:
+            first_aired = datetime.strptime(first_aired, "%Y-%m-%d")
         try:
             episode = Episode.objects.get(number=episode_number, season=season)
             episode.air_date = first_aired
