@@ -39,6 +39,9 @@
               <td>
                 {{ episode.get_status|title }}
               </td>
+              <td>
+                {{ episode.air_date|date:"j. F Y" }}
+              </td>
             </tr>
           {% endfor %}
         </table>
