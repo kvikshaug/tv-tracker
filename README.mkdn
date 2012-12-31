@@ -1,0 +1,7 @@
+# TVDB
+
+This is a small Django site which uses thetvdb.com's excellent API to tell you the following about the TV series you watch:
+
+- Which episode did you last watch?
+- How many new episodes are there?
+- When is the next episode?
