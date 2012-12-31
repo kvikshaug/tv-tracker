@@ -26,12 +26,12 @@ def search_series(query):
     for s in xml.findall("Series"):
         id = s.find('seriesid').text
         name = s.find('SeriesName').text
-        first_aired = s.find('FirstAired')
+        first_aired = s.find('FirstAired').text
         if first_aired is not None:
-            first_aired = datetime.strptime(first_aired.text, "%Y-%m-%d")
-        imdb = s.find('IMDB_ID')
-        if imdb is not None:
-            imdb = imdb.text
+            first_aired = datetime.strptime(first_aired, "%Y-%m-%d")
+        imdb = s.find('IMDB_ID').text
+        if imdb is None:
+            imdb = ''
         results.append(ShowSearched(id, name, first_aired, imdb))
     return results
 
@@ -42,20 +42,18 @@ def add_show(id):
 
     series = xml.find("Series")
     name = series.find("SeriesName").text
-    banner = series.find("banner")
+    banner = series.find("banner").text
     if banner is None:
         banner = ''
     else:
-        banner = banner.text
+        banner = banner
     status = series.find("Status").text
-    first_aired = series.find("FirstAired")
+    first_aired = series.find("FirstAired").text
     if first_aired is not None:
-        first_aired = datetime.strptime(first_aired.text, "%Y-%m-%d")
-    imdb = series.find("IMDB_ID")
+        first_aired = datetime.strptime(first_aired, "%Y-%m-%d")
+    imdb = series.find("IMDB_ID").text
     if imdb is None:
         imdb = ''
-    else:
-        imdb = imdb.text
 
     try:
         show = Show.objects.get(tvdbid=id)
