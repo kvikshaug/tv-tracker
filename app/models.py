@@ -59,7 +59,7 @@ class Episode(models.Model):
         return "%sx%s%s" % (self.season.number, lazy_zero, self.number)
 
     def get_days_remaining(self):
-        return (self.air_date - datetime.now()).days
+        return (self.air_date - datetime.now()).days + 1
 
     def get_status(self):
         seen_season = self.season.show.get_seen_season()
