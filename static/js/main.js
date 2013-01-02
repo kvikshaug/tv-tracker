@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
     $("footer a.sync").click(function(e) {
-        if(!confirm("Sikker!?")) {
+        if(!confirm("Are you sure!?")) {
             e.preventDefault();
         }
     });
