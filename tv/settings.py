@@ -1,7 +1,5 @@
 from tv.local_settings import *
 
-TEMPLATE_DEBUG = DEBUG = True
-
 MANAGERS = ADMINS = (
     ('Ali Kaafarani', 'ali@kvikshaug.no'),
 )
