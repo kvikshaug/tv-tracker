@@ -18,14 +18,6 @@ USE_I18N = True
 USE_L10N = True
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = (
-    "/home/murray/code/projects/tv/static",
-)
-
-TEMPLATE_DIRS = (
-    "/home/murray/code/projects/tv/templates",
-)
-
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
