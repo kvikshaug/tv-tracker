@@ -11,19 +11,19 @@
 {% endif %}
 
 <div class="row">
-  <div class="offset4 span4">
+  <div class="col-sm-offset-4 col-md-5">
     <form action="{% url 'core.views.last_seen' %}" method="post" class="last-seen">
       {% csrf_token %}
       <input type="hidden" name="show" value="{{ show.id }}">
       Seen:
-      <input type="text" name="last-seen" value="{{ show.last_seen }}" class="last-seen input-small">
-      <button type="submit" class="btn"><i class="icon-ok"></i></button>
+      <input type="text" name="last-seen" value="{{ show.last_seen }}" class="last-seen form-control">
+      <button type="submit" class="btn">Ok</button>
     </form>
   </div>
 </div>
 
 <div class="row">
-  <div class="offset3 span6">
+  <div class="col-sm-offset-3 col-md-6">
       {% for season in show.get_seasons %}
         <h4 class="season" data-season="{{ season.number }}">
           Season {{ season.number }}

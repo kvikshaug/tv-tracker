@@ -11,7 +11,7 @@
       {% for show in series_search_results %}
         <tr>
           <td>
-            <a href="{% url 'core.views.add_show' show.id %}" class="btn"><i class="icon-ok"></i></a>
+            <a href="{% url 'core.views.add_show' show.id %}" class="btn">Ok</a>
           </td>
           <td>
             <a href="http://thetvdb.com/?tab=series&amp;id={{ show.id }}">{{ show.name }}</a>

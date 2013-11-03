@@ -5,32 +5,21 @@
   <meta charset="utf-8">
   <title>TV</title>
   <link rel="stylesheet" href="/static/lib/bootstrap/css/bootstrap.min.css" media="screen">
-  <link rel="stylesheet" href="/static/lib/bootstrap/css/bootstrap-responsive.min.css" media="screen">
-
   <link rel="stylesheet" href="/static/css/main.css" media="screen">
-
-  {# Libs #}
-  <script src="/static/lib/jquery/jquery-1.8.3.min.js"></script>
-  <script src="/static/lib/bootstrap/js/bootstrap.min.js"></script>
-
-  {# Setup #}
-  <script src="/static/js/setup.js"></script>
-
-  {# Dynamic (runs on document.ready) #}
-  <script src="/static/js/main.js"></script>
 
 </head>
 <body>
+
   <div class="container">
 
     <header>
       <div class="row">
-        <div class="span8">
+        <div class="col-md-8">
           <h1><a href="/">TV DB</a></h1>
         </div>
-        <div class="span4">
+        <div class="col-md-4">
           <form action="{% url 'core.views.search' %}" method="get">
-            <input type="text" name="query" placeholder="Add new series..." value="{{ series_search_query }}" class="new-series input-xlarge">
+            <input type="text" name="query" placeholder="Add new series..." value="{{ series_search_query }}" class="new-series form-control">
           </form>
         </div>
       </div>
@@ -39,13 +28,23 @@
     {% block body %}{% endblock %}
 
     <footer>
-      <a class="sync" href="{% url 'core.views.sync_series' %}"><i class="icon-refresh"></i> Resync everything</a>
+      <a class="sync" href="{% url 'core.views.sync_series' %}">Resync everything</a>
     </footer>
 
   </div>
 
 {# Global csrf_token - used by AJAX-requests #}
 {% csrf_token %}
+
+{# Libs #}
+<script src="/static/lib/jquery/jquery-2.0.3.min.js"></script>
+<script src="/static/lib/bootstrap/js/bootstrap.min.js"></script>
+
+{# Setup #}
+<script src="/static/js/setup.js"></script>
+
+{# Dynamic (runs on document.ready) #}
+<script src="/static/js/main.js"></script>
 
 </body>
 </html>
