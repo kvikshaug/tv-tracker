@@ -29,7 +29,7 @@
           <h1><a href="/">TV DB</a></h1>
         </div>
         <div class="span4">
-          <form action="{% url app.views.search %}" method="get">
+          <form action="{% url 'core.views.search' %}" method="get">
             <input type="text" name="query" placeholder="Add new series..." value="{{ series_search_query }}" class="new-series input-xlarge">
           </form>
         </div>
@@ -39,7 +39,7 @@
     {% block body %}{% endblock %}
 
     <footer>
-      <a class="sync" href="{% url app.views.sync_series %}"><i class="icon-refresh"></i> Resync everything</a>
+      <a class="sync" href="{% url 'core.views.sync_series' %}"><i class="icon-refresh"></i> Resync everything</a>
     </footer>
 
   </div>

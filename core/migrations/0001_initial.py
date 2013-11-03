@@ -9,56 +9,56 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
         
         # Adding model 'Show'
-        db.create_table('app_show', (
+        db.create_table('core_show', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('tvdbid', self.gf('django.db.models.fields.IntegerField')(unique=True)),
             ('name', self.gf('django.db.models.fields.TextField')()),
         ))
-        db.send_create_signal('app', ['Show'])
+        db.send_create_signal('core', ['Show'])
 
         # Adding model 'Season'
-        db.create_table('app_season', (
+        db.create_table('core_season', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('number', self.gf('django.db.models.fields.IntegerField')()),
-            ('show', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['app.Show'])),
+            ('show', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.Show'])),
         ))
-        db.send_create_signal('app', ['Season'])
+        db.send_create_signal('core', ['Season'])
 
         # Adding model 'Episode'
-        db.create_table('app_episode', (
+        db.create_table('core_episode', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('number', self.gf('django.db.models.fields.IntegerField')()),
-            ('season', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['app.Season'])),
+            ('season', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.Season'])),
         ))
-        db.send_create_signal('app', ['Episode'])
+        db.send_create_signal('core', ['Episode'])
 
 
     def backwards(self, orm):
         
         # Deleting model 'Show'
-        db.delete_table('app_show')
+        db.delete_table('core_show')
 
         # Deleting model 'Season'
-        db.delete_table('app_season')
+        db.delete_table('core_season')
 
         # Deleting model 'Episode'
-        db.delete_table('app_episode')
+        db.delete_table('core_episode')
 
 
     models = {
-        'app.episode': {
+        'core.episode': {
             'Meta': {'object_name': 'Episode'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'number': ('django.db.models.fields.IntegerField', [], {}),
-            'season': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['app.Season']"})
+            'season': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.Season']"})
         },
-        'app.season': {
+        'core.season': {
             'Meta': {'object_name': 'Season'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'number': ('django.db.models.fields.IntegerField', [], {}),
-            'show': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['app.Show']"})
+            'show': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.Show']"})
         },
-        'app.show': {
+        'core.show': {
             'Meta': {'object_name': 'Show'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.TextField', [], {}),
@@ -66,4 +66,4 @@ class Migration(SchemaMigration):
         }
     }
 
-    complete_apps = ['app']
+    complete_apps = ['core']

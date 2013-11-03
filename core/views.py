@@ -1,12 +1,9 @@
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
-from django.core.urlresolvers import reverse
+from django.shortcuts import render, redirect
 
-import json
 import re
 
-from app import tvdb
-from app.models import Show, Season, Episode
+from core import tvdb
+from core.models import Show
 
 def index(request):
     context = {'series': Show.objects.all().order_by('name')}
@@ -29,16 +26,16 @@ def search(request):
 
 def add_show(request, id):
     show = tvdb.add_show(id)
-    return HttpResponseRedirect(reverse('app.views.show', args=[show.id]))
+    return redirect('core.views.show', show.id)
 
 def last_seen(request):
     show = Show.objects.get(id=request.POST['show'])
     if request.POST['last-seen'] == '' or re.match('^\d+x\d+$', request.POST['last-seen']):
         show.last_seen = request.POST['last-seen']
     show.save()
-    return HttpResponseRedirect(reverse('app.views.show', args=[show.id]))
+    return redirect('core.views.show', show.id)
 
 def sync_series(request):
     for show in Show.objects.all():
         tvdb.add_show(show.tvdbid)
-    return HttpResponseRedirect(reverse('app.views.index'))
+    return redirect('core.views.index')

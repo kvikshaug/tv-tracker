@@ -1,38 +1,34 @@
-# encoding: utf-8
+# -*- coding: utf-8 -*-
 import datetime
 from south.db import db
-from south.v2 import SchemaMigration
+from south.v2 import DataMigration
 from django.db import models
 
-class Migration(SchemaMigration):
+class Migration(DataMigration):
 
     def forwards(self, orm):
-        
-        # Adding field 'Episode.air_date'
-        db.add_column('app_episode', 'air_date', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime(2012, 12, 30, 23, 23, 45, 171142)), keep_default=False)
-
+        db.execute("alter table app_episode rename to core_episode;")
+        db.execute("alter table app_season rename to core_season;")
+        db.execute("alter table app_show rename to core_show;")
 
     def backwards(self, orm):
-        
-        # Deleting field 'Episode.air_date'
-        db.delete_column('app_episode', 'air_date')
-
+        "Write your backwards methods here."
 
     models = {
-        'app.episode': {
+        'core.episode': {
             'Meta': {'object_name': 'Episode'},
-            'air_date': ('django.db.models.fields.DateTimeField', [], {}),
+            'air_date': ('django.db.models.fields.DateTimeField', [], {'null': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'number': ('django.db.models.fields.IntegerField', [], {}),
-            'season': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'episodes'", 'to': "orm['app.Season']"})
+            'season': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'episodes'", 'to': "orm['core.Season']"})
         },
-        'app.season': {
+        'core.season': {
             'Meta': {'object_name': 'Season'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'number': ('django.db.models.fields.IntegerField', [], {}),
-            'show': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'seasons'", 'to': "orm['app.Show']"})
+            'show': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'seasons'", 'to': "orm['core.Show']"})
         },
-        'app.show': {
+        'core.show': {
             'Meta': {'object_name': 'Show'},
             'banner': ('django.db.models.fields.TextField', [], {}),
             'comments': ('django.db.models.fields.TextField', [], {}),
@@ -46,4 +42,5 @@ class Migration(SchemaMigration):
         }
     }
 
-    complete_apps = ['app']
+    complete_apps = ['core']
+    symmetrical = True

@@ -2,11 +2,11 @@ from django.conf import settings
 
 from lxml import etree
 from datetime import datetime
-from cStringIO import StringIO
+from io import StringIO
 import zipfile
 import requests
 
-from app.models import Show, Season, Episode
+from core.models import Show, Season, Episode
 
 API_PATH = "http://thetvdb.com/api"
 

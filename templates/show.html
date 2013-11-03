@@ -12,7 +12,7 @@
 
 <div class="row">
   <div class="offset4 span4">
-    <form action="{% url app.views.last_seen %}" method="post" class="last-seen">
+    <form action="{% url 'core.views.last_seen' %}" method="post" class="last-seen">
       {% csrf_token %}
       <input type="hidden" name="show" value="{{ show.id }}">
       Seen:

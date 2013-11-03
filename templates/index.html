@@ -12,7 +12,7 @@
   </tr>
   {% for show in series %}
     <tr>
-      <td><a href="{% url app.views.show show.id %}">{{ show.name }}</a></td>
+      <td><a href="{% url 'core.views.show' show.id %}">{{ show.name }}</a></td>
       <td>{{ show.last_seen }}</td>
       <td>{{ show.get_newest_episode.get_number }}</td>
       <td>

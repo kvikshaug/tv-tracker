@@ -1,4 +1,4 @@
-from tv.local_settings import *
+from project.local_settings import *
 
 MANAGERS = ADMINS = (
     ('Ali Kaafarani', 'ali@kvikshaug.no'),
@@ -17,6 +17,9 @@ LANGUAGE_CODE = 'en-us' # See http://www.i18nguy.com/unicode/language-identifier
 USE_I18N = True
 USE_L10N = True
 STATIC_URL = '/static/'
+ALLOWED_HOSTS = ['tv.kvikshaug.no']
+USE_TZ = False
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -35,10 +38,10 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'tv.urls'
+ROOT_URLCONF = 'project.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'tv.wsgi.application'
+WSGI_APPLICATION = 'project.wsgi.application'
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -47,16 +50,8 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    # Django admin
-    'django.contrib.admin',
-    'django.contrib.admindocs',
-
-    # Project-related 3rd party apps
     'south',
-
-    # Project-related apps
-    'app',
+    'core',
 )
 
 LOGGING = {

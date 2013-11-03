@@ -9,47 +9,47 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
         
         # Adding field 'Show.status'
-        db.add_column('app_show', 'status', self.gf('django.db.models.fields.TextField')(default=''), keep_default=False)
+        db.add_column('core_show', 'status', self.gf('django.db.models.fields.TextField')(default=''), keep_default=False)
 
         # Adding field 'Show.banner'
-        db.add_column('app_show', 'banner', self.gf('django.db.models.fields.TextField')(default=''), keep_default=False)
+        db.add_column('core_show', 'banner', self.gf('django.db.models.fields.TextField')(default=''), keep_default=False)
 
         # Adding field 'Show.first_aired'
-        db.add_column('app_show', 'first_aired', self.gf('django.db.models.fields.DateTimeField')(null=True), keep_default=False)
+        db.add_column('core_show', 'first_aired', self.gf('django.db.models.fields.DateTimeField')(null=True), keep_default=False)
 
         # Adding field 'Show.imdb'
-        db.add_column('app_show', 'imdb', self.gf('django.db.models.fields.TextField')(default=''), keep_default=False)
+        db.add_column('core_show', 'imdb', self.gf('django.db.models.fields.TextField')(default=''), keep_default=False)
 
 
     def backwards(self, orm):
         
         # Deleting field 'Show.status'
-        db.delete_column('app_show', 'status')
+        db.delete_column('core_show', 'status')
 
         # Deleting field 'Show.banner'
-        db.delete_column('app_show', 'banner')
+        db.delete_column('core_show', 'banner')
 
         # Deleting field 'Show.first_aired'
-        db.delete_column('app_show', 'first_aired')
+        db.delete_column('core_show', 'first_aired')
 
         # Deleting field 'Show.imdb'
-        db.delete_column('app_show', 'imdb')
+        db.delete_column('core_show', 'imdb')
 
 
     models = {
-        'app.episode': {
+        'core.episode': {
             'Meta': {'object_name': 'Episode'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'number': ('django.db.models.fields.IntegerField', [], {}),
-            'season': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['app.Season']"})
+            'season': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.Season']"})
         },
-        'app.season': {
+        'core.season': {
             'Meta': {'object_name': 'Season'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'number': ('django.db.models.fields.IntegerField', [], {}),
-            'show': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['app.Show']"})
+            'show': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.Show']"})
         },
-        'app.show': {
+        'core.show': {
             'Meta': {'object_name': 'Show'},
             'banner': ('django.db.models.fields.TextField', [], {}),
             'first_aired': ('django.db.models.fields.DateTimeField', [], {'null': 'True'}),
@@ -61,4 +61,4 @@ class Migration(SchemaMigration):
         }
     }
 
-    complete_apps = ['app']
+    complete_apps = ['core']

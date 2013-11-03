@@ -8,31 +8,31 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         
-        # Changing field 'Episode.air_date'
-        db.alter_column('app_episode', 'air_date', self.gf('django.db.models.fields.DateTimeField')(null=True))
+        # Adding field 'Episode.air_date'
+        db.add_column('core_episode', 'air_date', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime(2012, 12, 30, 23, 23, 45, 171142)), keep_default=False)
 
 
     def backwards(self, orm):
         
-        # User chose to not deal with backwards NULL issues for 'Episode.air_date'
-        raise RuntimeError("Cannot reverse this migration. 'Episode.air_date' and its values cannot be restored.")
+        # Deleting field 'Episode.air_date'
+        db.delete_column('core_episode', 'air_date')
 
 
     models = {
-        'app.episode': {
+        'core.episode': {
             'Meta': {'object_name': 'Episode'},
-            'air_date': ('django.db.models.fields.DateTimeField', [], {'null': 'True'}),
+            'air_date': ('django.db.models.fields.DateTimeField', [], {}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'number': ('django.db.models.fields.IntegerField', [], {}),
-            'season': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'episodes'", 'to': "orm['app.Season']"})
+            'season': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'episodes'", 'to': "orm['core.Season']"})
         },
-        'app.season': {
+        'core.season': {
             'Meta': {'object_name': 'Season'},
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'number': ('django.db.models.fields.IntegerField', [], {}),
-            'show': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'seasons'", 'to': "orm['app.Show']"})
+            'show': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'seasons'", 'to': "orm['core.Show']"})
         },
-        'app.show': {
+        'core.show': {
             'Meta': {'object_name': 'Show'},
             'banner': ('django.db.models.fields.TextField', [], {}),
             'comments': ('django.db.models.fields.TextField', [], {}),
@@ -46,4 +46,4 @@ class Migration(SchemaMigration):
         }
     }
 
-    complete_apps = ['app']
+    complete_apps = ['core']
