@@ -2,7 +2,7 @@ from django.conf import settings
 
 from lxml import etree
 from datetime import datetime
-from io import StringIO
+from io import BytesIO
 import zipfile
 import requests
 
@@ -64,7 +64,7 @@ def parse_search_result(xml):
 
 def add_show(id):
     zipped = requests.get('%s/%s/series/%s/all/en.zip' % (API_PATH, settings.TVDB_API_KEY, id)).content
-    content = zipfile.ZipFile(StringIO(zipped)).read('en.xml')
+    content = zipfile.ZipFile(BytesIO(zipped)).read('en.xml')
     xml = etree.fromstring(content)
 
     series = xml.find("Series")
