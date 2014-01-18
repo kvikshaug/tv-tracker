@@ -45,8 +45,3 @@ def last_seen(request):
         show.last_seen = request.POST['last-seen']
     show.save()
     return redirect('core.views.show', show.id)
-
-def sync_series(request):
-    for show in Show.objects.all():
-        tvdb.create_or_update_show(show.tvdbid)
-    return redirect('core.views.index')

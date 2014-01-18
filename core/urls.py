@@ -7,5 +7,4 @@ urlpatterns = patterns('core.views',
     url(r'^søk/$', 'search'),
     url(r'^ny/(?P<id>\d+)/$', 'add_show'),
     url(r'^sist-sett/$', 'last_seen'),
-    url(r'^synkroniser/$', 'sync_series'),
 )
