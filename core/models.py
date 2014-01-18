@@ -13,6 +13,12 @@ class Show(models.Model):
 
     last_seen = models.CharField(max_length=255)
     comments = models.TextField()
+    LOCAL_STATUS_CHOICES = (
+        ('active', ''),
+        ('default', ''),
+        ('archived', ''),
+    )
+    local_status = models.CharField(max_length=255, choices=LOCAL_STATUS_CHOICES)
 
     def get_seasons(self):
         return self.seasons.all().order_by('-number')
