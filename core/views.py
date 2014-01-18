@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.core.exceptions import PermissionDenied
 
 import re
 
@@ -16,12 +17,14 @@ def show(request, show):
 
 def search(request):
     q = request.GET.get('query', '')
-    series = []
-    if len(q) >= 3:
-        series = tvdb.search_series(q)
+    if len(q) < 3:
+        raise PermissionDenied
+
+    series = tvdb.search_series(q)
     context = {
         'series_search_query': q,
-        'series_search_results': series}
+        'series_search_results': series
+    }
     return render(request, 'search.html', context)
 
 def add_show(request, id):
