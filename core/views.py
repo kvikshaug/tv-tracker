@@ -20,7 +20,7 @@ def search(request):
     if len(q) < 3:
         raise PermissionDenied
 
-    series = tvdb.search_series(q)
+    series = tvdb.search_for_series(q)
 
     # Sort them - those with air date first, by date, then the rest by name
     series_with_airdate = [s for s in series if s.first_aired is not None]

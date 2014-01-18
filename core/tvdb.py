@@ -10,6 +10,10 @@ from core.models import Show, Season, Episode
 
 API_PATH = "http://thetvdb.com/api"
 
+#
+# Models
+#
+
 class SeriesResult():
     def __init__(self, id, name, overview, banner, first_aired, imdb):
         self.id = id
@@ -19,12 +23,27 @@ class SeriesResult():
         self.first_aired = first_aired
         self.imdb = imdb
 
-def search_series(query):
+#
+# Utilities
+#
+
+def try_field(xml, field_name, default=''):
+    field = xml.find(field_name)
+    if field is not None:
+        return field.text
+    else:
+        return default
+
+#
+# Available methods
+#
+
+def search_for_series(query):
     content = requests.get("%s/GetSeries.php?seriesname=%s" % (API_PATH, query)).content
     xml = etree.fromstring(content)
-    return [parse_series(series) for series in xml.findall("Series")]
+    return [parse_search_result(series_xml) for series_xml in xml.findall("Series")]
 
-def parse_series(xml):
+def parse_search_result(xml):
     # Fields we require (i.e. throw exception if missing)
     id = xml.find('seriesid').text
     name = xml.find('SeriesName').text
@@ -42,13 +61,6 @@ def parse_series(xml):
         first_aired = None
 
     return SeriesResult(id, name, overview, banner, first_aired, imdb)
-
-def try_field(xml, field_name, default=''):
-    field = xml.find(field_name)
-    if field is not None:
-        return field.text
-    else:
-        return default
 
 def add_show(id):
     zipped = requests.get('%s/%s/series/%s/all/en.zip' % (API_PATH, settings.TVDB_API_KEY, id)).content
