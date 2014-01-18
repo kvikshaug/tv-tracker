@@ -7,7 +7,15 @@ from core import tvdb
 from core.models import Show
 
 def index(request):
-    context = {'series': Show.objects.all().order_by('name')}
+    series = Show.objects.all().order_by('name')
+    active_series = series.filter(local_status='active')
+    default_series = series.filter(local_status='default')
+    archived_series = series.filter(local_status='archived')
+    context = {
+        'active_series': active_series,
+        'default_series': default_series,
+        'archived_series': archived_series,
+    }
     return render(request, 'index.html', context)
 
 def show(request, show):
@@ -45,3 +53,12 @@ def last_seen(request):
         show.last_seen = request.POST['last-seen']
     show.save()
     return redirect('core.views.show', show.id)
+
+def set_show_status(request, show, status):
+    if status not in [s[0] for s in Show.LOCAL_STATUS_CHOICES]:
+        raise PermissionDenied
+
+    show = Show.objects.get(id=show)
+    show.local_status = status
+    show.save()
+    return redirect('core.views.index')

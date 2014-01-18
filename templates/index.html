@@ -2,39 +2,13 @@
 
 {% block body %}
 
-<table class="table">
-  <tr>
-    <th>Show</th>
-    <th>Seen</th>
-    <th>Available</th>
-    <th>Next</th>
-    <th>Newest</th>
-    <th>Status</th>
-  </tr>
-  {% for show in series %}
-    <tr>
-      <td><a href="{% url 'core.views.show' show.id %}">{{ show.name }}</a></td>
-      <td>{{ show.last_seen }}</td>
-      <td>
-        {% with show.get_available_unseen as avail %}
-          {% if avail.count == 0 %}
-            -
-          {% else %}
-            {{ avail.latest.get_number }} ({{ avail.count }} total)
-          {% endif %}
-        {% endwith %}
-      </td>
-      <td>
-        {% if show.get_next_episode %}
-          {{ show.get_next_episode.get_number }} ({{ show.get_next_episode.get_days_remaining }} days: {{ show.get_next_episode.air_date|date:"d.m.Y" }})
-        {% else %}
-          N/A
-        {% endif %}
-      </td>
-      <td>{{ show.get_newest_episode.get_number }}</td>
-      <td>{{ show.status }}</td>
-    </tr>
-  {% endfor %}
-</table>
+<h3>Active series</h3>
+{% include 'series_table.html' with series=active_series %}
+
+<h3>Other series</h3>
+{% include 'series_table.html' with series=default_series %}
+
+<h3>Archived series</h3>
+{% include 'series_table.html' with series=archived_series %}
 
 {% endblock %}
