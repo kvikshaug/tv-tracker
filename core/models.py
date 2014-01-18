@@ -18,7 +18,7 @@ class Show(models.Model):
         ('default', ''),
         ('archived', ''),
     )
-    local_status = models.CharField(max_length=255, choices=LOCAL_STATUS_CHOICES)
+    local_status = models.CharField(max_length=255, choices=LOCAL_STATUS_CHOICES, default='default')
 
     def get_seasons(self):
         return self.seasons.all().order_by('-number')
