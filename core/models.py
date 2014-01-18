@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q
 
 from datetime import datetime
 
@@ -27,6 +28,44 @@ class Show(models.Model):
             return 0
         else:
             return int(self.last_seen.split('x')[1])
+
+    def get_available_unseen(self):
+        try:
+            seen_season, seen_episode = self.last_seen.split('x')
+        except ValueError:
+            seen_season = 0
+            seen_episode = 0
+
+        now = datetime.now()
+        available_episodes = Episode.objects.filter(
+            Q(
+                # Future episodes this season
+                season__number=seen_season,
+                number__gt=seen_episode
+            ) | Q(
+                # Future seasons
+                season__number__gt=seen_season,
+            ),
+            season__show=self,
+            air_date__lte=now,
+        )
+        latest = None
+        for e in available_episodes:
+            if latest is None:
+                latest = e
+                continue
+
+            if e.season.number > latest.season.number:
+                latest = e
+                continue
+
+            if e.season.number == latest.season.number and e.number > latest.number:
+                latest = e
+                continue
+        return {
+            'latest': latest,
+            'count': len(available_episodes)
+        }
 
     def get_newest_episode(self):
         season = self.seasons.all().order_by('-number')[0]
