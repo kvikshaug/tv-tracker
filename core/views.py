@@ -47,6 +47,11 @@ def add_show(request, id):
     show = tvdb.create_or_update_show(id)
     return redirect('core.views.show', show.id)
 
+def delete_show(request, show):
+    show = Show.objects.get(id=show)
+    show.delete()
+    return redirect('core.views.index')
+
 def last_seen(request):
     show = Show.objects.get(id=request.POST['show'])
     if request.POST['last-seen'] == '' or re.match('^\d+x\d+$', request.POST['last-seen']):

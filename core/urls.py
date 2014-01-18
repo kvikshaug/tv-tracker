@@ -6,6 +6,7 @@ urlpatterns = patterns('core.views',
     url(r'^serie/(?P<show>\d+)/$', 'show'),
     url(r'^søk/$', 'search'),
     url(r'^ny/(?P<id>\d+)/$', 'add_show'),
+    url(r'^slett/(?P<show>\d+)/$', 'delete_show'),
     url(r'^sist-sett/$', 'last_seen'),
     url(r'^sett-status/(?P<show>\d+)/(?P<status>[a-z]+)/$', 'set_show_status'),
 )
