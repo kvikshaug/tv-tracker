@@ -2,36 +2,52 @@
 
 {% block body %}
 
-<h3><strong>{{ series_search_results|length }}</strong> results for <strong>{{ series_search_query }}</strong>:</h3>
+<div class="search-results">
 
-<div class="row">
-  <div class="span6">
-
-    <table class="table">
-      {% for show in series_search_results %}
-        <tr>
-          <td>
-            <a href="{% url 'core.views.add_show' show.id %}" class="btn">Ok</a>
-          </td>
-          <td>
-            <a href="http://thetvdb.com/?tab=series&amp;id={{ show.id }}">{{ show.name }}</a>
-          </td>
-          <td>
-            {% if show.first_aired %}
-              {{ show.first_aired|date:"Y" }}
-            {% endif %}
-          </td>
-          <td>
-            {% if show.imdb %}
-              <a href="http://www.imdb.com/title/{{ show.imdb }}/">iMDB</a>
-            {% endif %}
-          </td>
-        </tr>
-      {% endfor %}
-    </table>
-
+  <div class="row">
+    <div class="col-lg-12">
+      <h2>
+        <strong>{{ series_search_results|length }}</strong> results for <strong>{{ series_search_query }}</strong>:
+      </h2>
+    </div>
   </div>
-</div>
 
+  {% for show in series_search_results %}
+    <div class="show-result">
+      <div class="row">
+        <div class="col-lg-12">
+
+          {% if show.banner %}
+            <a href="http://thetvdb.com/?tab=series&amp;id={{ show.id }}">
+              <img src="http://thetvdb.com/banners/{{ show.banner }}">
+            </a>
+          {% endif %}
+
+          <p class="title">
+            <a href="http://thetvdb.com/?tab=series&amp;id={{ show.id }}">{{ show.name }}</a>
+            {% if show.first_aired %}
+              ({{ show.first_aired|date:"Y" }})
+            {% endif %}
+            {% if show.imdb %}
+              &mdash; <a href="http://www.imdb.com/title/{{ show.imdb }}/">iMDB</a>
+            {% endif %}
+          </p>
+
+          {% if show.overview %}
+            <p>
+              {{ show.overview }}
+            </p>
+          {% endif %}
+
+          <p>
+            <a href="{% url 'core.views.add_show' show.id %}" class="btn btn-default btn-lg">Add it!</a>
+          </p>
+
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+
+</div><!-- /.search-results -->
 
 {% endblock %}
