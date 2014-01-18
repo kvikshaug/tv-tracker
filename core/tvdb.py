@@ -6,7 +6,7 @@ from io import BytesIO
 import zipfile
 import requests
 
-from core.models import Show, Season, Episode
+from core.models import Show
 
 API_PATH = "http://thetvdb.com/api"
 
@@ -14,7 +14,7 @@ API_PATH = "http://thetvdb.com/api"
 # Models
 #
 
-class SeriesResult():
+class SeriesSearchResult():
     def __init__(self, id, name, overview, banner, first_aired, imdb):
         self.id = id
         self.name = name
@@ -23,16 +23,25 @@ class SeriesResult():
         self.first_aired = first_aired
         self.imdb = imdb
 
-#
-# Utilities
-#
+class TVDBSeries():
+    def __init__(self, tvdbid, name, overview, status, banner, first_aired, imdb):
+        self.tvdbid = tvdbid
+        self.name = name
+        self.overview = overview
+        self.status = status
+        self.banner = banner
+        self.first_aired = first_aired
+        self.imdb = imdb
+        self.episodes = []
 
-def try_field(xml, field_name, default=''):
-    field = xml.find(field_name)
-    if field is not None:
-        return field.text
-    else:
-        return default
+    def add_episode(self, season):
+        self.episodes.append(season)
+
+class TVDBEpisode():
+    def __init__(self, season, number, first_aired):
+        self.season = season
+        self.number = number
+        self.first_aired = first_aired
 
 #
 # Available methods
@@ -42,6 +51,42 @@ def search_for_series(query):
     content = requests.get("%s/GetSeries.php?seriesname=%s" % (API_PATH, query)).content
     xml = etree.fromstring(content)
     return [parse_search_result(series_xml) for series_xml in xml.findall("Series")]
+
+def create_or_update_show(tvdbid):
+    # TODO: Remove stale episode objects
+    zipped = requests.get('%s/%s/series/%s/all/en.zip' % (API_PATH, settings.TVDB_API_KEY, tvdbid)).content
+    content = zipfile.ZipFile(BytesIO(zipped)).read('en.xml')
+    xml = etree.fromstring(content)
+
+    series_data = parse_series(xml)
+
+    show, created = Show.objects.get_or_create(tvdbid=series_data.tvdbid, defaults={
+        'name': series_data.name,
+        'status': series_data.status,
+        'banner': series_data.banner,
+        'first_aired': series_data.first_aired,
+        'imdb': series_data.imdb,
+    })
+
+    for episode_data in series_data.episodes:
+        season, created = show.seasons.get_or_create(number=episode_data.season)
+        episode, created = season.episodes.get_or_create(number=episode_data.number)
+        episode.air_date = episode_data.first_aired
+        episode.save()
+
+    return show
+
+
+#
+# Parsing and utilities
+#
+
+def try_field(xml, field_name, default=''):
+    field = xml.find(field_name)
+    if field is not None:
+        return field.text
+    else:
+        return default
 
 def parse_search_result(xml):
     # Fields we require (i.e. throw exception if missing)
@@ -54,79 +99,56 @@ def parse_search_result(xml):
     first_aired = try_field(xml, 'FirstAired')
     imdb = try_field(xml, 'IMDB_ID')
 
-    # Try to parse the first_aired date
     try:
         first_aired = datetime.strptime(first_aired, "%Y-%m-%d")
     except (ValueError, TypeError):
         first_aired = None
 
-    return SeriesResult(id, name, overview, banner, first_aired, imdb)
+    return SeriesSearchResult(id, name, overview, banner, first_aired, imdb)
 
-def add_show(id):
-    zipped = requests.get('%s/%s/series/%s/all/en.zip' % (API_PATH, settings.TVDB_API_KEY, id)).content
-    content = zipfile.ZipFile(BytesIO(zipped)).read('en.xml')
-    xml = etree.fromstring(content)
-
+def parse_series(xml):
     series = xml.find("Series")
-    name = series.find("SeriesName").text
-    banner = series.find("banner").text
-    if banner is None:
-        banner = ''
-    else:
-        banner = banner
-    status = series.find("Status").text
-    first_aired = series.find("FirstAired").text
-    if first_aired is not None:
-        first_aired = datetime.strptime(first_aired, "%Y-%m-%d")
-    imdb = series.find("IMDB_ID").text
-    if imdb is None:
-        imdb = ''
+    tvdbid = try_field(series, "id")
+    name = try_field(series, "SeriesName")
+    overview = try_field(series, "Overview")
+    status = try_field(series, "Status")
+    banner = try_field(series, "banner")
+    first_aired = try_field(series, "FirstAired")
+    imdb = try_field(series, "IMDB_ID")
 
     try:
-        show = Show.objects.get(tvdbid=id)
-        show.tvdbid = id
-        show.name = name
-        show.status = status
-        show.banner = banner
-        show.first_aired = first_aired
-        show.imdb = imdb
-    except Show.DoesNotExist:
-        show = Show(
-            tvdbid=id,
-            name=name,
-            status=status,
-            banner=banner,
-            first_aired=first_aired,
-            imdb=imdb)
+        first_aired = datetime.strptime(first_aired, "%Y-%m-%d")
+    except (ValueError, TypeError):
+        first_aired = None
 
-    show.save()
+    series = TVDBSeries(
+        tvdbid=tvdbid,
+        name=name,
+        overview=overview,
+        status=status,
+        banner=banner,
+        first_aired=first_aired,
+        imdb=imdb,
+    )
 
     for e in xml.findall("Episode"):
-        season_number = e.find("SeasonNumber").text
-        if season_number == '0':
+        season = try_field(e, "SeasonNumber")
+        if season == '0':
             # Ignore specials for now
             continue
 
-        try:
-            season = Season.objects.get(show=show, number=season_number)
-        except Season.DoesNotExist:
-            season = Season(
-                number=season_number,
-                show=show)
-            season.save()
+        number = try_field(e, "EpisodeNumber")
+        first_aired = try_field(e, "FirstAired")
 
-        episode_number = e.find("EpisodeNumber").text
-        first_aired = e.find("FirstAired").text
-        if first_aired is not None:
+        try:
             first_aired = datetime.strptime(first_aired, "%Y-%m-%d")
-        try:
-            episode = Episode.objects.get(number=episode_number, season=season)
-            episode.air_date = first_aired
-        except Episode.DoesNotExist:
-            episode = Episode(
-                number=episode_number,
-                air_date=first_aired,
-                season=season)
-        episode.save()
+        except (ValueError, TypeError):
+            first_aired = None
 
-    return show
+        series.add_episode(TVDBEpisode(
+            season=season,
+            number=number,
+            first_aired=first_aired,
+        ))
+
+    return series

@@ -36,7 +36,7 @@ def search(request):
     return render(request, 'search.html', context)
 
 def add_show(request, id):
-    show = tvdb.add_show(id)
+    show = tvdb.create_or_update_show(id)
     return redirect('core.views.show', show.id)
 
 def last_seen(request):
@@ -48,5 +48,5 @@ def last_seen(request):
 
 def sync_series(request):
     for show in Show.objects.all():
-        tvdb.add_show(show.tvdbid)
+        tvdb.create_or_update_show(show.tvdbid)
     return redirect('core.views.index')
