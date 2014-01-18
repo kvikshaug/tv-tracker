@@ -10,30 +10,45 @@ from core.models import Show, Season, Episode
 
 API_PATH = "http://thetvdb.com/api"
 
-class ShowSearched():
-    def __init__(self, id, name, first_aired, imdb):
+class SeriesResult():
+    def __init__(self, id, name, overview, banner, first_aired, imdb):
         self.id = id
         self.name = name
+        self.overview = overview
+        self.banner = banner
         self.first_aired = first_aired
         self.imdb = imdb
 
 def search_series(query):
     content = requests.get("%s/GetSeries.php?seriesname=%s" % (API_PATH, query)).content
     xml = etree.fromstring(content)
+    return [parse_series(series) for series in xml.findall("Series")]
 
-    # Relatively simple parsing, I bet some kind of error will appear here for some obscure search sometime.
-    results = []
-    for s in xml.findall("Series"):
-        id = s.find('seriesid').text
-        name = s.find('SeriesName').text
-        first_aired = s.find('FirstAired').text
-        if first_aired is not None:
-            first_aired = datetime.strptime(first_aired, "%Y-%m-%d")
-        imdb = s.find('IMDB_ID').text
-        if imdb is None:
-            imdb = ''
-        results.append(ShowSearched(id, name, first_aired, imdb))
-    return results
+def parse_series(xml):
+    # Fields we require (i.e. throw exception if missing)
+    id = xml.find('seriesid').text
+    name = xml.find('SeriesName').text
+
+    # Nice-to-have fields
+    overview = try_field(xml, 'Overview')
+    banner = try_field(xml, 'banner')
+    first_aired = try_field(xml, 'FirstAired')
+    imdb = try_field(xml, 'IMDB_ID')
+
+    # Try to parse the first_aired date
+    try:
+        first_aired = datetime.strptime(first_aired, "%Y-%m-%d")
+    except (ValueError, TypeError):
+        first_aired = None
+
+    return SeriesResult(id, name, overview, banner, first_aired, imdb)
+
+def try_field(xml, field_name, default=''):
+    field = xml.find(field_name)
+    if field is not None:
+        return field.text
+    else:
+        return default
 
 def add_show(id):
     zipped = requests.get('%s/%s/series/%s/all/en.zip' % (API_PATH, settings.TVDB_API_KEY, id)).content
