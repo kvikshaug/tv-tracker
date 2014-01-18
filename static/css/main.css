@@ -8,7 +8,9 @@ form.last-seen {
 }
 
 form.last-seen input.last-seen {
+  display: inline;
   height: 28px;
+  width: 100px;
   font-size: 16px;
 }
 
