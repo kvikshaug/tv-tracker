@@ -3,6 +3,10 @@ from django.db.models import Q
 
 from datetime import datetime
 
+class LastUpdate(models.Model):
+    """Should only contain a single row."""
+    date = models.DateTimeField()
+
 class Show(models.Model):
     tvdbid = models.IntegerField(unique=True)
     name = models.TextField()
