@@ -101,11 +101,7 @@ class Episode(models.Model):
     season = models.ForeignKey(Season, related_name='episodes')
 
     def get_number(self):
-        if self.number < 10:
-            lazy_zero = '0'
-        else:
-            lazy_zero = ''
-        return "%sx%s%s" % (self.season.number, lazy_zero, self.number)
+        return "%sx%02d" % (self.season.number, self.number)
 
     def get_days_remaining(self):
         return (self.air_date - datetime.now()).days + 1
