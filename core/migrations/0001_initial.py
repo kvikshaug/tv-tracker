@@ -1,69 +1,74 @@
-# encoding: utf-8
-import datetime
-from south.db import db
-from south.v2 import SchemaMigration
-from django.db import models
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 
-class Migration(SchemaMigration):
-
-    def forwards(self, orm):
-        
-        # Adding model 'Show'
-        db.create_table('core_show', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('tvdbid', self.gf('django.db.models.fields.IntegerField')(unique=True)),
-            ('name', self.gf('django.db.models.fields.TextField')()),
-        ))
-        db.send_create_signal('core', ['Show'])
-
-        # Adding model 'Season'
-        db.create_table('core_season', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('number', self.gf('django.db.models.fields.IntegerField')()),
-            ('show', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.Show'])),
-        ))
-        db.send_create_signal('core', ['Season'])
-
-        # Adding model 'Episode'
-        db.create_table('core_episode', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('number', self.gf('django.db.models.fields.IntegerField')()),
-            ('season', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.Season'])),
-        ))
-        db.send_create_signal('core', ['Episode'])
+from django.db import models, migrations
 
 
-    def backwards(self, orm):
-        
-        # Deleting model 'Show'
-        db.delete_table('core_show')
+class Migration(migrations.Migration):
 
-        # Deleting model 'Season'
-        db.delete_table('core_season')
+    dependencies = [
+    ]
 
-        # Deleting model 'Episode'
-        db.delete_table('core_episode')
-
-
-    models = {
-        'core.episode': {
-            'Meta': {'object_name': 'Episode'},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'number': ('django.db.models.fields.IntegerField', [], {}),
-            'season': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.Season']"})
-        },
-        'core.season': {
-            'Meta': {'object_name': 'Season'},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'number': ('django.db.models.fields.IntegerField', [], {}),
-            'show': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['core.Show']"})
-        },
-        'core.show': {
-            'Meta': {'object_name': 'Show'},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.TextField', [], {}),
-            'tvdbid': ('django.db.models.fields.IntegerField', [], {'unique': 'True'})
-        }
-    }
-
-    complete_apps = ['core']
+    operations = [
+        migrations.CreateModel(
+            name='Episode',
+            fields=[
+                ('id', models.AutoField(serialize=False, verbose_name='ID', auto_created=True, primary_key=True)),
+                ('number', models.IntegerField()),
+                ('air_date', models.DateTimeField(null=True)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='LastUpdate',
+            fields=[
+                ('id', models.AutoField(serialize=False, verbose_name='ID', auto_created=True, primary_key=True)),
+                ('date', models.DateTimeField()),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Season',
+            fields=[
+                ('id', models.AutoField(serialize=False, verbose_name='ID', auto_created=True, primary_key=True)),
+                ('number', models.IntegerField()),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Show',
+            fields=[
+                ('id', models.AutoField(serialize=False, verbose_name='ID', auto_created=True, primary_key=True)),
+                ('tvdbid', models.IntegerField(unique=True)),
+                ('name', models.TextField()),
+                ('status', models.TextField()),
+                ('banner', models.TextField()),
+                ('first_aired', models.DateTimeField(null=True)),
+                ('imdb', models.TextField()),
+                ('last_seen', models.CharField(max_length=255)),
+                ('comments', models.TextField()),
+                ('local_status', models.CharField(default='default', choices=[('active', ''), ('default', ''), ('archived', '')], max_length=255)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.AddField(
+            model_name='season',
+            name='show',
+            field=models.ForeignKey(related_name='seasons', to='core.Show'),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='episode',
+            name='season',
+            field=models.ForeignKey(related_name='episodes', to='core.Season'),
+            preserve_default=True,
+        ),
+    ]

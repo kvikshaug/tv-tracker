@@ -51,7 +51,6 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'raven.contrib.django.raven_compat',
-    'south',
     'core',
 )
 
@@ -65,3 +64,5 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.messages.context_processors.messages",
     "project.context_processors.last_update",
 )
+
+SILENCED_SYSTEM_CHECKS = ['1_6.W001']
