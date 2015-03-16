@@ -50,8 +50,8 @@
             </a>
           {% elif series.local_status == 'archived' %}
             <a class="btn btn-default btn-sm" href="{% url 'core.views.set_series_status' series.id 'default' %}">
-              Reactivate</
-              a>
+              Reactivate
+            </a>
           {% endif %}
         </td>
       </tr>
