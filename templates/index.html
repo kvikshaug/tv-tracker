@@ -3,7 +3,33 @@
 {% block body %}
 
 <h3>Active series</h3>
-{% include 'series_table.html' with series_plural=active_series %}
+{% for series in active_series %}
+  <div class="series">
+    <a href="{% url 'core.views.series' series.id %}">
+      <img src="http://thetvdb.com/banners/{{ series.banner }}" class="pull-left banner">
+    </a>
+
+    <div class="available">
+      {% with series.get_available_unseen as avail %}
+        {% if avail.count == 0 %}
+          {{ series.last_seen }} / {{ series.last_seen }}<br>
+          {{ avail.count }} available
+        {% else %}
+          {{ series.last_seen }} / {{ avail.latest.get_number }}<br>
+          {{ avail.count }} available
+        {% endif %}
+      {% endwith %}
+    </div>
+
+    <p>
+      <a class="btn btn-default btn-sm" href="{% url 'core.views.set_series_status' series.id 'default' %}">
+        Stop watching
+      </a>
+    </p>
+
+    <div style="clear: both;"></div>
+  </div>
+{% endfor %}
 
 <h3>Other series</h3>
 {% include 'series_table.html' with series_plural=default_series %}

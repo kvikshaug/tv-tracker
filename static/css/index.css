@@ -1,0 +1,21 @@
+.series {
+  margin-bottom: 20px;
+}
+
+.series .banner {
+  margin-right: 10px;
+}
+
+.series table th {
+  font-weight: normal;
+}
+
+.series table th,
+.series table td {
+  font-size: 24px;
+}
+
+.series .available {
+  font-size: 24px;
+  font-family: "Lato", sans-serif;
+}
