@@ -4,10 +4,10 @@ from django.core.exceptions import PermissionDenied
 import re
 
 from core import tvdb
-from core.models import Show
+from core.models import Series
 
 def index(request):
-    series = Show.objects.all().order_by('name')
+    series = Series.objects.all().order_by('name')
     active_series = series.filter(local_status='active')
     default_series = series.filter(local_status='default')
     archived_series = series.filter(local_status='archived')
@@ -18,10 +18,10 @@ def index(request):
     }
     return render(request, 'index.html', context)
 
-def show(request, show):
-    show = Show.objects.get(id=show)
-    context = {'show': show}
-    return render(request, 'show.html', context)
+def series(request, series):
+    series = Series.objects.get(id=series)
+    context = {'series': series}
+    return render(request, 'series.html', context)
 
 def search(request):
     q = request.GET.get('query', '')
@@ -43,27 +43,27 @@ def search(request):
     }
     return render(request, 'search.html', context)
 
-def add_show(request, id):
-    show = tvdb.create_or_update_show(id)
-    return redirect('core.views.show', show.id)
+def add_series(request, id):
+    series = tvdb.create_or_update_series(id)
+    return redirect('core.views.series', series.id)
 
-def delete_show(request, show):
-    show = Show.objects.get(id=show)
-    show.delete()
+def delete_series(request, series):
+    series = Series.objects.get(id=series)
+    series.delete()
     return redirect('core.views.index')
 
 def last_seen(request):
-    show = Show.objects.get(id=request.POST['show'])
+    series = Series.objects.get(id=request.POST['series'])
     if request.POST['last-seen'] == '' or re.match('^\d+x\d+$', request.POST['last-seen']):
-        show.last_seen = request.POST['last-seen']
-    show.save()
-    return redirect('core.views.show', show.id)
+        series.last_seen = request.POST['last-seen']
+    series.save()
+    return redirect('core.views.series', series.id)
 
-def set_show_status(request, show, status):
-    if status not in [s[0] for s in Show.LOCAL_STATUS_CHOICES]:
+def set_series_status(request, series, status):
+    if status not in [s[0] for s in Series.LOCAL_STATUS_CHOICES]:
         raise PermissionDenied
 
-    show = Show.objects.get(id=show)
-    show.local_status = status
-    show.save()
+    series = Series.objects.get(id=series)
+    series.local_status = status
+    series.save()
     return redirect('core.views.index')

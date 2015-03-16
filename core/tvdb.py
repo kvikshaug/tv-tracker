@@ -6,7 +6,7 @@ from io import BytesIO
 import zipfile
 import requests
 
-from core.models import Show
+from core.models import Series
 
 API_PATH = "http://thetvdb.com/api"
 
@@ -60,7 +60,7 @@ def create_or_update_show(tvdbid):
 
     series_data = parse_series(xml)
 
-    show, created = Show.objects.get_or_create(tvdbid=series_data.tvdbid, defaults={
+    show, created = Series.objects.get_or_create(tvdbid=series_data.tvdbid, defaults={
         'name': series_data.name,
         'status': series_data.status,
         'banner': series_data.banner,

@@ -3,12 +3,12 @@
 {% block body %}
 
 <h3>Active series</h3>
-{% include 'series_table.html' with series=active_series %}
+{% include 'series_table.html' with series_plural=active_series %}
 
 <h3>Other series</h3>
-{% include 'series_table.html' with series=default_series %}
+{% include 'series_table.html' with series_plural=default_series %}
 
 <h3>Archived series</h3>
-{% include 'series_table.html' with series=archived_series %}
+{% include 'series_table.html' with series_plural=archived_series %}
 
 {% endblock %}

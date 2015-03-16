@@ -7,7 +7,7 @@ class LastUpdate(models.Model):
     """Should only contain a single row."""
     date = models.DateTimeField()
 
-class Show(models.Model):
+class Series(models.Model):
     tvdbid = models.IntegerField(unique=True)
     name = models.TextField()
     status = models.TextField()
@@ -56,7 +56,7 @@ class Show(models.Model):
                 # Future seasons
                 season__number__gt=seen_season,
             ),
-            season__show=self,
+            season__series=self,
             air_date__lte=now,
         )
         latest = None
@@ -82,7 +82,7 @@ class Show(models.Model):
         return season.episodes.all().order_by('-number')[0]
 
     def get_next_episode(self):
-        future_episodes = Episode.objects.filter(season__show=self, air_date__gte=datetime.now()).order_by('air_date')
+        future_episodes = Episode.objects.filter(season__series=self, air_date__gte=datetime.now()).order_by('air_date')
         if future_episodes.exists():
             return future_episodes[0]
         else:
@@ -90,7 +90,7 @@ class Show(models.Model):
 
 class Season(models.Model):
     number = models.IntegerField()
-    show = models.ForeignKey(Show, related_name='seasons')
+    series = models.ForeignKey(Series, related_name='seasons')
 
     def get_episodes(self):
         return self.episodes.all().order_by('-number')
@@ -111,8 +111,8 @@ class Episode(models.Model):
         return (self.air_date - datetime.now()).days + 1
 
     def get_status(self):
-        seen_season = self.season.show.get_seen_season()
-        seen_episode = self.season.show.get_seen_episode()
+        seen_season = self.season.series.get_seen_season()
+        seen_episode = self.season.series.get_seen_episode()
 
         if self.air_date > datetime.now():
             return 'unaired'

@@ -1,4 +1,4 @@
-{% if series|length == 0 %}
+{% if series_plural|length == 0 %}
 
   <p>No series in this category.</p>
 
@@ -14,12 +14,12 @@
       <th>Status</th>
       <th>Action</th>
     </tr>
-    {% for show in series %}
+    {% for series in series_plural %}
       <tr>
-        <td><a href="{% url 'core.views.show' show.id %}">{{ show.name }}</a></td>
-        <td>{{ show.last_seen }}</td>
+        <td><a href="{% url 'core.views.series' series.id %}">{{ series.name }}</a></td>
+        <td>{{ series.last_seen }}</td>
         <td>
-          {% with show.get_available_unseen as avail %}
+          {% with series.get_available_unseen as avail %}
             {% if avail.count == 0 %}
               -
             {% else %}
@@ -28,28 +28,28 @@
           {% endwith %}
         </td>
         <td>
-          {% if show.get_next_episode %}
-            {{ show.get_next_episode.get_number }} ({{ show.get_next_episode.get_days_remaining }} days: {{ show.get_next_episode.air_date|date:"d.m.Y" }})
+          {% if series.get_next_episode %}
+            {{ series.get_next_episode.get_number }} ({{ series.get_next_episode.get_days_remaining }} days: {{ series.get_next_episode.air_date|date:"d.m.Y" }})
           {% else %}
             N/A
           {% endif %}
         </td>
-        <td>{{ show.get_newest_episode.get_number }}</td>
-        <td>{{ show.status }}</td>
+        <td>{{ series.get_newest_episode.get_number }}</td>
+        <td>{{ series.status }}</td>
         <td>
-          {% if show.local_status == 'active' %}
-            <a class="btn btn-default btn-sm" href="{% url 'core.views.set_show_status' show.id 'default' %}">
+          {% if series.local_status == 'active' %}
+            <a class="btn btn-default btn-sm" href="{% url 'core.views.set_series_status' series.id 'default' %}">
               Stop watching
             </a>
-          {% elif show.local_status == 'default' %}
-            <a class="btn btn-default btn-sm" href="{% url 'core.views.set_show_status' show.id 'active' %}">
+          {% elif series.local_status == 'default' %}
+            <a class="btn btn-default btn-sm" href="{% url 'core.views.set_series_status' series.id 'active' %}">
               Watch
             </a>
-            <a class="btn btn-default btn-sm" href="{% url 'core.views.set_show_status' show.id 'archived' %}">
+            <a class="btn btn-default btn-sm" href="{% url 'core.views.set_series_status' series.id 'archived' %}">
               Archive
             </a>
-          {% elif show.local_status == 'archived' %}
-            <a class="btn btn-default btn-sm" href="{% url 'core.views.set_show_status' show.id 'default' %}">
+          {% elif series.local_status == 'archived' %}
+            <a class="btn btn-default btn-sm" href="{% url 'core.views.set_series_status' series.id 'default' %}">
               Reactivate</
               a>
           {% endif %}

@@ -2,10 +2,10 @@
 
 {% block body %}
 
-{% if show.banner %}
+{% if series.banner %}
   <p class="banner">
-    <a href="http://thetvdb.com/?tab=series&amp;id={{ show.tvdbid }}">
-      <img src="http://thetvdb.com/banners/{{ show.banner }}">
+    <a href="http://thetvdb.com/?tab=series&amp;id={{ series.tvdbid }}">
+      <img src="http://thetvdb.com/banners/{{ series.banner }}">
     </a>
   </p>
 {% endif %}
@@ -14,9 +14,9 @@
   <div class="col-sm-offset-4 col-md-5">
     <form action="{% url 'core.views.last_seen' %}" method="post" class="last-seen">
       {% csrf_token %}
-      <input type="hidden" name="show" value="{{ show.id }}">
+      <input type="hidden" name="series" value="{{ series.id }}">
       Seen:
-      <input type="text" name="last-seen" value="{{ show.last_seen }}" class="last-seen form-control">
+      <input type="text" name="last-seen" value="{{ series.last_seen }}" class="last-seen form-control">
       <button type="submit" class="btn">Ok</button>
     </form>
   </div>
@@ -24,7 +24,7 @@
 
 <div class="row">
   <div class="col-sm-offset-3 col-md-6">
-      {% for season in show.get_seasons %}
+      {% for season in series.get_seasons %}
         <h4 class="season" data-season="{{ season.number }}">
           Season {{ season.number }}
           <span class="count pull-right">({{ season.episodes.all|length }})</span>
@@ -51,7 +51,7 @@
 
 <div class="row">
   <div class="col-lg-12 text-center">
-    <a href="{% url 'core.views.delete_show' show.id %}" class="btn btn-danger btn-lg">Delete this show</a>
+    <a href="{% url 'core.views.delete_series' series.id %}" class="btn btn-danger btn-lg">Delete this series</a>
   </div>
 </div>
 
