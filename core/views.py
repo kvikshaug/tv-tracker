@@ -18,6 +18,11 @@ def index(request):
     }
     return render(request, 'index.html', context)
 
+def increase_seen(request, series):
+    series = Series.objects.get(id=series)
+    series.increase_seen()
+    return redirect('core.views.index')
+
 def series(request, series):
     series = Series.objects.get(id=series)
     context = {'series': series}

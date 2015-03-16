@@ -88,6 +88,24 @@ class Series(models.Model):
         else:
             return None
 
+    def increase_seen(self):
+        season, episode = self.get_seen_season(), self.get_seen_episode()
+        if season == 0:
+            next = '1x01'
+        else:
+            if self.seasons.filter(number=season, episodes__number=(episode + 1)).exists():
+                # Next episode
+                next = '%sx%02d' % (season, (episode + 1))
+            elif self.seasons.filter(number=(season + 1), episodes__number=1).exists():
+                # Next season
+                next = '%sx01' % (season + 1)
+            else:
+                # Seen it all
+                return
+
+        self.last_seen = next
+        self.save()
+
 class Season(models.Model):
     number = models.IntegerField()
     series = models.ForeignKey(Series, related_name='seasons')

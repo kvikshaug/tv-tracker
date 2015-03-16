@@ -3,6 +3,7 @@ from django.conf.urls import patterns, include, url
 
 urlpatterns = patterns('core.views',
     url(r'^$', 'index'),
+    url(r'^se-episode/(?P<series>\d+)/$', 'increase_seen'),
     url(r'^serie/(?P<series>\d+)/$', 'series'),
     url(r'^søk/$', 'search'),
     url(r'^ny/(?P<id>\d+)/$', 'add_series'),

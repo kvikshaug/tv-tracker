@@ -15,7 +15,10 @@
           {{ series.last_seen }} / {{ series.last_seen }}<br>
           {{ avail.count }} available
         {% else %}
-          {{ series.last_seen }} / {{ avail.latest.get_number }}<br>
+          {{ series.last_seen }} / {{ avail.latest.get_number }}
+          <a href="{% url 'core.views.increase_seen' series.id %}" class="increase-seen"><i class="glyphicon glyphicon-plus"></i></a>
+          <br>
+
           {{ avail.count }} available
         {% endif %}
       {% endwith %}
