@@ -128,7 +128,7 @@ class Episode(models.Model):
         seen_season = self.season.series.get_seen_season()
         seen_episode = self.season.series.get_seen_episode()
 
-        if self.air_date > datetime.now():
+        if self.air_date is None or self.air_date > datetime.now():
             return 'unaired'
         else:
             if self.season.number > seen_season:
