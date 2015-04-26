@@ -124,7 +124,7 @@ class Episode(models.Model):
     def get_days_remaining(self):
         return (self.air_date - datetime.now()).days + 1
 
-    def get_status(self):
+    def get_status_class(self):
         seen_season = self.season.series.get_seen_season()
         seen_episode = self.season.series.get_seen_episode()
 

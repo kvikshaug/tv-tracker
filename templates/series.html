@@ -32,7 +32,7 @@
 
         <table class="table episodes" data-season="{{ season.number }}">
           {% for episode in season.get_episodes %}
-            <tr class="{{ episode.get_status }}">
+            <tr class="{{ episode.get_status_class }}">
               <td>
                 {{ episode.get_number }}
               </td>
