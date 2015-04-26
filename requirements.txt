@@ -1,4 +1,4 @@
-Django==1.7.6
+Django==1.8
 lxml==3.2.3
 raven==3.5.1
 requests==2.0.1
