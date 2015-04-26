@@ -60,7 +60,7 @@ def create_or_update_show(tvdbid):
 
     series_data = parse_series(xml)
 
-    show, created = Series.objects.get_or_create(tvdbid=series_data.tvdbid, defaults={
+    show, created = Series.objects.update_or_create(tvdbid=series_data.tvdbid, defaults={
         'name': series_data.name,
         'status': series_data.status,
         'banner': series_data.banner,
