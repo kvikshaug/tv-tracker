@@ -1,4 +1,4 @@
 Django==1.8
 lxml==3.4.4
-raven==3.5.1
+raven==5.2.0
 requests==2.0.1
