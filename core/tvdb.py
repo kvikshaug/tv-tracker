@@ -52,7 +52,7 @@ def search_for_series(query):
     xml = etree.fromstring(content)
     return [parse_search_result(series_xml) for series_xml in xml.findall("Series")]
 
-def create_or_update_show(tvdbid):
+def create_or_update_series(tvdbid):
     # TODO: Remove stale episode objects
     zipped = requests.get('%s/%s/series/%s/all/en.zip' % (API_PATH, settings.TVDB_API_KEY, tvdbid)).content
     content = zipfile.ZipFile(BytesIO(zipped)).read('en.xml')
@@ -60,7 +60,7 @@ def create_or_update_show(tvdbid):
 
     series_data = parse_series(xml)
 
-    show, created = Series.objects.update_or_create(tvdbid=series_data.tvdbid, defaults={
+    series, created = Series.objects.update_or_create(tvdbid=series_data.tvdbid, defaults={
         'name': series_data.name,
         'status': series_data.status,
         'banner': series_data.banner,
@@ -69,12 +69,12 @@ def create_or_update_show(tvdbid):
     })
 
     for episode_data in series_data.episodes:
-        season, created = show.seasons.get_or_create(number=episode_data.season)
+        season, created = series.seasons.get_or_create(number=episode_data.season)
         episode, created = season.episodes.get_or_create(number=episode_data.number)
         episode.air_date = episode_data.first_aired
         episode.save()
 
-    return show
+    return series
 
 
 #

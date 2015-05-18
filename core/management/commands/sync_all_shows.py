@@ -8,11 +8,11 @@ from core.models import LastUpdate, Series
 
 class Command(BaseCommand):
     args = u''
-    help = u"Sync all shows"
+    help = u"Sync all series"
 
     def handle(self, *args, **options):
-        for show in Series.objects.all():
-            tvdb.create_or_update_show(show.tvdbid)
+        for series in Series.objects.all():
+            tvdb.create_or_update_series(series.tvdbid)
         last_update = LastUpdate.objects.get()
         last_update.date = datetime.now()
         last_update.save()
