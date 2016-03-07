@@ -1,95 +1,94 @@
 from django.db import models
 from django.db.models import Q
 
-from datetime import datetime
+from datetime import date
 
 class LastUpdate(models.Model):
     """Should only contain a single row."""
     date = models.DateTimeField()
 
 class Series(models.Model):
-    tvdbid = models.IntegerField(unique=True)
+    tvdbid = models.PositiveIntegerField(unique=True)
     name = models.TextField()
     status = models.TextField()
     banner = models.TextField()
-    first_aired = models.DateTimeField(null=True)
+    first_aired = models.DateField(null=True)
     imdb = models.TextField()
 
     last_seen = models.CharField(max_length=255)
     comments = models.TextField()
-    LOCAL_STATUS_CHOICES = (
+    LOCAL_STATUS_CHOICES = [
         ('active', ''),
         ('default', ''),
         ('archived', ''),
-    )
+    ]
     local_status = models.CharField(max_length=255, choices=LOCAL_STATUS_CHOICES, default='default')
 
-    def get_seasons(self):
-        return self.seasons.all().order_by('-number')
-
-    def get_seen_season(self):
+    def get_last_seen(self):
         if self.last_seen == '':
-            return 0
+            return (0, 0)
         else:
-            return int(self.last_seen.split('x')[0])
+            season, episode = self.last_seen.split('x')
+            return (int(season), int(episode))
 
-    def get_seen_episode(self):
-        if self.last_seen == '':
-            return 0
-        else:
-            return int(self.last_seen.split('x')[1])
+    def unseen_episode_count(self):
+        """Return the number of unseen episodes. Depends on having seasons and episodes prefetched for performance."""
+        seen_season, seen_episode = self.get_last_seen()
+        count = 0
+        for season in self.seasons.all():
+            if season.number == seen_season:
+                # Current season
+                count += len([
+                    e for e in season.episodes.all()
+                    if e.air_date is not None
+                    and e.air_date <= date.today()
+                    and e.number > seen_episode
+                ])
+            elif season.number > seen_season:
+                # Future season
+                count += len([
+                    e for e in season.episodes.all()
+                    if e.air_date is not None
+                    and e.air_date <= date.today()
+                ])
+        return count
 
-    def get_available_unseen(self):
+    def get_all_episodes(self):
+        return [e for s in self.seasons.all() for e in s.episodes.all()]
+
+    def get_aired_episodes(self):
+        return [e for e in self.get_all_episodes() if e.air_date is not None and e.air_date <= date.today()]
+
+    def has_latest_available_episode(self):
         try:
-            seen_season, seen_episode = self.last_seen.split('x')
-        except ValueError:
-            seen_season = 0
-            seen_episode = 0
+            self.get_latest_available_episode()
+            return True
+        except IndexError:
+            return False
 
-        now = datetime.now()
-        available_episodes = Episode.objects.filter(
-            Q(
-                # Future episodes this season
-                season__number=seen_season,
-                number__gt=seen_episode
-            ) | Q(
-                # Future seasons
-                season__number__gt=seen_season,
-            ),
-            season__series=self,
-            air_date__lte=now,
-        )
-        latest = None
-        for e in available_episodes:
-            if latest is None:
-                latest = e
-                continue
+    def get_latest_available_episode(self):
+        aired_episodes = self.get_aired_episodes()
+        return aired_episodes[0]
 
-            if e.season.number > latest.season.number:
-                latest = e
-                continue
+    def get_future_episodes(self):
+        return [e for e in self.get_all_episodes() if e.air_date is not None and e.air_date > date.today()]
 
-            if e.season.number == latest.season.number and e.number > latest.number:
-                latest = e
-                continue
-        return {
-            'latest': latest,
-            'count': len(available_episodes)
-        }
-
-    def get_newest_episode(self):
-        season = self.seasons.all().order_by('-number')[0]
-        return season.episodes.all().order_by('-number')[0]
+    def has_next_episode(self):
+        try:
+            self.get_next_episode()
+            return True
+        except IndexError:
+            return False
 
     def get_next_episode(self):
-        future_episodes = Episode.objects.filter(season__series=self, air_date__gte=datetime.now()).order_by('air_date')
-        if future_episodes.exists():
-            return future_episodes[0]
-        else:
-            return None
+        future_episodes = sorted(self.get_future_episodes(), key=lambda e: e.air_date)
+        return future_episodes[0]
+
+    def get_newest_episode(self):
+        return self.get_all_episodes()[0]
 
     def increase_seen(self):
-        season, episode = self.get_seen_season(), self.get_seen_episode()
+        season, episode = self.get_last_seen()
         if season == 0:
             next = '1x01'
         else:
@@ -106,29 +105,31 @@ class Series(models.Model):
         self.last_seen = next
         self.save()
 
+    class Meta:
+        ordering = ['name']
+
 class Season(models.Model):
-    number = models.IntegerField()
+    number = models.PositiveIntegerField()
     series = models.ForeignKey(Series, related_name='seasons')
 
-    def get_episodes(self):
-        return self.episodes.all().order_by('-number')
+    class Meta:
+        ordering = ['-number']
 
 class Episode(models.Model):
-    number = models.IntegerField()
-    air_date = models.DateTimeField(null=True)
+    number = models.PositiveIntegerField()
+    air_date = models.DateField(null=True)
     season = models.ForeignKey(Season, related_name='episodes')
 
     def get_number(self):
         return "%sx%02d" % (self.season.number, self.number)
 
     def get_days_remaining(self):
-        return (self.air_date - datetime.now()).days + 1
+        return (self.air_date - date.today()).days + 1
 
     def get_status_class(self):
-        seen_season = self.season.series.get_seen_season()
-        seen_episode = self.season.series.get_seen_episode()
+        seen_season, seen_episode = self.season.series.get_last_seen()
 
-        if self.air_date is None or self.air_date > datetime.now():
+        if self.air_date is None or self.air_date > date.today():
             return 'unaired'
         else:
             if self.season.number > seen_season:
@@ -140,3 +141,6 @@ class Episode(models.Model):
                     return 'seen'
             else:
                 return 'seen'
+
+    class Meta:
+        ordering = ['-number']

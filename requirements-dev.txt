@@ -1,2 +1,3 @@
+django-debug-toolbar
 django-werkzeug-debugger-runserver
 ipython

@@ -19,16 +19,14 @@
         <td><a href="{% url 'core:series' series.id %}">{{ series.name }}</a></td>
         <td>{{ series.last_seen }}</td>
         <td>
-          {% with series.get_available_unseen as avail %}
-            {% if avail.count == 0 %}
-              -
-            {% else %}
-              {{ avail.latest.get_number }} ({{ avail.count }} total)
-            {% endif %}
-          {% endwith %}
+          {% if series.unseen_episode_count == 0 %}
+            -
+          {% else %}
+            {{ series.get_latest_available_episode.get_number }} ({{ series.unseen_episode_count }} total)
+          {% endif %}
         </td>
         <td>
-          {% if series.get_next_episode %}
+          {% if series.has_next_episode %}
             {{ series.get_next_episode.get_number }} ({{ series.get_next_episode.get_days_remaining }} days: {{ series.get_next_episode.air_date|date:"d.m.Y" }})
           {% else %}
             N/A
