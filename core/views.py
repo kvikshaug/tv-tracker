@@ -7,10 +7,13 @@ from core import tvdb
 from core.models import Series
 
 def index(request):
-    series = Series.objects.all()
-    active_series = series.filter(local_status='active')
-    default_series = series.filter(local_status='default')
-    archived_series = series.filter(local_status='archived')
+    series = Series.objects.prefetch_related(
+        'seasons',
+        'seasons__episodes',
+    ).all()
+    active_series = [s for s in series if s.local_status == 'active']
+    default_series = [s for s in series if s.local_status == 'default']
+    archived_series = [s for s in series if s.local_status == 'archived']
     context = {
         'active_series': active_series,
         'default_series': default_series,
