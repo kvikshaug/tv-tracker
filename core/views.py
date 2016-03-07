@@ -7,7 +7,7 @@ from core import tvdb
 from core.models import Series
 
 def index(request):
-    series = Series.objects.all().order_by('name')
+    series = Series.objects.all()
     active_series = series.filter(local_status='active')
     default_series = series.filter(local_status='default')
     archived_series = series.filter(local_status='archived')

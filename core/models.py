@@ -24,9 +24,6 @@ class Series(models.Model):
     )
     local_status = models.CharField(max_length=255, choices=LOCAL_STATUS_CHOICES, default='default')
 
-    def get_seasons(self):
-        return self.seasons.all().order_by('-number')
-
     def get_seen_season(self):
         if self.last_seen == '':
             return 0
@@ -78,8 +75,7 @@ class Series(models.Model):
         }
 
     def get_newest_episode(self):
-        season = self.seasons.all().order_by('-number')[0]
-        return season.episodes.all().order_by('-number')[0]
+        return self.seasons.all()[0].episodes.all()[0]
 
     def get_next_episode(self):
         future_episodes = Episode.objects.filter(season__series=self, air_date__gte=datetime.now()).order_by('air_date')
@@ -106,12 +102,15 @@ class Series(models.Model):
         self.last_seen = next
         self.save()
 
+    class Meta:
+        ordering = ['name']
+
 class Season(models.Model):
     number = models.IntegerField()
     series = models.ForeignKey(Series, related_name='seasons')
 
-    def get_episodes(self):
-        return self.episodes.all().order_by('-number')
+    class Meta:
+        ordering = ['-number']
 
 class Episode(models.Model):
     number = models.IntegerField()
@@ -140,3 +139,6 @@ class Episode(models.Model):
                     return 'seen'
             else:
                 return 'seen'
+
+    class Meta:
+        ordering = ['-number']
