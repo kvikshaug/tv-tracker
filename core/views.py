@@ -27,7 +27,10 @@ def increase_seen(request, series):
     return redirect('core:index')
 
 def series(request, series):
-    series = Series.objects.get(id=series)
+    series = Series.objects.prefetch_related(
+        'seasons',
+        'seasons__episodes',
+    ).get(id=series)
     context = {'series': series}
     return render(request, 'series.html', context)
 
