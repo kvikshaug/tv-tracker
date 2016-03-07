@@ -27,7 +27,7 @@ TVDB_API_KEY = os.environ['TVDB_API_KEY']
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': '/mnt/db/db.sqlite3',
     }
 }
 
