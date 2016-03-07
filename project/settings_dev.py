@@ -6,7 +6,21 @@ ALLOWED_HOSTS = ['*']
 RAVEN_CONFIG['dsn'] = None
 DATABASES['default']['NAME'] = os.path.join(BASE_DIR, 'db.sqlite3')
 
-INSTALLED_APPS = ['werkzeug_debugger_runserver'] + INSTALLED_APPS
+DEBUG_TOOLBAR_CONFIG = {
+    'SHOW_TOOLBAR_CALLBACK': lambda request: True,
+    'DISABLE_PANELS': [
+        'debug_toolbar.panels.versions.VersionsPanel',
+        'debug_toolbar.panels.settings.SettingsPanel',
+        'debug_toolbar.panels.profiling.ProfilingPanel',
+        'debug_toolbar.panels.signals.SignalsPanel',
+        'debug_toolbar.panels.redirects.RedirectsPanel',
+    ],
+}
+
+INSTALLED_APPS = [
+    'werkzeug_debugger_runserver',
+    'debug_toolbar',
+] + INSTALLED_APPS
 
 LOGGING = {
     'version': 1,
