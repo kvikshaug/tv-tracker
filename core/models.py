@@ -53,38 +53,6 @@ class Series(models.Model):
                 ])
         return count
 
-    def get_available_unseen(self):
-        seen_season, seen_episode = self.get_last_seen()
-        available_episodes = Episode.objects.filter(
-            Q(
-                # Future episodes this season
-                season__number=seen_season,
-                number__gt=seen_episode
-            ) | Q(
-                # Future seasons
-                season__number__gt=seen_season,
-            ),
-            season__series=self,
-            air_date__lte=date.today(),
-        )
-        latest = None
-        for e in available_episodes:
-            if latest is None:
-                latest = e
-                continue
-
-            if e.season.number > latest.season.number:
-                latest = e
-                continue
-
-            if e.season.number == latest.season.number and e.number > latest.number:
-                latest = e
-                continue
-        return {
-            'latest': latest,
-            'count': len(available_episodes)
-        }
-
     def get_all_episodes(self):
         return [e for s in self.seasons.all() for e in s.episodes.all()]
 
