@@ -1,6 +1,6 @@
 *.log
 *.pot
 *.pyc
-local_settings.py
-*.db
-env/
+
+secrets/
+db.sqlite3

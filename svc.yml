@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: tv
+  labels:
+    app: tv
+    tier: backend
+spec:
+  selector:
+    app: tv
+  ports:
+  - port: 80
+    name: http

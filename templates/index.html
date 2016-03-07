@@ -5,7 +5,7 @@
 <h3>Active series</h3>
 {% for series in active_series %}
   <div class="series">
-    <a href="{% url 'core.views.series' series.id %}">
+    <a href="{% url 'core:series' series.id %}">
       <img src="http://thetvdb.com/banners/{{ series.banner }}" class="pull-left banner">
     </a>
 
@@ -16,7 +16,7 @@
           {{ avail.count }} available
         {% else %}
           {{ series.last_seen }} / {{ avail.latest.get_number }}
-          <a href="{% url 'core.views.increase_seen' series.id %}" class="increase-seen"><i class="glyphicon glyphicon-plus"></i></a>
+          <a href="{% url 'core:increase_seen' series.id %}" class="increase-seen"><i class="glyphicon glyphicon-plus"></i></a>
           <br>
 
           {{ avail.count }} available
@@ -25,7 +25,7 @@
     </div>
 
     <p>
-      <a class="btn btn-default btn-sm" href="{% url 'core.views.set_series_status' series.id 'default' %}">
+      <a class="btn btn-default btn-sm" href="{% url 'core:set_series_status' series.id 'default' %}">
         Stop watching
       </a>
     </p>

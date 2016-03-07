@@ -1,0 +1,64 @@
+kind: ReplicationController
+apiVersion: v1
+metadata:
+  name: tv-v1
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: tv
+        tier: backend
+        version: v1
+    spec:
+      containers:
+      - name: web
+        image: eu.gcr.io/monkey-island-1227/nginx-django:latest
+        volumeMounts:
+        - name: static
+          mountPath: /mnt/static
+          readOnly: true
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: "10m"
+      - name: app
+        image: eu.gcr.io/monkey-island-1227/tv.kvikshaug.no:latest
+        lifecycle:
+          postStart:
+            exec:
+              command:
+              - "cp"
+              - "-a"
+              - "/app/static/build/"
+              - "/mnt/static/"
+        volumeMounts:
+        - name: static
+          mountPath: /mnt/static
+        - name: db
+          mountPath: /mnt/db
+        - name: secrets
+          mountPath: /mnt/secrets
+        ports:
+        - containerPort: 8000
+          name: uwsgi
+        env:
+        - name: DJANGO_SETTINGS_MODULE
+          value: project.settings
+        - name: DJANGO_CONFIGURATION
+          value: production
+        command:
+        - "/app/gunicorn-env.sh"
+        resources:
+          limits:
+            cpu: "10m"
+      volumes:
+      - name: static
+      - name: db
+        gcePersistentDisk:
+          pdName: tv-db
+          fsType: ext4
+      - name: secrets
+        secret:
+          secretName: tv

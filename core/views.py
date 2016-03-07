@@ -21,7 +21,7 @@ def index(request):
 def increase_seen(request, series):
     series = Series.objects.get(id=series)
     series.increase_seen()
-    return redirect('core.views.index')
+    return redirect('core:index')
 
 def series(request, series):
     series = Series.objects.get(id=series)
@@ -50,19 +50,19 @@ def search(request):
 
 def add_series(request, id):
     series = tvdb.create_or_update_series(id)
-    return redirect('core.views.series', series.id)
+    return redirect('core:series', series.id)
 
 def delete_series(request, series):
     series = Series.objects.get(id=series)
     series.delete()
-    return redirect('core.views.index')
+    return redirect('core:index')
 
 def last_seen(request):
     series = Series.objects.get(id=request.POST['series'])
     if request.POST['last-seen'] == '' or re.match('^\d+x\d+$', request.POST['last-seen']):
         series.last_seen = request.POST['last-seen']
     series.save()
-    return redirect('core.views.series', series.id)
+    return redirect('core:series', series.id)
 
 def set_series_status(request, series, status):
     if status not in [s[0] for s in Series.LOCAL_STATUS_CHOICES]:
@@ -71,4 +71,4 @@ def set_series_status(request, series, status):
     series = Series.objects.get(id=series)
     series.local_status = status
     series.save()
-    return redirect('core.views.index')
+    return redirect('core:index')
