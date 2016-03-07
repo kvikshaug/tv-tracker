@@ -48,6 +48,8 @@ spec:
           value: project.settings
         - name: DJANGO_CONFIGURATION
           value: production
+        command:
+        - "/app/gunicorn-env.sh"
         resources:
           limits:
             cpu: "10m"
