@@ -44,6 +44,9 @@ ROOT_URLCONF = 'project.urls'
 WSGI_APPLICATION = 'project.wsgi.application'
 
 INSTALLED_APPS = (
+    # TODO split prod/dev settings
+    'werkzeug_debugger_runserver',
+
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
