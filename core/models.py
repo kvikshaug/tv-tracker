@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models import Q
 
-from datetime import datetime
+from datetime import date
 
 class LastUpdate(models.Model):
     """Should only contain a single row."""
@@ -12,7 +12,7 @@ class Series(models.Model):
     name = models.TextField()
     status = models.TextField()
     banner = models.TextField()
-    first_aired = models.DateTimeField(null=True)
+    first_aired = models.DateField(null=True)
     imdb = models.TextField()
 
     last_seen = models.CharField(max_length=255)
@@ -33,8 +33,6 @@ class Series(models.Model):
 
     def get_available_unseen(self):
         seen_season, seen_episode = self.get_last_seen()
-
-        now = datetime.now()
         available_episodes = Episode.objects.filter(
             Q(
                 # Future episodes this season
@@ -45,7 +43,7 @@ class Series(models.Model):
                 season__number__gt=seen_season,
             ),
             season__series=self,
-            air_date__lte=now,
+            air_date__lte=date.today(),
         )
         latest = None
         for e in available_episodes:
@@ -69,7 +67,7 @@ class Series(models.Model):
         return self.seasons.all()[0].episodes.all()[0]
 
     def get_next_episode(self):
-        future_episodes = Episode.objects.filter(season__series=self, air_date__gte=datetime.now()).order_by('air_date')
+        future_episodes = Episode.objects.filter(season__series=self, air_date__gt=date.today()).order_by('air_date')
         if future_episodes.exists():
             return future_episodes[0]
         else:
@@ -105,19 +103,19 @@ class Season(models.Model):
 
 class Episode(models.Model):
     number = models.PositiveIntegerField()
-    air_date = models.DateTimeField(null=True)
+    air_date = models.DateField(null=True)
     season = models.ForeignKey(Season, related_name='episodes')
 
     def get_number(self):
         return "%sx%02d" % (self.season.number, self.number)
 
     def get_days_remaining(self):
-        return (self.air_date - datetime.now()).days + 1
+        return (self.air_date - date.today()).days + 1
 
     def get_status_class(self):
         seen_season, seen_episode = self.season.series.get_last_seen()
 
-        if self.air_date is None or self.air_date > datetime.now():
+        if self.air_date is None or self.air_date > date.today():
             return 'unaired'
         else:
             if self.season.number > seen_season:
