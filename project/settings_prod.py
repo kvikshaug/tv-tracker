@@ -13,7 +13,7 @@ USE_I18N = True
 USE_L10N = True
 
 STATIC_URL = '/static/'
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'static', 'build')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
