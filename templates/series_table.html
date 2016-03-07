@@ -19,13 +19,11 @@
         <td><a href="{% url 'core:series' series.id %}">{{ series.name }}</a></td>
         <td>{{ series.last_seen }}</td>
         <td>
-          {% with series.get_available_unseen as avail %}
-            {% if series.unseen_episode_count == 0 %}
-              -
-            {% else %}
-              {{ avail.latest.get_number }} ({{ series.unseen_episode_count }} total)
-            {% endif %}
-          {% endwith %}
+          {% if series.unseen_episode_count == 0 %}
+            -
+          {% else %}
+            {{ series.get_latest_available_episode.get_number }} ({{ series.unseen_episode_count }} total)
+          {% endif %}
         </td>
         <td>
           {% if series.has_next_episode %}
