@@ -16,7 +16,7 @@
     </tr>
     {% for series in series_plural %}
       <tr>
-        <td><a href="{% url 'core.views.series' series.id %}">{{ series.name }}</a></td>
+        <td><a href="{% url 'core:series' series.id %}">{{ series.name }}</a></td>
         <td>{{ series.last_seen }}</td>
         <td>
           {% with series.get_available_unseen as avail %}
@@ -38,18 +38,18 @@
         <td>{{ series.status }}</td>
         <td>
           {% if series.local_status == 'active' %}
-            <a class="btn btn-default btn-sm" href="{% url 'core.views.set_series_status' series.id 'default' %}">
+            <a class="btn btn-default btn-sm" href="{% url 'core:set_series_status' series.id 'default' %}">
               Stop watching
             </a>
           {% elif series.local_status == 'default' %}
-            <a class="btn btn-default btn-sm" href="{% url 'core.views.set_series_status' series.id 'active' %}">
+            <a class="btn btn-default btn-sm" href="{% url 'core:set_series_status' series.id 'active' %}">
               Watch
             </a>
-            <a class="btn btn-default btn-sm" href="{% url 'core.views.set_series_status' series.id 'archived' %}">
+            <a class="btn btn-default btn-sm" href="{% url 'core:set_series_status' series.id 'archived' %}">
               Archive
             </a>
           {% elif series.local_status == 'archived' %}
-            <a class="btn btn-default btn-sm" href="{% url 'core.views.set_series_status' series.id 'default' %}">
+            <a class="btn btn-default btn-sm" href="{% url 'core:set_series_status' series.id 'default' %}">
               Reactivate
             </a>
           {% endif %}

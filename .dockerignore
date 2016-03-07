@@ -2,4 +2,4 @@
 .gitignore
 Dockerfile
 
-tv.db
+db.sqlite3

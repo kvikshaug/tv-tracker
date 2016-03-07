@@ -1,4 +1,3 @@
-# encoding: utf-8
 from datetime import datetime
 
 from django.core.management.base import BaseCommand
@@ -7,8 +6,8 @@ from core import tvdb
 from core.models import LastUpdate, Series
 
 class Command(BaseCommand):
-    args = u''
-    help = u"Sync all series"
+    args = ""
+    help = "Sync all series"
 
     def handle(self, *args, **options):
         for series in Series.objects.all():
