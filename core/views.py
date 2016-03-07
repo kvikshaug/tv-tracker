@@ -21,16 +21,16 @@ def index(request):
     }
     return render(request, 'index.html', context)
 
-def increase_seen(request, series):
-    series = Series.objects.get(id=series)
+def increase_seen(request, series_id):
+    series = Series.objects.get(id=series_id)
     series.increase_seen()
     return redirect('core:index')
 
-def series(request, series):
+def series(request, series_id):
     series = Series.objects.prefetch_related(
         'seasons',
         'seasons__episodes',
-    ).get(id=series)
+    ).get(id=series_id)
     context = {'series': series}
     return render(request, 'series.html', context)
 
@@ -58,8 +58,8 @@ def add_series(request, id):
     series = tvdb.create_or_update_series(id)
     return redirect('core:series', series.id)
 
-def delete_series(request, series):
-    series = Series.objects.get(id=series)
+def delete_series(request, series_id):
+    series = Series.objects.get(id=series_id)
     series.delete()
     return redirect('core:index')
 
@@ -70,11 +70,11 @@ def last_seen(request):
     series.save()
     return redirect('core:series', series.id)
 
-def set_series_status(request, series, status):
+def set_series_status(request, series_id, status):
     if status not in [s[0] for s in Series.LOCAL_STATUS_CHOICES]:
         raise PermissionDenied
 
-    series = Series.objects.get(id=series)
+    series = Series.objects.get(id=series_id)
     series.local_status = status
     series.save()
     return redirect('core:index')
