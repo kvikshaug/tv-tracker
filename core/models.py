@@ -24,24 +24,15 @@ class Series(models.Model):
     ]
     local_status = models.CharField(max_length=255, choices=LOCAL_STATUS_CHOICES, default='default')
 
-    def get_seen_season(self):
+    def get_last_seen(self):
         if self.last_seen == '':
-            return 0
+            return (0, 0)
         else:
-            return int(self.last_seen.split('x')[0])
-
-    def get_seen_episode(self):
-        if self.last_seen == '':
-            return 0
-        else:
-            return int(self.last_seen.split('x')[1])
+            season, episode = self.last_seen.split('x')
+            return (int(season), int(episode))
 
     def get_available_unseen(self):
-        try:
-            seen_season, seen_episode = self.last_seen.split('x')
-        except ValueError:
-            seen_season = 0
-            seen_episode = 0
+        seen_season, seen_episode = self.get_last_seen()
 
         now = datetime.now()
         available_episodes = Episode.objects.filter(
@@ -85,7 +76,7 @@ class Series(models.Model):
             return None
 
     def increase_seen(self):
-        season, episode = self.get_seen_season(), self.get_seen_episode()
+        season, episode = self.get_last_seen()
         if season == 0:
             next = '1x01'
         else:
@@ -124,8 +115,7 @@ class Episode(models.Model):
         return (self.air_date - datetime.now()).days + 1
 
     def get_status_class(self):
-        seen_season = self.season.series.get_seen_season()
-        seen_episode = self.season.series.get_seen_episode()
+        seen_season, seen_episode = self.season.series.get_last_seen()
 
         if self.air_date is None or self.air_date > datetime.now():
             return 'unaired'
