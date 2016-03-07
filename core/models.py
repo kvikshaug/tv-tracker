@@ -8,7 +8,7 @@ class LastUpdate(models.Model):
     date = models.DateTimeField()
 
 class Series(models.Model):
-    tvdbid = models.IntegerField(unique=True)
+    tvdbid = models.PositiveIntegerField(unique=True)
     name = models.TextField()
     status = models.TextField()
     banner = models.TextField()
@@ -97,14 +97,14 @@ class Series(models.Model):
         ordering = ['name']
 
 class Season(models.Model):
-    number = models.IntegerField()
+    number = models.PositiveIntegerField()
     series = models.ForeignKey(Series, related_name='seasons')
 
     class Meta:
         ordering = ['-number']
 
 class Episode(models.Model):
-    number = models.IntegerField()
+    number = models.PositiveIntegerField()
     air_date = models.DateTimeField(null=True)
     season = models.ForeignKey(Season, related_name='episodes')
 
