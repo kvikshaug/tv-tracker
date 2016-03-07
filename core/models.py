@@ -17,11 +17,11 @@ class Series(models.Model):
 
     last_seen = models.CharField(max_length=255)
     comments = models.TextField()
-    LOCAL_STATUS_CHOICES = (
+    LOCAL_STATUS_CHOICES = [
         ('active', ''),
         ('default', ''),
         ('archived', ''),
-    )
+    ]
     local_status = models.CharField(max_length=255, choices=LOCAL_STATUS_CHOICES, default='default')
 
     def get_seen_season(self):
