@@ -91,12 +91,26 @@ class Series(models.Model):
     def get_aired_episodes(self):
         return [e for e in self.get_all_episodes() if e.air_date is not None and e.air_date <= date.today()]
 
+    def has_latest_available_episode(self):
+        try:
+            self.get_latest_available_episode()
+            return True
+        except IndexError:
+            return False
+
     def get_latest_available_episode(self):
         aired_episodes = self.get_aired_episodes()
         return aired_episodes[0]
 
     def get_future_episodes(self):
         return [e for e in self.get_all_episodes() if e.air_date is not None and e.air_date > date.today()]
+
+    def has_next_episode(self):
+        try:
+            self.get_next_episode()
+            return True
+        except IndexError:
+            return False
 
     def get_next_episode(self):
         future_episodes = sorted(self.get_future_episodes(), key=lambda e: e.air_date)

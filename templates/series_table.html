@@ -28,7 +28,7 @@
           {% endwith %}
         </td>
         <td>
-          {% if series.get_next_episode %}
+          {% if series.has_next_episode %}
             {{ series.get_next_episode.get_number }} ({{ series.get_next_episode.get_days_remaining }} days: {{ series.get_next_episode.air_date|date:"d.m.Y" }})
           {% else %}
             N/A
