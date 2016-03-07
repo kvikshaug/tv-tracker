@@ -85,15 +85,25 @@ class Series(models.Model):
             'count': len(available_episodes)
         }
 
-    def get_newest_episode(self):
-        return self.seasons.all()[0].episodes.all()[0]
+    def get_all_episodes(self):
+        return [e for s in self.seasons.all() for e in s.episodes.all()]
+
+    def get_aired_episodes(self):
+        return [e for e in self.get_all_episodes() if e.air_date is not None and e.air_date <= date.today()]
+
+    def get_latest_available_episode(self):
+        aired_episodes = self.get_aired_episodes()
+        return aired_episodes[0]
+
+    def get_future_episodes(self):
+        return [e for e in self.get_all_episodes() if e.air_date is not None and e.air_date > date.today()]
 
     def get_next_episode(self):
-        future_episodes = Episode.objects.filter(season__series=self, air_date__gt=date.today()).order_by('air_date')
-        if future_episodes.exists():
-            return future_episodes[0]
-        else:
-            return None
+        future_episodes = sorted(self.get_future_episodes(), key=lambda e: e.air_date)
+        return future_episodes[0]
+
+    def get_newest_episode(self):
+        return self.get_all_episodes()[0]
 
     def increase_seen(self):
         season, episode = self.get_last_seen()
