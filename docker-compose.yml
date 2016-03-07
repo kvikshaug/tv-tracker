@@ -1,0 +1,15 @@
+version: '2'
+
+services:
+  app:
+    build: .
+    volumes:
+    - .:/app
+    ports:
+    - "80:80"
+    environment:
+      DJANGO_SETTINGS_MODULE: 'project.settings'
+      PYTHONUNBUFFERED: 'true'
+      # Example secret values
+      SECRET_KEY: '4&o4wx)z4l3=zk85p(h)q08^2fvfjg^fpkmhjy=i%iu^azboig'
+    command: ./manage.py runserver 0.0.0.0:80
