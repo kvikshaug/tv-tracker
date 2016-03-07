@@ -31,6 +31,28 @@ class Series(models.Model):
             season, episode = self.last_seen.split('x')
             return (int(season), int(episode))
 
+    def unseen_episode_count(self):
+        """Return the number of unseen episodes. Depends on having seasons and episodes prefetched for performance."""
+        seen_season, seen_episode = self.get_last_seen()
+        count = 0
+        for season in self.seasons.all():
+            if season.number == seen_season:
+                # Current season
+                count += len([
+                    e for e in season.episodes.all()
+                    if e.air_date is not None
+                    and e.air_date <= date.today()
+                    and e.number > seen_episode
+                ])
+            elif season.number > seen_season:
+                # Future season
+                count += len([
+                    e for e in season.episodes.all()
+                    if e.air_date is not None
+                    and e.air_date <= date.today()
+                ])
+        return count
+
     def get_available_unseen(self):
         seen_season, seen_episode = self.get_last_seen()
         available_episodes = Episode.objects.filter(

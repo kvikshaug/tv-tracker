@@ -20,10 +20,10 @@
         <td>{{ series.last_seen }}</td>
         <td>
           {% with series.get_available_unseen as avail %}
-            {% if avail.count == 0 %}
+            {% if series.unseen_episode_count == 0 %}
               -
             {% else %}
-              {{ avail.latest.get_number }} ({{ avail.count }} total)
+              {{ avail.latest.get_number }} ({{ series.unseen_episode_count }} total)
             {% endif %}
           {% endwith %}
         </td>
