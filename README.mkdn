@@ -1,5 +1,7 @@
 # TVDB
 
+[![Requirements Status](https://requires.io/github/kvikshaug/tvdb/requirements.svg?branch=master)](https://requires.io/github/kvikshaug/tvdb/requirements/?branch=master)
+
 A lightweight Django + Bootstrap app for keeping track of the TV series you're interested in.
 
 ## Features
