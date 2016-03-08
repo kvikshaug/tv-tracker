@@ -12,6 +12,12 @@
     </div>
   </div>
 
+  {% if series_serch_query|length < 3 %}
+    <div class="alert alert-danger">
+      Please use at least 3 search characters.
+    </div>
+  {% endif %}
+
   {% for series in series_search_results %}
     <div class="series-result">
       <div class="row">

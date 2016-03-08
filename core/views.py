@@ -35,21 +35,21 @@ def series(request, series_id):
     return render(request, 'series.html', context)
 
 def search(request):
-    q = request.GET.get('query', '')
-    if len(q) < 3:
-        raise PermissionDenied
+    query = request.GET.get('query', '').strip()
+    if len(query) < 3:
+        series = []
+    else:
+        series = tvdb.search_for_series(query)
 
-    series = tvdb.search_for_series(q)
-
-    # Sort them - those with air date first, by date, then the rest by name
-    series_with_airdate = [s for s in series if s.first_aired is not None]
-    series_without_airdate = [s for s in series if s.first_aired is None]
-    series_with_airdate_sorted = sorted(series_with_airdate, key=lambda s: s.first_aired, reverse=True)
-    series_without_airdate_sorted = sorted(series_without_airdate, key=lambda s: s.name)
-    series = series_with_airdate_sorted + series_without_airdate_sorted
+        # Sort them - those with air date first, by date, then the rest by name
+        series_with_airdate = [s for s in series if s.first_aired is not None]
+        series_without_airdate = [s for s in series if s.first_aired is None]
+        series_with_airdate_sorted = sorted(series_with_airdate, key=lambda s: s.first_aired, reverse=True)
+        series_without_airdate_sorted = sorted(series_without_airdate, key=lambda s: s.name)
+        series = series_with_airdate_sorted + series_without_airdate_sorted
 
     context = {
-        'series_search_query': q,
+        'series_search_query': query,
         'series_search_results': series
     }
     return render(request, 'search.html', context)
