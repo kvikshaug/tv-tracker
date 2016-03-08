@@ -1,6 +1,8 @@
 *.log
 *.pot
 *.pyc
+.sass-cache
 
 secrets/
+static/css/
 db.sqlite3

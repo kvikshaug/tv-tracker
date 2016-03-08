@@ -16,3 +16,9 @@ services:
       RAVEN_DSN: ''
       TVDB_API_KEY: ''
     command: ./manage.py runserver 0.0.0.0:80
+
+  builder:
+    build: static/
+    volumes:
+    - ./static:/static
+    command: sass --scss --watch scss:css
