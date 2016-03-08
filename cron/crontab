@@ -1,0 +1,10 @@
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+  0  3  *  *  *  . /mnt/secrets/secrets.env && /app/manage.py sync_all_shows >> /app/cron.log 2>&1
+
+# ┬  ┬  ┬  ┬  ┬
+# │  │  │  │  └──── day of week (0 - 6) (0 is Sunday, or use names)
+# │  │  │  └─────── month (1 - 12)
+# │  │  └────────── day of month (1 - 31)
+# │  └───────────── hour (0 - 23)
+# └──────────────── min (0 - 59)

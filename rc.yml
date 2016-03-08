@@ -47,7 +47,7 @@ spec:
         - name: DJANGO_CONFIGURATION
           value: production
         command:
-        - "/app/gunicorn-env.sh"
+        - "/app/init.sh"
         resources:
           limits:
             cpu: "10m"

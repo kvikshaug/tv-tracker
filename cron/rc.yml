@@ -1,0 +1,34 @@
+kind: ReplicationController
+apiVersion: v1
+metadata:
+  name: tv-cron
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: tv-cron
+        tier: job
+        version: v1
+    spec:
+      containers:
+      - name: app
+        image: eu.gcr.io/monkey-island-1227/tv.kvikshaug.no:latest
+        volumeMounts:
+        - name: secrets
+          mountPath: /mnt/secrets
+        env:
+        - name: DJANGO_SETTINGS_MODULE
+          value: project.settings
+        - name: DJANGO_CONFIGURATION
+          value: production
+        command:
+        - "cron"
+        - "-f"
+        resources:
+          limits:
+            cpu: "5m"
+      volumes:
+      - name: secrets
+        secret:
+          secretName: tv

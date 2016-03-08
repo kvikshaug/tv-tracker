@@ -2,7 +2,12 @@ FROM python:latest
 
 RUN mkdir -p /app
 WORKDIR /app
-CMD gunicorn -c gunicorn.py project.wsgi:application
+
+COPY cron/crontab /app
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends cron && \
+    cat crontab | crontab && \
+    rm crontab
 
 RUN pip install --upgrade pip
 COPY requirements.txt /app
