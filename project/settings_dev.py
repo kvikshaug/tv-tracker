@@ -48,6 +48,13 @@ LOGGING = {
             'handlers': ['console'],
             'propagate': False,
         },
+
+        # Ignore the very verbose template DEBUG statements which include failed context lookups
+        'django.template': {
+            'level': 'INFO',
+            'handles': ['file'],
+            'propagate': False,
+        },
     },
     # Default behavior: log everything to console, but nowhere else
     'root': {
