@@ -1,12 +1,14 @@
-.search-results .series-result {
-  text-align: center;
-  margin-top: 50px;
-  margin-bottom: 50px;
-  padding-bottom: 30px;
-  border-bottom: 1px solid rgb(200, 200, 200);
-}
+.search-results {
+  .series-result {
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid rgb(200, 200, 200);
 
-.search-results .series-result .title {
-  margin-top: 15px;
-  font-size: 26px;
+    .title {
+      margin-top: 15px;
+      font-size: 26px;
+    }
+  }
 }
