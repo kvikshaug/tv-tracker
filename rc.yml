@@ -36,8 +36,6 @@ spec:
         volumeMounts:
         - name: static
           mountPath: /mnt/static
-        - name: db
-          mountPath: /mnt/db
         - name: secrets
           mountPath: /mnt/secrets
         ports:
@@ -55,10 +53,6 @@ spec:
             cpu: "10m"
       volumes:
       - name: static
-      - name: db
-        gcePersistentDisk:
-          pdName: tv-db
-          fsType: ext4
       - name: secrets
         secret:
           secretName: tv

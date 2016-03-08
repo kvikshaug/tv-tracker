@@ -4,7 +4,11 @@ from project.settings_prod import *
 DEBUG = True
 ALLOWED_HOSTS = ['*']
 RAVEN_CONFIG['dsn'] = None
-DATABASES['default']['NAME'] = os.path.join(BASE_DIR, 'db.sqlite3')
+
+DATABASES['default'] = {
+    'ENGINE': 'django.db.backends.sqlite3',
+    'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+}
 
 DEBUG_TOOLBAR_CONFIG = {
     'SHOW_TOOLBAR_CALLBACK': lambda request: True,

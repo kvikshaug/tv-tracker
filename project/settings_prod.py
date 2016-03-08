@@ -26,9 +26,12 @@ TVDB_API_KEY = os.environ['TVDB_API_KEY']
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '/mnt/db/db.sqlite3',
-    }
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': 'tv',
+        'USER': 'postgres',
+        'HOST': 'postgis',
+        'PORT': 5432,
+    },
 }
 
 TEMPLATES = [{
