@@ -10,15 +10,15 @@
       </a>
 
       <div class="available">
-        {% if series.unseen_episode_count == 0 %}
+        {% if series.unseen_available.count == 0 %}
           {{ series.last_seen }} / {{ series.last_seen }}<br>
-          {{ series.unseen_episode_count }} available
+          {{ series.unseen_available.count }} available
         {% else %}
-          {{ series.last_seen }} / {{ series.get_latest_available_episode.episode_number }}
+          {{ series.last_seen }} / {{ series.unseen_available.last.episode_number }}
           <a href="{% url 'core:increase_seen' series.id %}" class="increase-seen"><i class="glyphicon glyphicon-plus"></i></a>
           <br>
 
-          {{ series.unseen_episode_count }} available
+          {{ series.unseen_available.count }} available
         {% endif %}
       </div>
 

@@ -52,24 +52,28 @@ class Series(models.Model):
             for group in reversed(self.episodes_by_season())
         ]
 
-    def unseen_episode_count(self):
-        """Return the number of unseen episodes. Depends on having seasons and episodes prefetched for performance."""
+    def unseen_available(self):
+        """Returns a dict of unseen aired episodes; the first and last in the range (or None if 0) and the count"""
         seen_season, seen_episode = self.get_last_seen()
         aired_episodes = [e for e in self.episodes.all() if e.air_date is not None and e.air_date <= date.today()]
-        current_season = [e for e in aired_episodes if e.season == seen_season and e.episode > seen_episode]
-        future_seasons = [e for e in aired_episodes if e.season > seen_season]
-        return len(current_season) + len(future_seasons)
+        unseen_available = [
+            e for e in aired_episodes
+            if (e.season == seen_season and e.episode > seen_episode) or
+            e.season > seen_season
+        ]
 
-    def has_latest_available_episode(self):
-        try:
-            self.get_latest_available_episode()
-            return True
-        except IndexError:
-            return False
+        if len(unseen_available) == 0:
+            first = None
+            last = None
+        else:
+            first = unseen_available[0]
+            last = unseen_available[-1]
 
-    def get_latest_available_episode(self):
-        aired_episodes = [e for e in self.episodes.all() if e.air_date is not None and e.air_date <= date.today()]
-        return aired_episodes[-1]
+        return {
+            'first': first,
+            'last': last,
+            'count': len(unseen_available),
+        }
 
     def has_next_episode_on_air(self):
         try:
