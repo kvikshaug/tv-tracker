@@ -38,7 +38,7 @@ docker-compose run --rm app ./manage.py test
 ## How to play
 
 - Get an API key from [TheTVDB](http://thetvdb.com/wiki/index.php?title=Programmers_API)
-- Configure `crontab` to run `manage.py sync_all_shows` each night
+- Configure `crontab` to run `manage.py sync_all_series` each night
 - Set up your database, run all database migrations
 - Set up a standard Django installation and webserver
 - *(Optional)* set up Sentry for error logging
