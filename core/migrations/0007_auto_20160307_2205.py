@@ -4,23 +4,6 @@ from __future__ import unicode_literals
 
 from django.db import migrations
 
-def forwards(apps, schema_editor):
-    Series = apps.get_model("core", "Series")
-    Episode = apps.get_model("core", "Episode")
-
-    for s in Series.objects.all():
-        if s.first_aired_tmp is not None:
-            s.first_aired = s.first_aired_tmp.date()
-            s.save()
-
-    for e in Episode.objects.all():
-        if e.air_date_tmp is not None:
-            e.air_date = e.air_date_tmp.date()
-            e.save()
-
-def backwards(apps, schema_editor):
-    pass
-
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -28,5 +11,4 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(forwards, backwards),
     ]
