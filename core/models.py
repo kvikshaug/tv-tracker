@@ -48,7 +48,7 @@ class Series(models.Model):
     def episodes_by_season_reversed(self):
         """Reverse both season and episodes"""
         return [
-            {'season': group['season'], 'episodes': reversed(group['episodes'])}
+            {'season': group['season'], 'episodes': list(reversed(group['episodes']))}
             for group in reversed(self.episodes_by_season())
         ]
 
