@@ -7,10 +7,7 @@ from core.models import Series
 from thetvdb import tvdb
 
 def index(request):
-    series = Series.objects.prefetch_related(
-        'seasons',
-        'seasons__episodes',
-    ).all()
+    series = Series.objects.prefetch_related('episodes').all()
     active_series = [s for s in series if s.local_status == 'active']
     default_series = [s for s in series if s.local_status == 'default']
     archived_series = [s for s in series if s.local_status == 'archived']
@@ -27,10 +24,7 @@ def increase_seen(request, series_id):
     return redirect('core:index')
 
 def series(request, series_id):
-    series = Series.objects.prefetch_related(
-        'seasons',
-        'seasons__episodes',
-    ).get(id=series_id)
+    series = Series.objects.prefetch_related('episodes').get(id=series_id)
     context = {'series': series}
     return render(request, 'series.html', context)
 

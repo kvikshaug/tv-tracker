@@ -35,8 +35,7 @@ def create_or_update_series(tvdbid):
     })
 
     for episode_data in series_data.episodes:
-        season, created = series.seasons.get_or_create(number=episode_data.season)
-        episode, created = season.episodes.get_or_create(number=episode_data.number)
+        episode, created = series.episodes.get_or_create(season=episode_data.season, episode=episode_data.number)
         episode.air_date = episode_data.first_aired
         episode.save()
 

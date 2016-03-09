@@ -24,14 +24,14 @@
 
 <div class="row">
   <div class="col-sm-offset-3 col-md-6">
-      {% for season in series.seasons.all %}
+      {% for season in series.episodes_by_season_reversed %}
         <h4 class="season">
-          Season {{ season.number }}
-          <span class="count pull-right">({{ season.episodes.all|length }})</span>
+          Season {{ season.season }}
+          <span class="count pull-right">({{ season.episodes|length }})</span>
         </h4>
 
         <table class="table episodes">
-          {% for episode in season.episodes.all %}
+          {% for episode in season.episodes %}
             <tr class="{{ episode.get_status_class }}">
               <td>
                 {{ episode.get_number }}
