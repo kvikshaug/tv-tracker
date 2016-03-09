@@ -88,6 +88,7 @@ LOGGING = {
             'format': '%(levelname)s (%(name)s) %(asctime)s\n%(pathname)s:%(lineno)d in %(funcName)s\n%(message)s\n'
         },
     },
+
     'handlers': {
         'file': {
             'level': 'DEBUG',
@@ -95,24 +96,30 @@ LOGGING = {
             'filename': os.path.join(BASE_DIR, 'django.log'),
             'formatter': 'verbose',
         },
+        'papertrail': {
+            'level': 'INFO',
+            'class': 'logging.handlers.SysLogHandler',
+            'formatter': 'simple',
+            'address': ('logs2.papertrailapp.com', 58442),
+        },
     },
     'loggers': {
         # Djangos DB backend outputs all SQL-statements to DEBUG; limit to INFO
         'django.db.backends': {
             'level': 'INFO',
-            'handlers': ['file'],
+            'handlers': ['file', 'papertrail'],
             'propagate': False,
         },
 
         # Ignore the very verbose template DEBUG statements which include failed context lookups
         'django.template': {
             'level': 'INFO',
-            'handles': ['file'],
+            'handlers': ['file', 'papertrail'],
             'propagate': False,
         },
     },
     'root': {
         'level': 'DEBUG',
-        'handlers': ['file'],
+        'handlers': ['file', 'papertrail'],
     }
 }
