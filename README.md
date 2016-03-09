@@ -4,6 +4,28 @@
 
 A lightweight Django + Bootstrap app for keeping track of the TV series you're interested in.
 
+## Development
+
+### Start development server
+
+```
+docker-compose up
+```
+
+### Compile statics
+
+```
+docker-compose run --rm builder sass --scss --update scss:css
+docker-compose run --rm app ./manage.py collectstatic --noinput
+```
+
+### QA
+
+```
+docker-compose run --rm app flake8 --config=flake8.cfg .
+docker-compose run --rm app ./manage.py test
+```
+
 ## Features
 
 - Add your shows and categorize them by **active**, **default** and **archived**
