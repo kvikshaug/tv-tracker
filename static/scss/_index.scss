@@ -3,44 +3,29 @@ header input.new-series {
   font-size: 16px;
 }
 
-form.last-seen {
-  text-align: center;
+.series {
+  margin-bottom: 20px;
 
-  input.last-seen {
-    display: inline;
-    height: 28px;
-    width: 100px;
-    font-size: 16px;
+  .banner {
+    margin-right: 10px;
   }
 
-  button {
-    margin-bottom: 10px;
-  }
-}
-
-p.banner {
-  text-align: center;
-}
-
-h4.season {
-  cursor: pointer;
-
-  span.count {
+  table th {
     font-weight: normal;
   }
-}
 
-table.episodes {
-  tr.unaired {
-    color: red;
+  table th,
+  table td {
+    font-size: 24px;
   }
 
-  tr.available {
-    color: green;
+  .available {
+    font-size: 24px;
+    font-family: "Lato", sans-serif;
   }
 
-  tr.seen {
-    color: gray;
+  .increase-seen {
+    font-size: 18px;
   }
 }
 

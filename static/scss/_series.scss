@@ -1,25 +1,40 @@
-.series {
-  margin-bottom: 20px;
+form.last-seen {
+  text-align: center;
 
-  .banner {
-    margin-right: 10px;
+  input.last-seen {
+    display: inline;
+    height: 28px;
+    width: 100px;
+    font-size: 16px;
   }
 
-  table th {
+  button {
+    margin-bottom: 10px;
+  }
+}
+
+p.banner {
+  text-align: center;
+}
+
+h4.season {
+  cursor: pointer;
+
+  span.count {
     font-weight: normal;
   }
+}
 
-  table th,
-  table td {
-    font-size: 24px;
+table.episodes {
+  tr.unaired {
+    color: red;
   }
 
-  .available {
-    font-size: 24px;
-    font-family: "Lato", sans-serif;
+  tr.available {
+    color: green;
   }
 
-  .increase-seen {
-    font-size: 18px;
+  tr.seen {
+    color: gray;
   }
 }
