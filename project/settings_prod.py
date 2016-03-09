@@ -102,8 +102,19 @@ LOGGING = {
             'formatter': 'simple',
             'address': ('logs2.papertrailapp.com', 58442),
         },
+        'sentry': {
+            'level': 'DEBUG',
+            'class': 'raven.contrib.django.handlers.SentryHandler',
+        },
     },
     'loggers': {
+        # Only our own events include the sentry handler
+        'tv': {
+            'level': 'DEBUG',
+            'handlers': ['file', 'papertrail', 'sentry'],
+            'propagate': False,
+        },
+
         # Djangos DB backend outputs all SQL-statements to DEBUG; limit to INFO
         'django.db.backends': {
             'level': 'INFO',
