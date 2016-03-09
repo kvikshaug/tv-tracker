@@ -2,40 +2,40 @@
 
 {% block body %}
 
-<h3>Active series</h3>
-{% for series in active_series %}
-  <div class="series">
-    <a href="{% url 'core:series' series.id %}">
-      <img src="http://thetvdb.com/banners/{{ series.banner }}" class="pull-left banner">
-    </a>
-
-    <div class="available">
-      {% if series.unseen_episode_count == 0 %}
-        {{ series.last_seen }} / {{ series.last_seen }}<br>
-        {{ series.unseen_episode_count }} available
-      {% else %}
-        {{ series.last_seen }} / {{ series.get_latest_available_episode.get_number }}
-        <a href="{% url 'core:increase_seen' series.id %}" class="increase-seen"><i class="glyphicon glyphicon-plus"></i></a>
-        <br>
-
-        {{ series.unseen_episode_count }} available
-      {% endif %}
-    </div>
-
-    <p>
-      <a class="btn btn-default btn-sm" href="{% url 'core:set_series_status' series.id 'default' %}">
-        Stop watching
+  <h3>Active series</h3>
+  {% for series in active_series %}
+    <div class="series">
+      <a href="{% url 'core:series' series.id %}">
+        <img src="http://thetvdb.com/banners/{{ series.banner }}" class="pull-left banner">
       </a>
-    </p>
 
-    <div style="clear: both;"></div>
-  </div>
-{% endfor %}
+      <div class="available">
+        {% if series.unseen_episode_count == 0 %}
+          {{ series.last_seen }} / {{ series.last_seen }}<br>
+          {{ series.unseen_episode_count }} available
+        {% else %}
+          {{ series.last_seen }} / {{ series.get_latest_available_episode.get_number }}
+          <a href="{% url 'core:increase_seen' series.id %}" class="increase-seen"><i class="glyphicon glyphicon-plus"></i></a>
+          <br>
 
-<h3>Other series</h3>
-{% include 'series_table.html' with series_plural=default_series %}
+          {{ series.unseen_episode_count }} available
+        {% endif %}
+      </div>
 
-<h3>Archived series</h3>
-{% include 'series_table.html' with series_plural=archived_series %}
+      <p>
+        <a class="btn btn-default btn-sm" href="{% url 'core:set_series_status' series.id 'default' %}">
+          Stop watching
+        </a>
+      </p>
+
+      <div style="clear: both;"></div>
+    </div>
+  {% endfor %}
+
+  <h3>Other series</h3>
+  {% include 'series_table.html' with series_plural=default_series %}
+
+  <h3>Archived series</h3>
+  {% include 'series_table.html' with series_plural=archived_series %}
 
 {% endblock %}
