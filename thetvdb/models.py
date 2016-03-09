@@ -1,8 +1,8 @@
 from datetime import datetime
 
 class SeriesSearchResult():
-    def __init__(self, id, name, overview, banner, first_aired, imdb):
-        self.id = id
+    def __init__(self, tvdbid, name, overview, banner, first_aired, imdb):
+        self.tvdbid = tvdbid
         self.name = name
         self.overview = overview
         self.banner = banner
@@ -10,12 +10,12 @@ class SeriesSearchResult():
         self.imdb = imdb
 
     def __str__(self):
-        return "%s: %s" % (self.id, self.name)
+        return "%s: %s" % (self.tvdbid, self.name)
 
     @staticmethod
     def from_xml(xml):
         # Required fields (i.e. throw exception if missing)
-        id = xml.find("seriesid").text
+        tvdbid = xml.find("seriesid").text
         name = xml.find("SeriesName").text
 
         # Optional fields
@@ -27,7 +27,7 @@ class SeriesSearchResult():
             first_aired = None
         imdb = xml.findtext("IMDB_ID", default="")
 
-        return SeriesSearchResult(id, name, overview, banner, first_aired, imdb)
+        return SeriesSearchResult(tvdbid, name, overview, banner, first_aired, imdb)
 
 class Series():
     def __init__(self, tvdbid, name, overview, status, banner, first_aired, imdb):
