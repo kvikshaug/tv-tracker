@@ -23,6 +23,7 @@ RAVEN_CONFIG = {
 }
 
 TVDB_API_KEY = os.environ['TVDB_API_KEY']
+TVDB_API_ENDPOINT = "http://thetvdb.com/api"
 
 DATABASES = {
     'default': {
