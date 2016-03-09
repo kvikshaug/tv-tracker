@@ -2,9 +2,9 @@ from django.conf import settings
 
 from datetime import datetime
 from io import BytesIO
+from xml.etree import ElementTree
 import zipfile
 
-from lxml import etree
 import requests
 
 from .models import SeriesSearchResult, Series as TVDBSeries, Episode
@@ -14,14 +14,14 @@ API_PATH = "http://thetvdb.com/api"
 
 def search_for_series(query):
     content = requests.get("%s/GetSeries.php?seriesname=%s" % (API_PATH, query)).content
-    xml = etree.fromstring(content)
+    xml = ElementTree.fromstring(content)
     return [parse_search_result(series_xml) for series_xml in xml.findall("Series")]
 
 def create_or_update_series(tvdbid):
     # TODO: Remove stale episode objects
     zipped = requests.get('%s/%s/series/%s/all/en.zip' % (API_PATH, settings.TVDB_API_KEY, tvdbid)).content
     content = zipfile.ZipFile(BytesIO(zipped)).read('en.xml')
-    xml = etree.fromstring(content)
+    xml = ElementTree.fromstring(content)
 
     series_data = parse_series(xml)
 
