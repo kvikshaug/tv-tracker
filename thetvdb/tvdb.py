@@ -15,7 +15,6 @@ def search_for_series(query):
     return [SeriesSearchResult.from_xml(series_xml) for series_xml in xml.findall("Series")]
 
 def create_or_update_series(tvdbid):
-    # TODO: Remove stale episode objects
     zipped = requests.get("%s/%s/series/%s/all/en.zip" % (
         settings.TVDB_API_ENDPOINT,
         settings.TVDB_API_KEY,
@@ -33,10 +32,30 @@ def create_or_update_series(tvdbid):
         'first_aired': series_data.first_aired,
         'imdb': series_data.imdb,
     })
+    episodes = series.episodes.all()
 
+    # Delete removed episodes
+    for episode in episodes:
+        if not any([e.season == episode.season and e.episode == episode.episode for e in series_data.episodes]):
+            episode.delete()
+
+    # Create new and update existing episodes
     for episode_data in series_data.episodes:
-        episode, created = series.episodes.get_or_create(season=episode_data.season, episode=episode_data.episode)
-        episode.air_date = episode_data.air_date
-        episode.save()
+        episode_matches = [e for e in episodes if e.season == episode_data.season and e.episode == episode_data.episode]
+        if len(episode_matches) == 0:
+            # Episode doesn't exist, create it
+            series.episodes.create(
+                season=episode_data.season,
+                episode=episode_data.episode,
+                air_date=episode_data.air_date,
+            )
+        elif len(episode_matches) == 1:
+            # Episode exist, update it only if it differs
+            episode = episode_matches[0]
+            if episode.air_date != episode_data.air_date:
+                episode.air_date = episode_data.air_date
+                episode.save()
+        else:
+            raise Exception("Invalid state; episode '%s' is duplicated despite UNIQUE constraint" % episode_matches[0])
 
     return series

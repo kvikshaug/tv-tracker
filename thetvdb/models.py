@@ -22,7 +22,7 @@ class SeriesSearchResult():
         overview = xml.findtext("Overview", default="")
         banner = xml.findtext("banner", default="")
         try:
-            first_aired = datetime.strptime(xml.findtext("FirstAired", default=""), "%Y-%m-%d")
+            first_aired = datetime.strptime(xml.findtext("FirstAired", default=""), "%Y-%m-%d").date()
         except ValueError:
             first_aired = None
         imdb = xml.findtext("IMDB_ID", default="")
@@ -52,7 +52,7 @@ class Series():
         status = series.findtext("Status", default="")
         banner = series.findtext("banner", default="")
         try:
-            first_aired = datetime.strptime(series.findtext("FirstAired", default=""), "%Y-%m-%d")
+            first_aired = datetime.strptime(series.findtext("FirstAired", default=""), "%Y-%m-%d").date()
         except ValueError:
             first_aired = None
         imdb = series.findtext("IMDB_ID", default="")
@@ -68,14 +68,14 @@ class Series():
         )
 
         for e in xml.findall("Episode"):
-            season = e.findtext("SeasonNumber", default="")
-            if season == "0":
+            season = int(e.findtext("SeasonNumber", default=""))
+            if season == 0:
                 # Ignore specials for now
                 continue
 
-            episode = e.findtext("EpisodeNumber", default="")
+            episode = int(e.findtext("EpisodeNumber", default=""))
             try:
-                air_date = datetime.strptime(e.findtext("FirstAired", default=""), "%Y-%m-%d")
+                air_date = datetime.strptime(e.findtext("FirstAired", default=""), "%Y-%m-%d").date()
             except ValueError:
                 air_date = None
 
