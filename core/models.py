@@ -4,7 +4,7 @@ from django.db import models
 
 class LastUpdate(models.Model):
     """Should only contain a single row."""
-    date = models.DateTimeField()
+    datetime = models.DateTimeField()
 
 class Series(models.Model):
     tvdbid = models.PositiveIntegerField(unique=True)

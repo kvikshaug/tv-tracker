@@ -13,5 +13,5 @@ class Command(BaseCommand):
         for series in Series.objects.all():
             tvdb.create_or_update_series(series.tvdbid)
         last_update = LastUpdate.objects.get()
-        last_update.date = datetime.now()
+        last_update.datetime = datetime.now()
         last_update.save()
