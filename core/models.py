@@ -8,6 +8,9 @@ class LastUpdate(models.Model):
     """Should only contain a single row."""
     datetime = models.DateTimeField()
 
+    def __str__(self):
+        return "%s: %s" % (self.pk, self.datetime)
+
 class Series(models.Model):
     tvdbid = models.PositiveIntegerField(unique=True)
     name = models.TextField()
@@ -24,6 +27,9 @@ class Series(models.Model):
         ('archived', ''),
     ]
     local_status = models.CharField(max_length=255, choices=LOCAL_STATUS_CHOICES, default='default')
+
+    def __str__(self):
+        return "%s: %s" % (self.pk, self.name)
 
     def get_last_seen(self):
         if self.last_seen == '':
@@ -110,6 +116,9 @@ class Episode(models.Model):
     season = models.PositiveIntegerField()
     episode = models.PositiveIntegerField()
     air_date = models.DateField(null=True)
+
+    def __str__(self):
+        return "%s: %s (%s)" % (self.pk, self.get_number(), self.series.name)
 
     def get_number(self):
         return "%sx%02d" % (self.season, self.episode)
