@@ -48,45 +48,34 @@ def create_or_update_series(tvdbid):
 # Parsing and utilities
 #
 
-def try_field(xml, field_name, default=''):
-    field = xml.find(field_name)
-    if field is not None:
-        return field.text
-    else:
-        return default
-
 def parse_search_result(xml):
-    # Fields we require (i.e. throw exception if missing)
+    # Required fields (i.e. throw exception if missing)
     id = xml.find('seriesid').text
     name = xml.find('SeriesName').text
 
-    # Nice-to-have fields
-    overview = try_field(xml, 'Overview')
-    banner = try_field(xml, 'banner')
-    first_aired = try_field(xml, 'FirstAired')
-    imdb = try_field(xml, 'IMDB_ID')
-
+    # Optional fields
+    overview = xml.findtext('Overview', default='')
+    banner = xml.findtext('banner', default='')
     try:
-        first_aired = datetime.strptime(first_aired, "%Y-%m-%d")
-    except (ValueError, TypeError):
+        first_aired = datetime.strptime(xml.findtext('FirstAired', default=''), "%Y-%m-%d")
+    except ValueError:
         first_aired = None
+    imdb = xml.findtext('IMDB_ID', default='')
 
     return SeriesSearchResult(id, name, overview, banner, first_aired, imdb)
 
 def parse_series(xml):
     series = xml.find("Series")
-    tvdbid = try_field(series, "id")
-    name = try_field(series, "SeriesName")
-    overview = try_field(series, "Overview")
-    status = try_field(series, "Status")
-    banner = try_field(series, "banner")
-    first_aired = try_field(series, "FirstAired")
-    imdb = try_field(series, "IMDB_ID")
-
+    tvdbid = series.findtext("id", default='')
+    name = series.findtext("SeriesName", default='')
+    overview = series.findtext("Overview", default='')
+    status = series.findtext("Status", default='')
+    banner = series.findtext("banner", default='')
     try:
-        first_aired = datetime.strptime(first_aired, "%Y-%m-%d")
-    except (ValueError, TypeError):
+        first_aired = datetime.strptime(series.findtext("FirstAired", default=''), "%Y-%m-%d")
+    except ValueError:
         first_aired = None
+    imdb = series.findtext("IMDB_ID", default='')
 
     series = TVDBSeries(
         tvdbid=tvdbid,
