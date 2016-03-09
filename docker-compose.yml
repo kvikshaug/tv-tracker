@@ -3,6 +3,7 @@ version: '2'
 services:
   app:
     build: .
+    image: kvikshaug/tv.kvikshaug.no
     volumes:
     - .:/app
     ports:
@@ -19,6 +20,7 @@ services:
 
   builder:
     build: static/
+    image: kvikshaug/tv.kvikshaug.no-builder
     volumes:
     - ./static:/static
     command: sass --scss --watch scss:css
