@@ -76,6 +76,11 @@ INSTALLED_APPS = [
     'core',
 ]
 
+# Logging strategy:
+# - All events are verbosely stored in a local file (note that this logfile is currently not persistent)
+# - INFO events are also sent to papertrail
+# - Events logged by the local project are additionally explicitly sent to Sentry
+# - Uncaught exceptions are implicitly sent to Sentry by Raven (no logging configuration is needed for that)
 LOGGING = {
     'version': 1,
     # Never disable existing loggers, that will silence logs you want
