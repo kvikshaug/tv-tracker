@@ -1,0 +1,27 @@
+sudo: required
+
+language: python
+python:
+  - "3.5"
+  - "3.5-dev"
+  - "nightly"
+
+services:
+  - docker
+
+env:
+  DOCKER_COMPOSE_VERSION: 1.6.2
+  DEBIAN_FRONTEND: noninteractive
+
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install -y -q -o Dpkg::Options::="--force-confnew" docker-engine
+  - sudo service docker restart
+  - sudo pip install docker-compose==${DOCKER_COMPOSE_VERSION}
+
+script:
+  - docker-compose run --rm app flake8 --config=flake8.cfg .
+  - docker-compose run --rm app ./manage.py test
+
+notifications:
+  irc: "chat.freenode.net#kvikshaug"

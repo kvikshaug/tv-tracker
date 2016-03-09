@@ -1,5 +1,6 @@
 # TV Tracker
 
+[![Build Status](https://travis-ci.org/kvikshaug/tv-tracker.svg?branch=master)](https://travis-ci.org/kvikshaug/tv-tracker)
 [![Requirements Status](https://requires.io/github/kvikshaug/tv-tracker/requirements.svg?branch=master)](https://requires.io/github/kvikshaug/tv-tracker/requirements/?branch=master)
 
 Keep track of the TV series you're watching, what episodes you've seen and when the next one is coming out.
