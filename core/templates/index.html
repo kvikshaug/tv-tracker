@@ -14,7 +14,7 @@
           {{ series.last_seen }} / {{ series.last_seen }}<br>
           {{ series.unseen_episode_count }} available
         {% else %}
-          {{ series.last_seen }} / {{ series.get_latest_available_episode.get_number }}
+          {{ series.last_seen }} / {{ series.get_latest_available_episode.episode_number }}
           <a href="{% url 'core:increase_seen' series.id %}" class="increase-seen"><i class="glyphicon glyphicon-plus"></i></a>
           <br>
 

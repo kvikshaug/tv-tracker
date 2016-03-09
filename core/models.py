@@ -60,9 +60,6 @@ class Series(models.Model):
         future_seasons = [e for e in aired_episodes if e.season > seen_season]
         return len(current_season) + len(future_seasons)
 
-    def get_aired_episodes(self):
-        return [e for e in self.episodes.all() if e.air_date is not None and e.air_date <= date.today()]
-
     def has_latest_available_episode(self):
         try:
             self.get_latest_available_episode()
@@ -71,24 +68,21 @@ class Series(models.Model):
             return False
 
     def get_latest_available_episode(self):
-        aired_episodes = self.get_aired_episodes()
-        return list(aired_episodes)[-1]
+        aired_episodes = [e for e in self.episodes.all() if e.air_date is not None and e.air_date <= date.today()]
+        return aired_episodes[-1]
 
-    def get_future_episodes(self):
-        return [e for e in self.episodes.all() if e.air_date is not None and e.air_date > date.today()]
-
-    def has_next_episode(self):
+    def has_next_episode_on_air(self):
         try:
-            self.get_next_episode()
+            self.next_episode_on_air()
             return True
         except IndexError:
             return False
 
-    def get_next_episode(self):
-        future_episodes = sorted(self.get_future_episodes(), key=lambda e: e.air_date)
-        return future_episodes[0]
+    def next_episode_on_air(self):
+        unaired_episodes = [e for e in self.episodes.all() if e.air_date is not None and e.air_date > date.today()]
+        return unaired_episodes[0]
 
-    def get_newest_episode(self):
+    def last_episode(self):
         return list(self.episodes.all())[-1]
 
     def increase_seen(self):
@@ -119,15 +113,15 @@ class Episode(models.Model):
     air_date = models.DateField(null=True)
 
     def __str__(self):
-        return "%s: %s (%s)" % (self.pk, self.get_number(), self.series.name)
+        return "%s: %s (%s)" % (self.pk, self.episode_number(), self.series.name)
 
-    def get_number(self):
+    def episode_number(self):
         return "%sx%02d" % (self.season, self.episode)
 
-    def get_days_remaining(self):
+    def days_remaining(self):
         return (self.air_date - date.today()).days + 1
 
-    def get_status_class(self):
+    def status_class(self):
         seen_season, seen_episode = self.series.get_last_seen()
 
         if self.air_date is None or self.air_date > date.today():

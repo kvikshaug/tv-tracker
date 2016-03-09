@@ -9,8 +9,8 @@
       <th>Show</th>
       <th>Seen</th>
       <th>Available</th>
-      <th>Next</th>
-      <th>Newest</th>
+      <th>Next on air</th>
+      <th>Last</th>
       <th>Status</th>
       <th>Action</th>
     </tr>
@@ -22,17 +22,17 @@
           {% if series.unseen_episode_count == 0 %}
             -
           {% else %}
-            {{ series.get_latest_available_episode.get_number }} ({{ series.unseen_episode_count }} total)
+            {{ series.get_latest_available_episode.episode_number }} ({{ series.unseen_episode_count }} total)
           {% endif %}
         </td>
         <td>
-          {% if series.has_next_episode %}
-            {{ series.get_next_episode.get_number }} ({{ series.get_next_episode.get_days_remaining }} days: {{ series.get_next_episode.air_date|date:"d.m.Y" }})
+          {% if series.has_next_episode_on_air %}
+            {{ series.next_episode_on_air.episode_number }} ({{ series.next_episode_on_air.days_remaining }} days: {{ series.next_episode_on_air.air_date|date:"d.m.Y" }})
           {% else %}
             N/A
           {% endif %}
         </td>
-        <td>{{ series.get_newest_episode.get_number }}</td>
+        <td>{{ series.last_episode.episode_number }}</td>
         <td>{{ series.status }}</td>
         <td>
           {% if series.local_status == 'active' %}
