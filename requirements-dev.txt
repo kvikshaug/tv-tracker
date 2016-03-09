@@ -2,3 +2,4 @@ django-debug-toolbar
 django-werkzeug-debugger-runserver
 flake8
 ipython
+testfixtures
