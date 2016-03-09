@@ -2,47 +2,101 @@
 
 {% block body %}
 
-  {% if series.banner %}
-    <p class="banner">
-      <a href="http://thetvdb.com/?tab=series&amp;id={{ series.tvdbid }}">
-        <img src="http://thetvdb.com/banners/{{ series.banner }}">
-      </a>
-    </p>
-  {% endif %}
+  <div class="series">
 
-  <div class="row">
-    <div class="col-sm-offset-4 col-md-5">
-      <form action="{% url 'core:last_seen' %}" method="post" class="last-seen">
-        {% csrf_token %}
-        <input type="hidden" name="series" value="{{ series.id }}">
-        Seen:
-        <input type="text" name="last-seen" value="{{ series.last_seen }}" class="last-seen form-control">
-        <button type="submit" class="btn">Ok</button>
-      </form>
-    </div>
-  </div>
+    <div class="header">
+      <div class="row">
+        <div class="col-md-4">
+          {% if series.poster %}
+            <a href="http://thetvdb.com/?tab=series&amp;id={{ series.tvdbid }}">
+              <img class="poster" src="http://thetvdb.com/banners/{{ series.poster }}">
+            </a>
+          {% endif %}
+        </div>
+        <div class="col-md-8">
+          <h1>{{ series.name }}</h1>
 
-  <div class="row">
-    <div class="col-sm-offset-3 col-md-6">
-        {% for season in series.episodes_by_season_reversed %}
-          <h4 class="season">
-            Season {{ season.season }}
-            <span class="count pull-right">({{ season.episodes|length }})</span>
-          </h4>
+          <form action="{% url 'core:last_seen' %}" method="post" class="last-seen">
+            {% csrf_token %}
+            <input type="hidden" name="series" value="{{ series.id }}">
 
-          <table class="table episodes">
-            {% for episode in season.episodes %}
-              <tr class="{{ episode.status_class }}">
+            <table class="episode-stats">
+              <tr>
+                <th>Seen</th>
                 <td>
-                  {{ episode.episode_number }}
-                </td>
-                <td>
-                  {{ episode.air_date|date:"j. F Y"|default:"No air date" }}
+                  <div class="input-group" class="last-seen">
+                    <input type="text" name="last-seen" value="{{ series.last_seen }}" class="form-control input-sm">
+                    <span class="input-group-btn">
+                      <button type="submit" class="btn btn-default btn-sm">Update</button>
+                    </span>
+                  </div>
                 </td>
               </tr>
-            {% endfor %}
-          </table>
-        {% endfor %}
+              <tr>
+                <th>Next</th>
+                <td>
+                  {% if series.unseen_available.count == 0 %}
+                    {% if not series.has_next_episode_on_air %}
+                      <span class="label label-danger">No upcoming episodes</span>
+                    {% else %}
+                      {{ series.next_episode_on_air.episode_number }}
+                      <span class="label label-warning">
+                        {{ series.next_episode_on_air.days_remaining }} days
+                        ({{ series.next_episode_on_air.air_date|date:"d.m.Y" }})
+                      </span>
+                    {% endif %}
+                  {% else %}
+                    {{ series.unseen_available.first.episode_number }}
+                    <span class="label label-success">Available</span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% if series.unseen_available.count > 0 %}
+                <tr>
+                  <th>Available</th>
+                  <td>
+                    {{ series.unseen_available.first.episode_number }}
+
+                    {% if series.unseen_available.first != series.unseen_available.last %}
+                     - {{ series.unseen_available.last.episode_number }}
+                    {% endif %}
+
+                    ({{ series.unseen_available.count }} total)
+                  </td>
+                </tr>
+              {% endif %}
+              <tr>
+                <th>Status</th>
+                <td>{{ series.status }}</td>
+              </tr>
+            </table>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="season-listing">
+      {% for season in series.episodes_by_season_reversed %}
+        <h4>
+          Season {{ season.season }}
+          <span class="pull-right">
+            {{ season.episodes|length }} episodes
+          </span>
+        </h4>
+
+        <table class="table">
+          {% for episode in season.episodes %}
+            <tr class="episode {{ episode.status_class }}">
+              <td>
+                {{ episode.episode_number }}
+              </td>
+              <td>
+                {{ episode.air_date|date:"j. F Y"|default:"No air date" }}
+              </td>
+            </tr>
+          {% endfor %}
+        </table>
+      {% endfor %}
     </div>
   </div>
 
