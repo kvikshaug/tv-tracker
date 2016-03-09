@@ -2,8 +2,8 @@ from datetime import datetime
 
 from django.core.management.base import BaseCommand
 
-from core import tvdb
 from core.models import LastUpdate, Series
+from thetvdb import tvdb
 
 class Command(BaseCommand):
     args = ""

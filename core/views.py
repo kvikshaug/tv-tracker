@@ -3,8 +3,8 @@ from django.core.exceptions import PermissionDenied
 
 import re
 
-from core import tvdb
 from core.models import Series
+from thetvdb import tvdb
 
 def index(request):
     series = Series.objects.prefetch_related(

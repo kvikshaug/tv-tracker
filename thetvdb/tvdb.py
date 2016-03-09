@@ -6,46 +6,11 @@ from io import BytesIO
 import zipfile
 import requests
 
+from .models import SeriesSearchResult, Series as TVDBSeries, Episode
+
 from core.models import Series
 
 API_PATH = "http://thetvdb.com/api"
-
-#
-# Models
-#
-
-class SeriesSearchResult():
-    def __init__(self, id, name, overview, banner, first_aired, imdb):
-        self.id = id
-        self.name = name
-        self.overview = overview
-        self.banner = banner
-        self.first_aired = first_aired
-        self.imdb = imdb
-
-class TVDBSeries():
-    def __init__(self, tvdbid, name, overview, status, banner, first_aired, imdb):
-        self.tvdbid = tvdbid
-        self.name = name
-        self.overview = overview
-        self.status = status
-        self.banner = banner
-        self.first_aired = first_aired
-        self.imdb = imdb
-        self.episodes = []
-
-    def add_episode(self, season):
-        self.episodes.append(season)
-
-class TVDBEpisode():
-    def __init__(self, season, number, first_aired):
-        self.season = season
-        self.number = number
-        self.first_aired = first_aired
-
-#
-# Available methods
-#
 
 def search_for_series(query):
     content = requests.get("%s/GetSeries.php?seriesname=%s" % (API_PATH, query)).content
@@ -145,7 +110,7 @@ def parse_series(xml):
         except (ValueError, TypeError):
             first_aired = None
 
-        series.add_episode(TVDBEpisode(
+        series.add_episode(Episode(
             season=season,
             number=number,
             first_aired=first_aired,
