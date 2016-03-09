@@ -56,7 +56,7 @@ LOGGING = {
         # Ignore the very verbose template DEBUG statements which include failed context lookups
         'django.template': {
             'level': 'INFO',
-            'handles': ['file'],
+            'handlers': ['console'],
             'propagate': False,
         },
     },
