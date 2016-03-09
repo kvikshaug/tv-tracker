@@ -1,5 +1,5 @@
 # Boilerplate imports of preceding prod settings
-from project.settings_prod import *
+from project.settings_prod import * # noqa
 
 DEBUG = True
 ALLOWED_HOSTS = ['*']

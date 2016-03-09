@@ -7,14 +7,14 @@ _configuration = os.environ.get('DJANGO_CONFIGURATION', 'production').lower()
 #
 
 # Always set production settings
-from project.settings_prod import *
+from project.settings_prod import * # noqa
 
 # Override with development settings if running dev-configuration
 if _configuration == 'development':
-    from project.settings_dev import *
+    from project.settings_dev import * # noqa
 
 # Replace Django's logging configuration completely by disabling it and manually setting our log configuration
 # See http://stackoverflow.com/a/22336174/302484
-import logging.config
+import logging.config # noqa
 logging.config.dictConfig(LOGGING)
 LOGGING_CONFIG = None

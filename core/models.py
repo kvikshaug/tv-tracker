@@ -1,5 +1,4 @@
 from django.db import models
-from django.db.models import Q
 
 from datetime import date
 
@@ -40,16 +39,16 @@ class Series(models.Model):
                 # Current season
                 count += len([
                     e for e in season.episodes.all()
-                    if e.air_date is not None
-                    and e.air_date <= date.today()
-                    and e.number > seen_episode
+                    if e.air_date is not None and
+                    e.air_date <= date.today() and
+                    e.number > seen_episode
                 ])
             elif season.number > seen_season:
                 # Future season
                 count += len([
                     e for e in season.episodes.all()
-                    if e.air_date is not None
-                    and e.air_date <= date.today()
+                    if e.air_date is not None and
+                    e.air_date <= date.today()
                 ])
         return count
 
