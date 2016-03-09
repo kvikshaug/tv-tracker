@@ -107,17 +107,11 @@ class Series(models.Model):
     class Meta:
         ordering = ['name']
 
-class Season(models.Model):
-    number = models.PositiveIntegerField()
-    series = models.ForeignKey(Series, related_name='seasons')
-
-    class Meta:
-        ordering = ['-number']
-
 class Episode(models.Model):
-    number = models.PositiveIntegerField()
+    series = models.ForeignKey(Series, related_name='episodes')
+    season = models.PositiveIntegerField()
+    episode = models.PositiveIntegerField()
     air_date = models.DateField(null=True)
-    season = models.ForeignKey(Season, related_name='episodes')
 
     def get_number(self):
         return "%sx%02d" % (self.season.number, self.number)
@@ -142,4 +136,4 @@ class Episode(models.Model):
                 return 'seen'
 
     class Meta:
-        ordering = ['-number']
+        ordering = ['season', 'episode']
