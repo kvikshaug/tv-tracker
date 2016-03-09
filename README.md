@@ -1,8 +1,8 @@
-# TVDB
+# TV Tracker
 
-[![Requirements Status](https://requires.io/github/kvikshaug/tvdb/requirements.svg?branch=master)](https://requires.io/github/kvikshaug/tvdb/requirements/?branch=master)
+[![Requirements Status](https://requires.io/github/kvikshaug/tv-tracker/requirements.svg?branch=master)](https://requires.io/github/kvikshaug/tv-tracker/requirements/?branch=master)
 
-A lightweight Django + Bootstrap app for keeping track of the TV series you're interested in.
+Keep track of the TV series you're watching, what episodes you've seen and when the next one is coming out.
 
 ## Development
 
@@ -49,12 +49,12 @@ If the words above make no sense
 
 ### The dashboard shows you what's up
 
-![No soup for eyehandicappeds](http://kvikshaug.github.io/tvdb/index.jpg "Index")
+![No soup for eyehandicappeds](https://kvikshaug.github.io/tv-tracker/index.jpg "Index")
 
 ### Search for and add new shows
 
-![No soup for eyehandicappeds](http://kvikshaug.github.io/tvdb/search.jpg "Search")
+![No soup for eyehandicappeds](https://kvikshaug.github.io/tv-tracker/search.jpg "Search")
 
 ### Show details
 
-![No soup for eyehandicappeds](http://kvikshaug.github.io/tvdb/show.jpg "Show")
+![No soup for eyehandicappeds](https://kvikshaug.github.io/tv-tracker/show.jpg "Show")
