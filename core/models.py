@@ -144,3 +144,4 @@ class Episode(models.Model):
 
     class Meta:
         ordering = ['season', 'episode']
+        unique_together = ('series', 'season', 'episode')
