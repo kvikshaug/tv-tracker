@@ -16,6 +16,7 @@ class Series(models.Model):
     name = models.TextField()
     status = models.TextField()
     banner = models.TextField()
+    poster = models.CharField(max_length=255)
     first_aired = models.DateField(null=True)
     imdb = models.TextField()
 

@@ -30,12 +30,13 @@ class SeriesSearchResult():
         return SeriesSearchResult(tvdbid, name, overview, banner, first_aired, imdb)
 
 class Series():
-    def __init__(self, tvdbid, name, overview, status, banner, first_aired, imdb):
+    def __init__(self, tvdbid, name, overview, status, banner, poster, first_aired, imdb):
         self.tvdbid = tvdbid
         self.name = name
         self.overview = overview
         self.status = status
         self.banner = banner
+        self.poster = poster
         self.first_aired = first_aired
         self.imdb = imdb
         self.episodes = []
@@ -51,6 +52,7 @@ class Series():
         overview = series.findtext("Overview", default="")
         status = series.findtext("Status", default="")
         banner = series.findtext("banner", default="")
+        poster = series.findtext("poster", default="")
         try:
             first_aired = datetime.strptime(series.findtext("FirstAired", default=""), "%Y-%m-%d").date()
         except ValueError:
@@ -63,6 +65,7 @@ class Series():
             overview=overview,
             status=status,
             banner=banner,
+            poster=poster,
             first_aired=first_aired,
             imdb=imdb,
         )

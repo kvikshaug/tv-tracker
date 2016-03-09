@@ -29,6 +29,7 @@ def create_or_update_series(tvdbid):
         'name': series_data.name,
         'status': series_data.status,
         'banner': series_data.banner,
+        'poster': series_data.poster,
         'first_aired': series_data.first_aired,
         'imdb': series_data.imdb,
     })
