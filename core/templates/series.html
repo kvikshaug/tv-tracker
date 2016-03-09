@@ -37,7 +37,7 @@
                 {{ episode.get_number }}
               </td>
               <td>
-                {{ episode.air_date|date:"j. F Y" }}
+                {{ episode.air_date|date:"j. F Y"|default:"No air date" }}
               </td>
             </tr>
           {% endfor %}
