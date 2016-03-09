@@ -1,6 +1,6 @@
-from django.db import models
-
 from datetime import date
+
+from django.db import models
 
 class LastUpdate(models.Model):
     """Should only contain a single row."""
