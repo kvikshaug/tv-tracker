@@ -73,27 +73,25 @@ class Series():
                 # Ignore specials for now
                 continue
 
-            number = e.findtext("EpisodeNumber", default="")
-            first_aired = e.findtext("FirstAired", default="")
-
+            episode = e.findtext("EpisodeNumber", default="")
             try:
-                first_aired = datetime.strptime(first_aired, "%Y-%m-%d")
-            except (ValueError, TypeError):
-                first_aired = None
+                air_date = datetime.strptime(e.findtext("FirstAired", default=""), "%Y-%m-%d")
+            except ValueError:
+                air_date = None
 
             series.episodes.append(Episode(
                 season=season,
-                number=number,
-                first_aired=first_aired,
+                episode=episode,
+                air_date=air_date,
             ))
 
         return series
 
 class Episode():
-    def __init__(self, season, number, first_aired):
+    def __init__(self, season, episode, air_date):
         self.season = season
-        self.number = number
-        self.first_aired = first_aired
+        self.episode = episode
+        self.air_date = air_date
 
     def __str__(self):
-        return "%sx%s" % (self.season, self.number)
+        return "%sx%s" % (self.season, self.episode)
