@@ -95,17 +95,27 @@ class Series(models.Model):
         return list(self.episodes.all())[-1]
 
     def move_seen(self, direction='next'):
-        # If we haven't seen anything, start on 1x01
         if not self.has_last_seen():
-            self.last_seen = '1x01'
-            self.save()
-            return
+            if direction == 'next':
+                # If we're starting to watch, start with the pilot
+                self.last_seen = '1x01'
+                self.save()
+                return
+            else:
+                # Decreasing without having seen anything anyway? Ignore
+                return
 
         try:
             season, episode = self.get_last_seen()
             if direction == 'next':
                 new_episode = self.episode_after(season, episode)
             else:
+                # Special case: Trying to unset seen (decreasing when having only seen the pilot)
+                if season == 1 and episode == 1:
+                    self.last_seen = ''
+                    self.save()
+                    return
+
                 new_episode = self.episode_before(season, episode)
             self.last_seen = new_episode.episode_number()
             self.save()
