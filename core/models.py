@@ -32,12 +32,15 @@ class Series(models.Model):
     def __str__(self):
         return "%s: %s" % (self.pk, self.name)
 
+    def has_last_seen(self):
+        return self.last_seen != ''
+
     def get_last_seen(self):
-        if self.last_seen == '':
-            return (0, 0)
-        else:
-            season, episode = self.last_seen.split('x')
-            return (int(season), int(episode))
+        if not self.has_last_seen():
+            raise Exception("Last seen is undefined")
+
+        season, episode = self.last_seen.split('x')
+        return (int(season), int(episode))
 
     def episodes_by_season(self):
         return [
@@ -54,13 +57,17 @@ class Series(models.Model):
 
     def unseen_available(self):
         """Returns a dict of unseen aired episodes; the first and last in the range (or None if 0) and the count"""
-        seen_season, seen_episode = self.get_last_seen()
         aired_episodes = [e for e in self.episodes.all() if e.air_date is not None and e.air_date <= date.today()]
-        unseen_available = [
-            e for e in aired_episodes
-            if (e.season == seen_season and e.episode > seen_episode) or
-            e.season > seen_season
-        ]
+        if not self.has_last_seen():
+            # If we haven't seen anything, all aired episodes are unseen, according to tautology club
+            unseen_available = aired_episodes
+        else:
+            seen_season, seen_episode = self.get_last_seen()
+            unseen_available = [
+                e for e in aired_episodes
+                if (e.season == seen_season and e.episode > seen_episode) or
+                e.season > seen_season
+            ]
 
         if len(unseen_available) == 0:
             first = None
@@ -88,15 +95,14 @@ class Series(models.Model):
         return list(self.episodes.all())[-1]
 
     def increase_seen(self):
-        season, episode = self.get_last_seen()
-
         # If we haven't seen anything, start on 1x01
-        if season == 0:
+        if not self.has_last_seen():
             self.last_seen = '1x01'
             self.save()
             return
 
         try:
+            season, episode = self.get_last_seen()
             next_episode = self.episode_after(season, episode)
             self.last_seen = next_episode.episode_number()
             self.save()
@@ -131,11 +137,13 @@ class Episode(models.Model):
         return (self.air_date - date.today()).days + 1
 
     def status_class(self):
-        seen_season, seen_episode = self.series.get_last_seen()
-
         if self.air_date is None or self.air_date > date.today():
             return 'unaired'
         else:
+            if not self.series.has_last_seen():
+                return 'available'
+
+            seen_season, seen_episode = self.series.get_last_seen()
             if self.season > seen_season:
                 return 'available'
             elif self.season == seen_season:
