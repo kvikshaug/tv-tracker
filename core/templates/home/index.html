@@ -33,9 +33,9 @@
   {% endfor %}
 
   <h3>Other series</h3>
-  {% include 'series_table.html' with series_plural=default_series %}
+  {% include 'home/table.html' with series_plural=default_series %}
 
   <h3>Archived series</h3>
-  {% include 'series_table.html' with series_plural=archived_series %}
+  {% include 'home/table.html' with series_plural=archived_series %}
 
 {% endblock %}

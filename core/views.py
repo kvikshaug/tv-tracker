@@ -16,7 +16,7 @@ def index(request):
         'default_series': default_series,
         'archived_series': archived_series,
     }
-    return render(request, 'index.html', context)
+    return render(request, 'home/index.html', context)
 
 def search(request):
     query = request.GET.get('query', '').strip()
@@ -36,7 +36,7 @@ def search(request):
         'series_search_query': query,
         'series_search_results': series
     }
-    return render(request, 'search.html', context)
+    return render(request, 'home/search.html', context)
 
 def series_synchronize(request):
     series = tvdb.create_or_update_series(int(request.GET['tvdbid']))
@@ -45,7 +45,7 @@ def series_synchronize(request):
 def series(request, series_id):
     series = Series.objects.prefetch_related('episodes').get(id=series_id)
     context = {'series': series}
-    return render(request, 'series.html', context)
+    return render(request, 'home/series.html', context)
 
 def series_seen_increase(request, series_id):
     series = Series.objects.get(id=series_id)
