@@ -11,6 +11,6 @@ def grouper(list_, n=4):
     list_groups = []
     index = 0
     while index < len(list_):
-        list_groups.append(list_[index:index+n])
+        list_groups.append(list_[index:index + n])
         index += n
     return list_groups

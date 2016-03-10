@@ -51,7 +51,7 @@ class TheTVDBTestCase(TestCase):
 
     def test_remove_stale_episodes(self):
         series = Series.objects.create(tvdbid=152831)
-        stale_episode = Episode.objects.create(series=series, season=8, episode=1)
+        Episode.objects.create(series=series, season=8, episode=1)
         self.assertEqual(series.episodes.filter(season=8).exists(), True)
 
         with Replace('requests.get', self.get_series_all_7_seasons):

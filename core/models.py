@@ -140,7 +140,7 @@ class Series(models.Model):
         for episode in self.episodes.all():
             if episode.season == season and episode.episode == episode_number + 1:
                 return episode
-            elif episode.season == season+1 and episode.episode == 1:
+            elif episode.season == season + 1 and episode.episode == 1:
                 return episode
         raise Episode.DoesNotExist("Series '%s' has no episode after %sx%02d" % (self, season, episode_number))
 
