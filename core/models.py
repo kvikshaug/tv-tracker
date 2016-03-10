@@ -89,21 +89,28 @@ class Series(models.Model):
 
     def increase_seen(self):
         season, episode = self.get_last_seen()
-        if season == 0:
-            next = '1x01'
-        else:
-            if self.episodes.filter(season=season, episode=(episode + 1)).exists():
-                # Next episode
-                next = '%sx%02d' % (season, (episode + 1))
-            elif self.episodes.filter(season=(season + 1), episode=1).exists():
-                # Next season
-                next = '%sx01' % (season + 1)
-            else:
-                # Seen it all
-                return
 
-        self.last_seen = next
-        self.save()
+        # If we haven't seen anything, start on 1x01
+        if season == 0:
+            self.last_seen = '1x01'
+            self.save()
+            return
+
+        try:
+            next_episode = self.episode_after(season, episode)
+            self.last_seen = next_episode.episode_number()
+            self.save()
+        except Episode.DoesNotExist:
+            # Seen it all; do nothing
+            pass
+
+    def episode_after(self, season, episode_number):
+        for episode in self.episodes.all():
+            if episode.season == season and episode.episode == episode_number + 1:
+                return episode
+            elif episode.season == season+1 and episode.episode == 1:
+                return episode
+        raise Episode.DoesNotExist("Series '%s' has no episode after %sx%02d" % (self, season, episode_number))
 
     class Meta:
         ordering = ['name']
