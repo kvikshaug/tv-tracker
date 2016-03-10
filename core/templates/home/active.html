@@ -1,28 +1,59 @@
-{% for series in active_series %}
-  <div class="series">
-    <a href="{% url 'core:series' series.id %}">
-      <img src="http://thetvdb.com/banners/{{ series.banner }}" class="pull-left banner">
-    </a>
+{% load grouper %}
 
-    <div class="available">
-      {% if series.unseen_available.count == 0 %}
-        {{ series.last_seen }} / {{ series.last_seen }}<br>
-        {{ series.unseen_available.count }} available
-      {% else %}
-        {{ series.last_seen }} / {{ series.unseen_available.last.episode_number }}
-        <a href="{% url 'core:series_seen_increase' series.id %}" class="increase-seen"><i class="glyphicon glyphicon-plus"></i></a>
-        <br>
+<div class="active-series">
+  {% for group in active_series|grouper:4 %}
+    <div class="row">
+      {% for series in group %}
+        <div class="col-md-3">
+          <div class="series">
+            <a href="{% url 'core:series' series.id %}">
+              <img class="poster" src="http://thetvdb.com/banners/{{ series.poster }}">
+            </a>
 
-        {{ series.unseen_available.count }} available
-      {% endif %}
+            <p class="title">
+              {{ series.name }}
+              <a
+                class="pull-right"
+                title="Stop watching"
+                href="{% url 'core:series_status' series.id %}?status=default">
+                <i class="glyphicon glyphicon-remove"></i>
+              </a>
+
+            </p>
+            <p class="next">
+              {% if series.unseen_available.count > 0 %}
+                Next episode: {{ series.unseen_available.first.episode_number }}
+                ({{ series.unseen_available.count }} left)
+              {% else %}
+                {# None available, then we want to know if something's about to air #}
+
+                {% if not series.has_next_episode_on_air and series.status|lower == 'ended' %}
+                  Series has ended
+                {% else %}
+                  {% if not series.has_next_episode_on_air %}
+                    Next episode TBA (seen: {{ series.last_seen }})
+                  {% else %}
+                    Next episode: {{ series.next_episode_on_air.episode_number }}
+                    (airs in {{ series.next_episode_on_air.days_remaining }} days)
+                  {% endif %}
+                {% endif %}
+
+              {% endif %}
+            </p>
+            <p class="input">
+              {% if series.unseen_available.count > 0 %}
+                <a href="{% url 'core:series_seen' series.id %}?increment">Watch</a>
+              {% endif %}
+              {% if series.unseen_available.count > 0 and series.has_last_seen %}
+                or
+              {% endif %}
+              {% if series.has_last_seen %}
+                <a href="{% url 'core:series_seen' series.id %}?decrement">Forget</a>
+              {% endif %}
+            </p>
+          </div>
+        </div>
+      {% endfor %}
     </div>
-
-    <p>
-      <a class="btn btn-default btn-sm" href="{% url 'core:series_status' series.id %}?status=default">
-        Stop watching
-      </a>
-    </p>
-
-    <div style="clear: both;"></div>
-  </div>
-{% endfor %}
+  {% endfor %}
+</div>

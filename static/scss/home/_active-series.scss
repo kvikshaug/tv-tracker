@@ -1,0 +1,32 @@
+.active-series {
+  .series {
+    margin-bottom: 40px;
+
+    .poster {
+      margin-bottom: 5px;
+      max-width: 100%;
+    }
+
+    .title {
+      margin-bottom: 0;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .next {
+      margin-bottom: 0;
+      text-align: center;
+      color: rgb(140, 140, 140);
+
+      .label {
+        display: inline-block;
+        width: 100%;
+      }
+    }
+
+    .input {
+      margin-bottom: 0;
+      text-align: center;
+    }
+  }
+}
