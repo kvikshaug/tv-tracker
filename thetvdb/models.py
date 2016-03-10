@@ -30,10 +30,10 @@ class SeriesSearchResult():
         return SeriesSearchResult(tvdbid, name, overview, banner, first_aired, imdb)
 
 class Series():
-    def __init__(self, tvdbid, name, overview, status, banner, poster, first_aired, imdb):
+    def __init__(self, tvdbid, name, description, status, banner, poster, first_aired, imdb):
         self.tvdbid = tvdbid
         self.name = name
-        self.overview = overview
+        self.description = description
         self.status = status
         self.banner = banner
         self.poster = poster
@@ -49,7 +49,7 @@ class Series():
         series = xml.find("Series")
         tvdbid = series.findtext("id", default="")
         name = series.findtext("SeriesName", default="")
-        overview = series.findtext("Overview", default="")
+        description = series.findtext("Overview", default="")
         status = series.findtext("Status", default="")
         banner = series.findtext("banner", default="")
         poster = series.findtext("poster", default="")
@@ -62,7 +62,7 @@ class Series():
         series = Series(
             tvdbid=tvdbid,
             name=name,
-            overview=overview,
+            description=description,
             status=status,
             banner=banner,
             poster=poster,

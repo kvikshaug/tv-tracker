@@ -14,6 +14,7 @@ class LastUpdate(models.Model):
 class Series(models.Model):
     tvdbid = models.PositiveIntegerField(unique=True)
     name = models.CharField(max_length=255)
+    description = models.TextField()
     status = models.CharField(max_length=255)
     banner = models.CharField(max_length=255)
     poster = models.CharField(max_length=255)

@@ -27,6 +27,7 @@ def create_or_update_series(tvdbid):
 
     series, created = Series.objects.update_or_create(tvdbid=series_data.tvdbid, defaults={
         'name': series_data.name,
+        'description': series_data.description,
         'status': series_data.status,
         'banner': series_data.banner,
         'poster': series_data.poster,
