@@ -1,0 +1,28 @@
+{% for series in active_series %}
+  <div class="series">
+    <a href="{% url 'core:series' series.id %}">
+      <img src="http://thetvdb.com/banners/{{ series.banner }}" class="pull-left banner">
+    </a>
+
+    <div class="available">
+      {% if series.unseen_available.count == 0 %}
+        {{ series.last_seen }} / {{ series.last_seen }}<br>
+        {{ series.unseen_available.count }} available
+      {% else %}
+        {{ series.last_seen }} / {{ series.unseen_available.last.episode_number }}
+        <a href="{% url 'core:series_seen_increase' series.id %}" class="increase-seen"><i class="glyphicon glyphicon-plus"></i></a>
+        <br>
+
+        {{ series.unseen_available.count }} available
+      {% endif %}
+    </div>
+
+    <p>
+      <a class="btn btn-default btn-sm" href="{% url 'core:series_status' series.id %}?status=default">
+        Stop watching
+      </a>
+    </p>
+
+    <div style="clear: both;"></div>
+  </div>
+{% endfor %}
