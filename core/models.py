@@ -13,12 +13,12 @@ class LastUpdate(models.Model):
 
 class Series(models.Model):
     tvdbid = models.PositiveIntegerField(unique=True)
-    name = models.TextField()
-    status = models.TextField()
-    banner = models.TextField()
+    name = models.CharField(max_length=255)
+    status = models.CharField(max_length=255)
+    banner = models.CharField(max_length=255)
     poster = models.CharField(max_length=255)
     first_aired = models.DateField(null=True)
-    imdb = models.TextField()
+    imdb = models.CharField(max_length=1023)
 
     last_seen = models.CharField(max_length=255)
     comments = models.TextField()
