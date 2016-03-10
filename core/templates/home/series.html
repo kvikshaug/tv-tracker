@@ -16,7 +16,7 @@
         <div class="col-md-8">
           <h1>{{ series.name }}</h1>
 
-          <form action="{% url 'core:series_seen_set' series.id %}" method="post" class="last-seen">
+          <form action="{% url 'core:series_seen' series.id %}" method="post" class="last-seen">
             {% csrf_token %}
             <table class="episode-stats">
               <tr>

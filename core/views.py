@@ -47,17 +47,22 @@ def series(request, series_id):
     context = {'series': series}
     return render(request, 'home/series.html', context)
 
-def series_seen_increase(request, series_id):
+def series_seen(request, series_id):
     series = Series.objects.get(id=series_id)
-    series.increase_seen()
-    return redirect('core:index')
 
-def series_seen_set(request, series_id):
-    series = Series.objects.get(id=series_id)
-    if request.POST['last-seen'] == '' or re.match('^\d+x\d+$', request.POST['last-seen']):
-        series.last_seen = request.POST['last-seen']
-    series.save()
-    return redirect('core:series', series.id)
+    if 'increment' in request.GET:
+        series.move_seen('next')
+        return redirect('core:index')
+    elif 'decrement' in request.GET:
+        series.move_seen('previous')
+        return redirect('core:index')
+    elif 'last-seen' in request.POST:
+        if request.POST['last-seen'] == '' or re.match('^\d+x\d+$', request.POST['last-seen']):
+            series.last_seen = request.POST['last-seen']
+        series.save()
+        return redirect('core:series', series.id)
+    else:
+        return redirect('core:index')
 
 def series_status(request, series_id):
     status = request.GET.get('status', '')

@@ -94,7 +94,7 @@ class Series(models.Model):
     def last_episode(self):
         return list(self.episodes.all())[-1]
 
-    def increase_seen(self):
+    def move_seen(self, direction='next'):
         # If we haven't seen anything, start on 1x01
         if not self.has_last_seen():
             self.last_seen = '1x01'
@@ -103,12 +103,27 @@ class Series(models.Model):
 
         try:
             season, episode = self.get_last_seen()
-            next_episode = self.episode_after(season, episode)
-            self.last_seen = next_episode.episode_number()
+            if direction == 'next':
+                new_episode = self.episode_after(season, episode)
+            else:
+                new_episode = self.episode_before(season, episode)
+            self.last_seen = new_episode.episode_number()
             self.save()
         except Episode.DoesNotExist:
-            # Seen it all; do nothing
+            # Reached start/end or the last_seen value is invalid; do nothing
             pass
+
+    def episode_before(self, season, episode_number):
+        if episode_number == 1:
+            previous_season = [e for e in self.episodes.all() if e.season == season - 1]
+            if len(previous_season) == 0:
+                raise Episode.DoesNotExist("Series '%s' has no season before %sx%02d" % (self, season, episode_number))
+            return max(previous_season, key=lambda e: e.episode)
+        else:
+            for episode in self.episodes.all():
+                if episode.season == season and episode.episode == episode_number - 1:
+                    return episode
+            raise Episode.DoesNotExist("Series '%s' has no episode before %sx%02d" % (self, season, episode_number))
 
     def episode_after(self, season, episode_number):
         for episode in self.episodes.all():
