@@ -75,16 +75,14 @@ class Series(models.Model):
             'count': len(unseen_available),
         }
 
+    def unaired_episodes(self):
+        return [e for e in self.episodes.all() if e.air_date is not None and e.air_date > date.today()]
+
     def has_next_episode_on_air(self):
-        try:
-            self.next_episode_on_air()
-            return True
-        except IndexError:
-            return False
+        return len(self.unaired_episodes()) > 0
 
     def next_episode_on_air(self):
-        unaired_episodes = [e for e in self.episodes.all() if e.air_date is not None and e.air_date > date.today()]
-        return unaired_episodes[0]
+        return self.unaired_episodes()[0]
 
     def last_episode(self):
         return list(self.episodes.all())[-1]
