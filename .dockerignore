@@ -1,5 +1,6 @@
 .git/
 .gitignore
 Dockerfile
-
+*.pyc
+static/.sass-cache
 db.sqlite3
