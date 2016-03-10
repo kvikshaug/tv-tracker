@@ -5,18 +5,18 @@
   <div class="series">
 
     <div class="header">
-      <div class="row">
-        <div class="col-md-4">
-          {% if series.poster %}
-            <a href="http://thetvdb.com/?tab=series&amp;id={{ series.tvdbid }}">
-              <img class="poster" src="http://thetvdb.com/banners/{{ series.poster }}">
-            </a>
-          {% endif %}
-        </div>
-        <div class="col-md-8">
-          <h1>{{ series.name }}</h1>
+      {% if series.banner %}
+        <a href="http://thetvdb.com/?tab=series&amp;id={{ series.tvdbid }}">
+          <img class="banner" src="http://thetvdb.com/banners/{{ series.banner }}">
+        </a>
+      {% endif %}
 
-          <form action="{% url 'core:series_seen' series.id %}" method="post" class="last-seen">
+      <h1>{{ series.name }}</h1>
+
+      <div class="row">
+        <div class="col-md-5">
+
+          <form action="{% url 'core:series_seen' series.id %}" method="post">
             {% csrf_token %}
             <table class="episode-stats">
               <tr>
@@ -31,44 +31,57 @@
                 </td>
               </tr>
               <tr>
-                <th>Next</th>
+                <th>Available</th>
                 <td>
                   {% if series.unseen_available.count == 0 %}
-                    {% if not series.has_next_episode_on_air %}
-                      <span class="label label-danger">No upcoming episodes</span>
-                    {% else %}
-                      {{ series.next_episode_on_air.episode_number }}
-                      <span class="label label-warning">
-                        {{ series.next_episode_on_air.days_remaining }} days
-                        ({{ series.next_episode_on_air.air_date|date:"d.m.Y" }})
-                      </span>
-                    {% endif %}
+                    <div class="label label-warning">
+                      No available episodes
+                    </div>
                   {% else %}
-                    {{ series.unseen_available.first.episode_number }}
-                    <span class="label label-success">Available</span>
+                    <span class="label label-success">
+                      {{ series.unseen_available.count }} episodes
+
+                      {% if series.unseen_available.first == series.unseen_available.last %}
+                        ({{ series.unseen_available.first.episode_number }})
+                      {% else %}
+                        ({{ series.unseen_available.first.episode_number }}
+                        - {{ series.unseen_available.last.episode_number }})
+                      {% endif %}
+                    </span>
                   {% endif %}
                 </td>
               </tr>
-              {% if series.unseen_available.count > 0 %}
-                <tr>
-                  <th>Available</th>
-                  <td>
-                    {{ series.unseen_available.first.episode_number }}
-
-                    {% if series.unseen_available.first != series.unseen_available.last %}
-                     - {{ series.unseen_available.last.episode_number }}
-                    {% endif %}
-
-                    ({{ series.unseen_available.count }} total)
-                  </td>
-                </tr>
-              {% endif %}
               <tr>
-                <th>Status</th>
-                <td>{{ series.status }}</td>
+                <th>Next on air</th>
+                <td>
+                  {% if not series.has_next_episode_on_air and series.status|lower == 'ended' %}
+                    <span class="label label-danger">Series has ended</span>
+                  {% else %}
+                    {% if not series.has_next_episode_on_air %}
+                      <span class="label label-warning">To be announced</span>
+                    {% else %}
+                      {{ series.next_episode_on_air.episode_number }}
+                      airs in {{ series.next_episode_on_air.days_remaining }} days
+                    {% endif %}
+                  {% endif %}
+                </td>
+              </tr>
+              <tr>
+                <th>Last episode</th>
+                <td>{{ series.last_episode.episode_number }}</td>
               </tr>
             </table>
           </form>
+
+        </div>
+        <div class="col-md-7">
+          <p>
+            <strong>Status: {{ series.status }}</strong> |
+            <strong>First on air: {{ series.first_aired|date:"d.m.Y" }}</strong> |
+            <strong><a href="http://www.imdb.com/title/{{ series.imdb }}/">iMDB</a></strong> |
+            <strong><a href="http://thetvdb.com/?tab=series&amp;id={{ series.tvdbid }}">thetvdb</a></strong>
+          </p>
+          {{ series.description|default:"No series description available." }}
         </div>
       </div>
     </div>

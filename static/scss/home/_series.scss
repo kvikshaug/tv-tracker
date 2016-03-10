@@ -1,28 +1,18 @@
 .series {
   .header {
-    margin-top: 20px;
-
-    .poster {
-      max-width: 100%;
-    }
-
-    h1 {
-      margin-top: 0;
+    .banner {
+      width: 100%;
     }
 
     .episode-stats {
-      .last-seen {
-        width: 200px;
-      }
-
       th {
-        padding: 3px 20px 3px 0;
-        font-size: 18px;
+        padding-right: 40px;
+        font-size: 16px;
+        font-weight: normal;
         text-align: left;
       }
 
       td {
-        padding: 3px 5px 3px 0;
         min-width: 200px;
         font-size: 18px;
       }
