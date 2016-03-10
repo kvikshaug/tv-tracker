@@ -16,10 +16,8 @@
         <div class="col-md-8">
           <h1>{{ series.name }}</h1>
 
-          <form action="{% url 'core:last_seen' %}" method="post" class="last-seen">
+          <form action="{% url 'core:series_seen_set' series.id %}" method="post" class="last-seen">
             {% csrf_token %}
-            <input type="hidden" name="series" value="{{ series.id }}">
-
             <table class="episode-stats">
               <tr>
                 <th>Seen</th>
@@ -101,7 +99,7 @@
   </div>
 
   <div class="text-center">
-    <a href="{% url 'core:delete_series' series.id %}" class="btn btn-danger btn-lg">Delete this series</a>
+    <a href="{% url 'core:series_delete' series.id %}" class="btn btn-danger btn-lg">Delete this series</a>
   </div>
 
 {% endblock %}

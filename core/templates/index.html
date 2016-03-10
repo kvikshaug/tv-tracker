@@ -15,7 +15,7 @@
           {{ series.unseen_available.count }} available
         {% else %}
           {{ series.last_seen }} / {{ series.unseen_available.last.episode_number }}
-          <a href="{% url 'core:increase_seen' series.id %}" class="increase-seen"><i class="glyphicon glyphicon-plus"></i></a>
+          <a href="{% url 'core:series_seen_increase' series.id %}" class="increase-seen"><i class="glyphicon glyphicon-plus"></i></a>
           <br>
 
           {{ series.unseen_available.count }} available
@@ -23,7 +23,7 @@
       </div>
 
       <p>
-        <a class="btn btn-default btn-sm" href="{% url 'core:set_series_status' series.id 'default' %}">
+        <a class="btn btn-default btn-sm" href="{% url 'core:series_status' series.id %}?status=default">
           Stop watching
         </a>
       </p>

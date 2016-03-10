@@ -18,16 +18,6 @@ def index(request):
     }
     return render(request, 'index.html', context)
 
-def increase_seen(request, series_id):
-    series = Series.objects.get(id=series_id)
-    series.increase_seen()
-    return redirect('core:index')
-
-def series(request, series_id):
-    series = Series.objects.prefetch_related('episodes').get(id=series_id)
-    context = {'series': series}
-    return render(request, 'series.html', context)
-
 def search(request):
     query = request.GET.get('query', '').strip()
     if len(query) < 3:
@@ -48,27 +38,38 @@ def search(request):
     }
     return render(request, 'search.html', context)
 
-def add_series(request, id):
-    series = tvdb.create_or_update_series(id)
+def series_synchronize(request):
+    series = tvdb.create_or_update_series(int(request.GET['tvdbid']))
     return redirect('core:series', series.id)
 
-def delete_series(request, series_id):
+def series(request, series_id):
+    series = Series.objects.prefetch_related('episodes').get(id=series_id)
+    context = {'series': series}
+    return render(request, 'series.html', context)
+
+def series_seen_increase(request, series_id):
     series = Series.objects.get(id=series_id)
-    series.delete()
+    series.increase_seen()
     return redirect('core:index')
 
-def last_seen(request):
-    series = Series.objects.get(id=request.POST['series'])
+def series_seen_set(request, series_id):
+    series = Series.objects.get(id=series_id)
     if request.POST['last-seen'] == '' or re.match('^\d+x\d+$', request.POST['last-seen']):
         series.last_seen = request.POST['last-seen']
     series.save()
     return redirect('core:series', series.id)
 
-def set_series_status(request, series_id, status):
+def series_status(request, series_id):
+    status = request.GET.get('status', '')
     if status not in [s[0] for s in Series.LOCAL_STATUS_CHOICES]:
         raise PermissionDenied
 
     series = Series.objects.get(id=series_id)
     series.local_status = status
     series.save()
+    return redirect('core:index')
+
+def series_delete(request, series_id):
+    series = Series.objects.get(id=series_id)
+    series.delete()
     return redirect('core:index')
