@@ -1,6 +1,5 @@
-from itertools import groupby
-
 from datetime import date
+from itertools import groupby
 
 from django.db import models
 
