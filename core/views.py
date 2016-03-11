@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
 import re
 
@@ -8,6 +10,21 @@ from thetvdb import tvdb
 
 def index(request):
     return render(request, 'index.html')
+
+def demo(request):
+    DEMO_USERNAME = 'demouser'
+    DEMO_PASSWORD = ''
+    demo_user, created = User.objects.get_or_create(username=DEMO_USERNAME, defaults={
+        'first_name': '',
+        'last_name': '',
+        'email': '',
+    })
+    demo_user.set_password(DEMO_PASSWORD)
+    demo_user.save()
+
+    auth_user = authenticate(username=DEMO_USERNAME, password=DEMO_PASSWORD)
+    login(request, auth_user)
+    return redirect('core:dashboard')
 
 @login_required
 def dashboard(request):

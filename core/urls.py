@@ -8,6 +8,7 @@ app_name = "core"
 urlpatterns = [
     url(r'^$', views.index, name='index'),
 
+    url('^demo/', views.demo, name='demo'),
     url('^login/', auth_views.login, name='login', kwargs={'template_name': 'login.html'}),
     url('^logout/', auth_views.logout, name='logout', kwargs={'next_page': '/'}),
 
