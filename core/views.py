@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -7,6 +8,7 @@ import re
 
 from core.models import Watching, Series
 from thetvdb import tvdb
+from thetvdb.exceptions import TVDBIDDoesNotExist
 
 def index(request):
     if request.user.is_authenticated():
@@ -67,12 +69,12 @@ def search(request):
 def watching_start(request):
     try:
         tvdbid = int(request.GET['tvdbid'])
-        series = Series.objects.get(tvdbid=tvdbid)
-    except Series.DoesNotExist:
-        series = tvdb.create_or_update_series(tvdbid)
-    finally:
+        series = Series.create_or_sync(tvdbid)
         watching, created = Watching.objects.get_or_create(user=request.user, series=series)
         return redirect('core:watching', watching.id)
+    except TVDBIDDoesNotExist:
+        messages.info(request, 'tvdbid_invalid')
+        return redirect('core:dashboard')
 
 @login_required
 def watching(request, watching_id):

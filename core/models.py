@@ -153,6 +153,14 @@ class Series(models.Model):
                 return episode
         raise Episode.DoesNotExist("Series '%s' has no episode after %sx%02d" % (self, season, episode_number))
 
+    @staticmethod
+    def create_or_sync(tvdbid):
+        try:
+            return Series.objects.get(tvdbid=tvdbid)
+        except Series.DoesNotExist:
+            from thetvdb import tvdb
+            return tvdb.create_or_update_series(tvdbid)
+
     class Meta:
         ordering = ['name']
 

@@ -2,6 +2,14 @@
 
 {% block body %}
 
+  {% for message in messages %}
+    {% if message.message == 'tvdbid_invalid' %}
+      <div class="alert alert-warning">
+        <a href="http://thetvdb.com/">TheTVDB</a> claims that the given Series ID is invalid.
+      </div>
+    {% endif %}
+  {% endfor %}
+
   {% include 'home/active.html' %}
   {% include 'home/table.html' with table_header="Series" watches=default_series %}
   {% include 'home/table.html' with table_header="Archive" watches=archived_series %}
