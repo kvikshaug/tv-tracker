@@ -1,62 +1,65 @@
-{% if watches|length == 0 %}
+{% if watches|length > 0 %}
 
-  <p>No series in this category.</p>
-
-{% else %}
-
+  <h3>{{ table_header }}</h3>
   <table class="table">
     <tr>
-      <th>Show</th>
+      <th>Series</th>
       <th>Seen</th>
       <th>Available</th>
       <th>Next on air</th>
-      <th>Last</th>
+      <th>Last episode</th>
       <th>Status</th>
       <th>Action</th>
     </tr>
     {% for watching in watches %}
       <tr>
         <td><a href="{% url 'core:watching' watching.id %}">{{ watching.series.name }}</a></td>
-        <td>{{ watching.last_seen }}</td>
+        <td>{{ watching.last_seen|default:"Not started" }}</td>
         <td>
           {% if watching.unseen_available.count == 0 %}
-            -
+            No episodes
           {% else %}
-            {{ watching.unseen_available.first.episode_number }}
+            {{ watching.unseen_available.count }} episodes
 
-            {% if watching.unseen_available.first != watching.unseen_available.last %}
-             - {{ watching.unseen_available.last.episode_number }}
+            {% if watching.unseen_available.first == watching.unseen_available.last %}
+              ({{ watching.unseen_available.first.episode_number }})
+            {% else %}
+              ({{ watching.unseen_available.first.episode_number }}
+              - {{ watching.unseen_available.last.episode_number }})
             {% endif %}
-
-            ({{ watching.unseen_available.count }} total)
           {% endif %}
         </td>
         <td>
           {% if watching.series.has_next_episode_on_air %}
             {{ watching.series.next_episode_on_air.episode_number }}
-            ({{ watching.series.next_episode_on_air.days_remaining }} days:
-            {{ watching.series.next_episode_on_air.air_date|date:"d.m.Y" }})
+            in {{ watching.series.next_episode_on_air.days_remaining }} days
+            ({{ watching.series.next_episode_on_air.air_date|date:"d.m.Y" }})
           {% else %}
-            N/A
+            {% if watching.series.status|lower == "ended" %}
+              -
+            {% else %}
+              No upcoming episodes
+            {% endif %}
           {% endif %}
         </td>
         <td>{{ watching.series.last_episode.episode_number }}</td>
         <td>{{ watching.series.status }}</td>
         <td>
-          {% if watching.status == 'active' %}
-            <a class="btn btn-default btn-sm" href="{% url 'core:watching_status' watching.id %}?status=default">
-              Stop watching
+          {% if watching.status == 'default' %}
+            <a href="{% url 'core:watching_status' watching.id %}?status=active">
+              Start watching
             </a>
-          {% elif watching.status == 'default' %}
-            <a class="btn btn-default btn-sm" href="{% url 'core:watching_status' watching.id %}?status=active">
-              Watch
-            </a>
-            <a class="btn btn-default btn-sm" href="{% url 'core:watching_status' watching.id %}?status=archived">
+            or
+            <a href="{% url 'core:watching_status' watching.id %}?status=archived">
               Archive
             </a>
           {% elif watching.status == 'archived' %}
-            <a class="btn btn-default btn-sm" href="{% url 'core:watching_status' watching.id %}?status=default">
+            <a href="{% url 'core:watching_status' watching.id %}?status=default">
               Reactivate
+            </a>
+            or
+            <a href="{% url 'core:watching_stop' watching.id %}">
+              Stop following series
             </a>
           {% endif %}
         </td>

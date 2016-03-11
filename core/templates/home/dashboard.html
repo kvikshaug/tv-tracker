@@ -2,13 +2,8 @@
 
 {% block body %}
 
-  <h3>Active series</h3>
   {% include 'home/active.html' %}
-
-  <h3>Other series</h3>
-  {% include 'home/table.html' with watches=default_series %}
-
-  <h3>Archived series</h3>
-  {% include 'home/table.html' with watches=archived_series %}
+  {% include 'home/table.html' with table_header="Series" watches=default_series %}
+  {% include 'home/table.html' with table_header="Archive" watches=archived_series %}
 
 {% endblock %}
