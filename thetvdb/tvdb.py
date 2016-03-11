@@ -6,6 +6,7 @@ import zipfile
 
 import requests
 
+from .exceptions import TVDBIDDoesNotExist
 from .models import SeriesSearchResult, Series as TVDBSeries
 from core.models import Series
 
@@ -15,12 +16,16 @@ def search_for_series(query):
     return [SeriesSearchResult.from_xml(series_xml) for series_xml in xml.findall("Series")]
 
 def create_or_update_series(tvdbid):
-    zipped = requests.get("%s/%s/series/%s/all/en.zip" % (
+    response = requests.get("%s/%s/series/%s/all/en.zip" % (
         settings.TVDB_API_ENDPOINT,
         settings.TVDB_API_KEY,
         tvdbid,
-    )).content
-    content = zipfile.ZipFile(BytesIO(zipped)).read("en.xml")
+    ))
+
+    if response.status_code == 404:
+        raise TVDBIDDoesNotExist("thetvdb returned 404 for series id '%s'" % tvdbid)
+
+    content = zipfile.ZipFile(BytesIO(response.content)).read("en.xml")
     xml = ElementTree.fromstring(content)
 
     series_data = TVDBSeries.from_xml(xml)

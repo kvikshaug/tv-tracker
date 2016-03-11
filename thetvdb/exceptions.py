@@ -1,0 +1,2 @@
+class TVDBIDDoesNotExist(Exception):
+    pass

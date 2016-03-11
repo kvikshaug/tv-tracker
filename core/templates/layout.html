@@ -2,10 +2,11 @@
 <html>
 <head>
 
-  <title>TV</title>
+  <title>TV Tracker</title>
   <meta charset="utf-8">
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
   <link rel="stylesheet" href="/static/css/style.css" media="screen">
+  <link rel="shortcut icon" href="/static/img/tv.ico">
 
 </head>
 <body>
@@ -14,13 +15,52 @@
 
     <header>
       <div class="row">
-        <div class="col-md-8">
-          <h1><a href="/">TV DB</a></h1>
+        <div class="col-md-3">
+          <h1>
+            {% if not user.is_authenticated %}
+              <a href="{% url 'core:index' %}">TV Tracker</a>
+            {% else %}
+              <a href="{% url 'core:dashboard' %}">TV Tracker</a>
+            {% endif %}
+          </h1>
         </div>
-        <div class="col-md-4">
-          <form action="{% url 'core:search' %}" method="get" class="search">
-            <input type="text" name="query" placeholder="Add new series..." value="{{ series_search_query }}" class="new-series form-control">
-          </form>
+        <div class="col-md-9">
+          <div class="user-header text-right">
+            <nav>
+              <ul>
+                {% if user.is_authenticated %}
+                  <li>
+                    {{ user.username }}
+                  </li>
+                  <li>
+                    <a href="{% url 'core:logout' %}">Log out</a>
+                  </li>
+                {% else %}
+                  <li>
+                    <a href="{% url 'core:login' %}">Log in</a>
+                  </li>
+                {% endif %}
+              </ul>
+            </nav>
+
+            {% if user.is_authenticated %}
+              <form action="{% url 'core:search' %}" method="get" class="search form-inline">
+                <div class="input-group">
+                  <input
+                    type="text"
+                    name="query"
+                    placeholder="Search for series..."
+                    value="{{ series_search_query }}"
+                    class="form-control">
+                  <span class="input-group-btn">
+                    <button class="btn btn-default" type="submit">
+                      <i class="glyphicon glyphicon-search"></i>
+                    </button>
+                  </span>
+                </div>
+              </form>
+            {% endif %}
+          </div>
         </div>
       </div>
     </header>

@@ -46,10 +46,8 @@
             {% endif %}
 
             <p>
-              <a
-                href="{% url 'core:series_synchronize' %}?tvdbid={{ series.tvdbid }}"
-                class="btn btn-default btn-lg">
-                Add it!
+              <a href="{% url 'core:watching_start' %}?tvdbid={{ series.tvdbid }}"class="btn btn-default">
+                Start following {{ series.name }}
               </a>
             </p>
 

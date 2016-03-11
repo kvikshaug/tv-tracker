@@ -1,0 +1,34 @@
+header {
+
+  .user-header {
+    margin-top: 20px;
+
+    nav {
+      display: inline-block;
+
+      ul {
+        list-style-type: none;
+
+        li {
+          display: inline-block;
+          margin-right: 20px;
+
+          a {
+            display: block;
+            padding-top: 15px;
+            padding-bottom: 15px;
+          }
+        }
+      }
+    }
+
+    .search {
+      display: inline-block;
+    }
+  }
+}
+
+footer {
+  margin-bottom: 40px;
+  text-align: center;
+}

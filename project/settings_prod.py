@@ -6,6 +6,8 @@ ROOT_URLCONF = 'project.urls'
 WSGI_APPLICATION = 'project.wsgi.application'
 ALLOWED_HOSTS = ['tv.kvikshaug.no']
 SECRET_KEY = os.environ['SECRET_KEY']
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/dashboard/'
 
 TIME_ZONE = 'Europe/Oslo'
 LANGUAGE_CODE = 'en-us' # See http://www.i18nguy.com/unicode/language-identifiers.html

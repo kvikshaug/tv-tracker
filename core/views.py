@@ -1,23 +1,42 @@
 from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
-
 import re
 
-from core.models import Series
+from core import demo
+from core.models import Watching, Series
 from thetvdb import tvdb
+from thetvdb.exceptions import TVDBIDDoesNotExist
 
 def index(request):
-    series = Series.objects.prefetch_related('episodes').all()
-    active_series = [s for s in series if s.local_status == 'active']
-    default_series = [s for s in series if s.local_status == 'default']
-    archived_series = [s for s in series if s.local_status == 'archived']
+    if request.user.is_authenticated():
+        return redirect('core:dashboard')
+
+    return render(request, 'index.html')
+
+def demo_login(request):
+    demo.reset_demouser() # Reset the demo data anytime someone tries to access it
+    auth_user = authenticate(username=demo.USERNAME, password=demo.PASSWORD)
+    login(request, auth_user)
+    return redirect('core:dashboard')
+
+@login_required
+def dashboard(request):
+    watches = request.user.watches.select_related('series').prefetch_related('series__episodes').all()
+    active_series = [s for s in watches if s.status == 'active']
+    default_series = [s for s in watches if s.status == 'default']
+    archived_series = [s for s in watches if s.status == 'archived']
     context = {
         'active_series': active_series,
         'default_series': default_series,
         'archived_series': archived_series,
     }
-    return render(request, 'home/index.html', context)
+    return render(request, 'home/dashboard.html', context)
 
+@login_required
 def search(request):
     query = request.GET.get('query', '').strip()
     if len(query) < 3:
@@ -38,43 +57,63 @@ def search(request):
     }
     return render(request, 'home/search.html', context)
 
-def series_synchronize(request):
-    series = tvdb.create_or_update_series(int(request.GET['tvdbid']))
-    return redirect('core:series', series.id)
+@login_required
+def watching_start(request):
+    try:
+        tvdbid = int(request.GET['tvdbid'])
+        series = Series.create_or_sync(tvdbid)
+        watching, created = Watching.objects.get_or_create(user=request.user, series=series)
+        return redirect('core:watching', watching.id)
+    except TVDBIDDoesNotExist:
+        messages.info(request, 'tvdbid_invalid')
+        return redirect('core:dashboard')
 
-def series(request, series_id):
-    series = Series.objects.prefetch_related('episodes').get(id=series_id)
-    context = {'series': series}
+@login_required
+def watching(request, watching_id):
+    watching = Watching.objects.select_related(
+        'series',
+    ).prefetch_related(
+        'series__episodes',
+    ).get(id=watching_id)
+    context = {'watching': watching}
     return render(request, 'home/series.html', context)
 
-def series_seen(request, series_id):
-    series = Series.objects.get(id=series_id)
+@login_required
+def watching_seen(request, watching_id):
+    watching = Watching.objects.get(id=watching_id)
 
     if 'increment' in request.GET:
-        series.move_seen('next')
-        return redirect('core:index')
+        watching.move_seen('next')
+        return redirect('core:dashboard')
     elif 'decrement' in request.GET:
-        series.move_seen('previous')
-        return redirect('core:index')
+        watching.move_seen('previous')
+        return redirect('core:dashboard')
     elif 'last-seen' in request.POST:
-        if request.POST['last-seen'] == '' or re.match('^\d+x\d+$', request.POST['last-seen']):
-            series.last_seen = request.POST['last-seen']
-        series.save()
-        return redirect('core:series', series.id)
+        try:
+            last_seen = request.POST['last-seen'].strip()
+            if last_seen != '':
+                season, episode = last_seen.split('x')
+                last_seen = "%sx%02d" % (int(season), int(episode))
+            watching.last_seen = last_seen
+            watching.save()
+        except ValueError:
+            messages.info(request, 'invalid_seen')
+        return redirect('core:watching', watching.id)
     else:
-        return redirect('core:index')
+        return redirect('core:dashboard')
 
-def series_status(request, series_id):
+@login_required
+def watching_status(request, watching_id):
     status = request.GET.get('status', '')
-    if status not in [s[0] for s in Series.LOCAL_STATUS_CHOICES]:
+    if status not in [s[0] for s in Watching.STATUS_CHOICES]:
         raise PermissionDenied
 
-    series = Series.objects.get(id=series_id)
-    series.local_status = status
-    series.save()
-    return redirect('core:index')
+    watching = Watching.objects.get(id=watching_id)
+    watching.status = status
+    watching.save()
+    return redirect('core:dashboard')
 
-def series_delete(request, series_id):
-    series = Series.objects.get(id=series_id)
-    series.delete()
-    return redirect('core:index')
+@login_required
+def watching_stop(request, watching_id):
+    Watching.objects.get(id=watching_id).delete()
+    return redirect('core:dashboard')
