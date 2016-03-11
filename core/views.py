@@ -9,6 +9,9 @@ from core.models import Watching, Series
 from thetvdb import tvdb
 
 def index(request):
+    if request.user.is_authenticated():
+        return redirect('core:dashboard')
+
     return render(request, 'index.html')
 
 def demo(request):
