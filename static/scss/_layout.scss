@@ -1,7 +1,32 @@
 header {
-  .search {
-    margin-top: 15px;
-    font-size: 16px;
+
+  .user-header {
+    margin-top: 20px;
+
+    nav {
+      display: inline-block;
+
+      ul {
+        list-style-type: none;
+
+        li {
+          display: inline-block;
+          margin-right: 20px;
+
+          a {
+            display: block;
+            padding-top: 15px;
+            padding-bottom: 15px;
+          }
+        }
+      }
+    }
+
+    .search {
+      display: inline-block;
+      max-width: 200px;
+      font-size: 16px;
+    }
   }
 }
 

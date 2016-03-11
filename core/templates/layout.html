@@ -14,18 +14,42 @@
 
     <header>
       <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-3">
           <h1><a href="/">TV Tracker</a></h1>
         </div>
-        <div class="col-md-4">
-          <form action="{% url 'core:search' %}" method="get" class="search">
-            <input
-              type="text"
-              name="query"
-              placeholder="Add new series..."
-              value="{{ series_search_query }}"
-              class="form-control search">
-          </form>
+        <div class="col-md-9">
+          <div class="user-header pull-right">
+            <nav>
+              <ul>
+                {% if user.is_authenticated %}
+                  <li>
+                    {{ user.username }}
+                  </li>
+                  <li>
+                    <a href="{% url 'core:dashboard' %}">Dashboard</a>
+                  </li>
+                  <li>
+                    <a href="{% url 'core:logout' %}">Log out</a>
+                  </li>
+                {% else %}
+                  <li>
+                    <a href="{% url 'core:login' %}">Log in</a>
+                  </li>
+                {% endif %}
+              </ul>
+            </nav>
+
+            {% if user.is_authenticated %}
+              <form action="{% url 'core:search' %}" method="get" class="search">
+                <input
+                  type="text"
+                  name="query"
+                  placeholder="Search for series..."
+                  value="{{ series_search_query }}"
+                  class="form-control search">
+              </form>
+            {% endif %}
+          </div>
         </div>
       </div>
     </header>
