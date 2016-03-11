@@ -97,9 +97,15 @@ def watching_seen(request, watching_id):
         watching.move_seen('previous')
         return redirect('core:dashboard')
     elif 'last-seen' in request.POST:
-        if request.POST['last-seen'] == '' or re.match('^\d+x\d+$', request.POST['last-seen']):
-            watching.last_seen = request.POST['last-seen']
-        watching.save()
+        try:
+            last_seen = request.POST['last-seen'].strip()
+            if last_seen != '':
+                season, episode = last_seen.split('x')
+                last_seen = "%sx%02d" % (int(season), int(episode))
+            watching.last_seen = last_seen
+            watching.save()
+        except ValueError:
+            messages.info(request, 'invalid_seen')
         return redirect('core:watching', watching.id)
     else:
         return redirect('core:dashboard')

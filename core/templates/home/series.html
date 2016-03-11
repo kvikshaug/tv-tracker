@@ -15,6 +15,14 @@
 
       <h1>{{ watching.series.name }}</h1>
 
+      {% for message in messages %}
+        {% if message.message == 'invalid_seen' %}
+          <div class="alert alert-warning">
+            Invalid episode number. Please use the SxEE format, eg. <strong>1x01</strong>.
+          </div>
+        {% endif %}
+      {% endfor %}
+
       <div class="row">
         <div class="col-md-5">
 
