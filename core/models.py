@@ -95,6 +95,9 @@ class Watching(models.Model):
             # Reached start/end or the last_seen value is invalid; do nothing
             pass
 
+    class Meta:
+        ordering = ['series__name']
+
 class Series(models.Model):
     tvdbid = models.PositiveIntegerField(unique=True)
     name = models.CharField(max_length=255)
