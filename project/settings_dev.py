@@ -23,8 +23,9 @@ DEBUG_TOOLBAR_CONFIG = {
 
 INSTALLED_APPS = [
     'werkzeug_debugger_runserver',
+] + INSTALLED_APPS + [
     'debug_toolbar',
-] + INSTALLED_APPS
+]
 
 LOGGING = {
     'version': 1,
