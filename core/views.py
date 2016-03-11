@@ -1,14 +1,13 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
-
 import re
 
 from core.models import Series
 from thetvdb import tvdb
 
 def index(request):
-    return redirect('core:dashboard')
+    return render(request, 'index.html')
 
 @login_required
 def dashboard(request):
