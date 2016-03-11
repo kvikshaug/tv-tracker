@@ -7,6 +7,7 @@ from thetvdb import tvdb
 
 class MockRequestsResponse:
     def __init__(self, content):
+        self.status_code = 200
         self.content = content
 
 class TheTVDBTestCase(TestCase):
