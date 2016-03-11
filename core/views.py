@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
 import re
 
+from core import demo
 from core.models import Watching, Series
 from thetvdb import tvdb
 from thetvdb.exceptions import TVDBIDDoesNotExist
@@ -16,18 +17,9 @@ def index(request):
 
     return render(request, 'index.html')
 
-def demo(request):
-    DEMO_USERNAME = 'demouser'
-    DEMO_PASSWORD = ''
-    demo_user, created = User.objects.get_or_create(username=DEMO_USERNAME, defaults={
-        'first_name': '',
-        'last_name': '',
-        'email': '',
-    })
-    demo_user.set_password(DEMO_PASSWORD)
-    demo_user.save()
-
-    auth_user = authenticate(username=DEMO_USERNAME, password=DEMO_PASSWORD)
+def demo_login(request):
+    demo.reset_demouser() # Reset the demo data anytime someone tries to access it
+    auth_user = authenticate(username=demo.USERNAME, password=demo.PASSWORD)
     login(request, auth_user)
     return redirect('core:dashboard')
 
