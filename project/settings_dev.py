@@ -22,7 +22,7 @@ DEBUG_TOOLBAR_CONFIG = {
 }
 
 INSTALLED_APPS = [
-    'werkzeug_debugger_runserver',
+    'django_extensions',
 ] + INSTALLED_APPS + [
     'debug_toolbar',
 ]

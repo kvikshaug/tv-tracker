@@ -1,5 +1,6 @@
 django-debug-toolbar
-django-werkzeug-debugger-runserver
+django-extensions
 flake8
 ipython
 testfixtures
+Werkzeug
