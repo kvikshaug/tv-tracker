@@ -5,7 +5,7 @@ from . import views
 app_name = "core"
 
 urlpatterns = [
-    url(r'^$', views.index, name='index'),
+    url(r'^$', views.dashboard, name='dashboard'),
     url(r'^search/$', views.search, name='search'),
 
     url(r'^series/synchronize/$', views.series_synchronize, name='series_synchronize'),

@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 
 import re
@@ -6,7 +7,7 @@ import re
 from core.models import Series
 from thetvdb import tvdb
 
-def index(request):
+def dashboard(request):
     series = Series.objects.prefetch_related('episodes').all()
     active_series = [s for s in series if s.local_status == 'active']
     default_series = [s for s in series if s.local_status == 'default']
@@ -16,7 +17,7 @@ def index(request):
         'default_series': default_series,
         'archived_series': archived_series,
     }
-    return render(request, 'home/index.html', context)
+    return render(request, 'home/dashboard.html', context)
 
 def search(request):
     query = request.GET.get('query', '').strip()
@@ -52,17 +53,17 @@ def series_seen(request, series_id):
 
     if 'increment' in request.GET:
         series.move_seen('next')
-        return redirect('core:index')
+        return redirect('core:dashboard')
     elif 'decrement' in request.GET:
         series.move_seen('previous')
-        return redirect('core:index')
+        return redirect('core:dashboard')
     elif 'last-seen' in request.POST:
         if request.POST['last-seen'] == '' or re.match('^\d+x\d+$', request.POST['last-seen']):
             series.last_seen = request.POST['last-seen']
         series.save()
         return redirect('core:series', series.id)
     else:
-        return redirect('core:index')
+        return redirect('core:dashboard')
 
 def series_status(request, series_id):
     status = request.GET.get('status', '')
@@ -72,9 +73,9 @@ def series_status(request, series_id):
     series = Series.objects.get(id=series_id)
     series.local_status = status
     series.save()
-    return redirect('core:index')
+    return redirect('core:dashboard')
 
 def series_delete(request, series_id):
     series = Series.objects.get(id=series_id)
     series.delete()
-    return redirect('core:index')
+    return redirect('core:dashboard')

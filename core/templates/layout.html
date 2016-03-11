@@ -19,7 +19,12 @@
         </div>
         <div class="col-md-4">
           <form action="{% url 'core:search' %}" method="get" class="search">
-            <input type="text" name="query" placeholder="Add new series..." value="{{ series_search_query }}" class="new-series form-control">
+            <input
+              type="text"
+              name="query"
+              placeholder="Add new series..."
+              value="{{ series_search_query }}"
+              class="form-control search">
           </form>
         </div>
       </div>
