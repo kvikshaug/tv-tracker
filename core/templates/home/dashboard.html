@@ -6,9 +6,9 @@
   {% include 'home/active.html' %}
 
   <h3>Other series</h3>
-  {% include 'home/table.html' with series_plural=default_series %}
+  {% include 'home/table.html' with watches=default_series %}
 
   <h3>Archived series</h3>
-  {% include 'home/table.html' with series_plural=archived_series %}
+  {% include 'home/table.html' with watches=archived_series %}
 
 {% endblock %}

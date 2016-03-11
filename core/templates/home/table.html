@@ -1,4 +1,4 @@
-{% if series_plural|length == 0 %}
+{% if watches|length == 0 %}
 
   <p>No series in this category.</p>
 
@@ -14,46 +14,48 @@
       <th>Status</th>
       <th>Action</th>
     </tr>
-    {% for series in series_plural %}
+    {% for watching in watches %}
       <tr>
-        <td><a href="{% url 'core:series' series.id %}">{{ series.name }}</a></td>
-        <td>{{ series.last_seen }}</td>
+        <td><a href="{% url 'core:watching' watching.id %}">{{ watching.series.name }}</a></td>
+        <td>{{ watching.last_seen }}</td>
         <td>
-          {% if series.unseen_available.count == 0 %}
+          {% if watching.unseen_available.count == 0 %}
             -
           {% else %}
-            {{ series.unseen_available.first.episode_number }}
+            {{ watching.unseen_available.first.episode_number }}
 
-            {% if series.unseen_available.first != series.unseen_available.last %}
-             - {{ series.unseen_available.last.episode_number }}
+            {% if watching.unseen_available.first != watching.unseen_available.last %}
+             - {{ watching.unseen_available.last.episode_number }}
             {% endif %}
 
-            ({{ series.unseen_available.count }} total)
+            ({{ watching.unseen_available.count }} total)
           {% endif %}
         </td>
         <td>
-          {% if series.has_next_episode_on_air %}
-            {{ series.next_episode_on_air.episode_number }} ({{ series.next_episode_on_air.days_remaining }} days: {{ series.next_episode_on_air.air_date|date:"d.m.Y" }})
+          {% if watching.series.has_next_episode_on_air %}
+            {{ watching.series.next_episode_on_air.episode_number }}
+            ({{ watching.series.next_episode_on_air.days_remaining }} days:
+            {{ watching.series.next_episode_on_air.air_date|date:"d.m.Y" }})
           {% else %}
             N/A
           {% endif %}
         </td>
-        <td>{{ series.last_episode.episode_number }}</td>
-        <td>{{ series.status }}</td>
+        <td>{{ watching.series.last_episode.episode_number }}</td>
+        <td>{{ watching.series.status }}</td>
         <td>
-          {% if series.local_status == 'active' %}
-            <a class="btn btn-default btn-sm" href="{% url 'core:series_status' series.id %}?status=default">
+          {% if watching.status == 'active' %}
+            <a class="btn btn-default btn-sm" href="{% url 'core:watching_status' watching.id %}?status=default">
               Stop watching
             </a>
-          {% elif series.local_status == 'default' %}
-            <a class="btn btn-default btn-sm" href="{% url 'core:series_status' series.id %}?status=active">
+          {% elif watching.status == 'default' %}
+            <a class="btn btn-default btn-sm" href="{% url 'core:watching_status' watching.id %}?status=active">
               Watch
             </a>
-            <a class="btn btn-default btn-sm" href="{% url 'core:series_status' series.id %}?status=archived">
+            <a class="btn btn-default btn-sm" href="{% url 'core:watching_status' watching.id %}?status=archived">
               Archive
             </a>
-          {% elif series.local_status == 'archived' %}
-            <a class="btn btn-default btn-sm" href="{% url 'core:series_status' series.id %}?status=default">
+          {% elif watching.status == 'archived' %}
+            <a class="btn btn-default btn-sm" href="{% url 'core:watching_status' watching.id %}?status=default">
               Reactivate
             </a>
           {% endif %}

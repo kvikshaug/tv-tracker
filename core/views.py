@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
 import re
 
-from core.models import Series
+from core.models import Watching, Series
 from thetvdb import tvdb
 
 def index(request):
@@ -28,10 +28,10 @@ def demo(request):
 
 @login_required
 def dashboard(request):
-    series = Series.objects.prefetch_related('episodes').all()
-    active_series = [s for s in series if s.local_status == 'active']
-    default_series = [s for s in series if s.local_status == 'default']
-    archived_series = [s for s in series if s.local_status == 'archived']
+    watches = request.user.watches.select_related('series').prefetch_related('series__episodes').all()
+    active_series = [s for s in watches if s.status == 'active']
+    default_series = [s for s in watches if s.status == 'default']
+    archived_series = [s for s in watches if s.status == 'archived']
     context = {
         'active_series': active_series,
         'default_series': default_series,
@@ -61,47 +61,56 @@ def search(request):
     return render(request, 'home/search.html', context)
 
 @login_required
-def series_synchronize(request):
-    series = tvdb.create_or_update_series(int(request.GET['tvdbid']))
-    return redirect('core:series', series.id)
+def watching_start(request):
+    try:
+        tvdbid = int(request.GET['tvdbid'])
+        series = Series.objects.get(tvdbid=tvdbid)
+    except Series.DoesNotExist:
+        series = tvdb.create_or_update_series(tvdbid)
+    finally:
+        watching, created = Watching.objects.get_or_create(user=request.user, series=series)
+        return redirect('core:watching', watching.id)
 
 @login_required
-def series(request, series_id):
-    series = Series.objects.prefetch_related('episodes').get(id=series_id)
-    context = {'series': series}
+def watching(request, watching_id):
+    watching = Watching.objects.select_related(
+        'series',
+    ).prefetch_related(
+        'series__episodes',
+    ).get(id=watching_id)
+    context = {'watching': watching}
     return render(request, 'home/series.html', context)
 
 @login_required
-def series_seen(request, series_id):
-    series = Series.objects.get(id=series_id)
+def watching_seen(request, watching_id):
+    watching = Watching.objects.get(id=watching_id)
 
     if 'increment' in request.GET:
-        series.move_seen('next')
+        watching.move_seen('next')
         return redirect('core:dashboard')
     elif 'decrement' in request.GET:
-        series.move_seen('previous')
+        watching.move_seen('previous')
         return redirect('core:dashboard')
     elif 'last-seen' in request.POST:
         if request.POST['last-seen'] == '' or re.match('^\d+x\d+$', request.POST['last-seen']):
-            series.last_seen = request.POST['last-seen']
-        series.save()
-        return redirect('core:series', series.id)
+            watching.last_seen = request.POST['last-seen']
+        watching.save()
+        return redirect('core:watching', watching.id)
     else:
         return redirect('core:dashboard')
 
 @login_required
-def series_status(request, series_id):
+def watching_status(request, watching_id):
     status = request.GET.get('status', '')
-    if status not in [s[0] for s in Series.LOCAL_STATUS_CHOICES]:
+    if status not in [s[0] for s in Watching.STATUS_CHOICES]:
         raise PermissionDenied
 
-    series = Series.objects.get(id=series_id)
-    series.local_status = status
-    series.save()
+    watching = Watching.objects.get(id=watching_id)
+    watching.status = status
+    watching.save()
     return redirect('core:dashboard')
 
 @login_required
-def series_delete(request, series_id):
-    series = Series.objects.get(id=series_id)
-    series.delete()
+def watching_stop(request, watching_id):
+    Watching.objects.get(id=watching_id).delete()
     return redirect('core:dashboard')
