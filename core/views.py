@@ -7,6 +7,10 @@ import re
 from core.models import Series
 from thetvdb import tvdb
 
+def index(request):
+    return redirect('core:dashboard')
+
+@login_required
 def dashboard(request):
     series = Series.objects.prefetch_related('episodes').all()
     active_series = [s for s in series if s.local_status == 'active']
@@ -19,6 +23,7 @@ def dashboard(request):
     }
     return render(request, 'home/dashboard.html', context)
 
+@login_required
 def search(request):
     query = request.GET.get('query', '').strip()
     if len(query) < 3:
@@ -39,15 +44,18 @@ def search(request):
     }
     return render(request, 'home/search.html', context)
 
+@login_required
 def series_synchronize(request):
     series = tvdb.create_or_update_series(int(request.GET['tvdbid']))
     return redirect('core:series', series.id)
 
+@login_required
 def series(request, series_id):
     series = Series.objects.prefetch_related('episodes').get(id=series_id)
     context = {'series': series}
     return render(request, 'home/series.html', context)
 
+@login_required
 def series_seen(request, series_id):
     series = Series.objects.get(id=series_id)
 
@@ -65,6 +73,7 @@ def series_seen(request, series_id):
     else:
         return redirect('core:dashboard')
 
+@login_required
 def series_status(request, series_id):
     status = request.GET.get('status', '')
     if status not in [s[0] for s in Series.LOCAL_STATUS_CHOICES]:
@@ -75,6 +84,7 @@ def series_status(request, series_id):
     series.save()
     return redirect('core:dashboard')
 
+@login_required
 def series_delete(request, series_id):
     series = Series.objects.get(id=series_id)
     series.delete()
