@@ -10,7 +10,7 @@ urlpatterns = [
 
     url('^demo/', views.demo_login, name='demo_login'),
     url('^register/', views.register, name='register'),
-    url('^login/', auth_views.login, name='login', kwargs={'template_name': 'login.html'}),
+    url('^login/', auth_views.login, name='login', kwargs={'template_name': 'intro.html'}),
     url('^logout/', auth_views.logout, name='logout', kwargs={'next_page': '/'}),
 
     url(r'^dashboard/$', views.dashboard, name='dashboard'),

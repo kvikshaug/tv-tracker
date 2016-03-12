@@ -26,24 +26,39 @@
         </div>
         <div class="col-md-9">
           <div class="user-header text-right">
-            <nav>
-              <ul>
-                {% if user.is_authenticated %}
-                  <li>
-                    {{ user.username }}
-                  </li>
-                  <li>
-                    <a href="{% url 'core:logout' %}">Log out</a>
-                  </li>
-                {% else %}
-                  <li>
-                    <a href="{% url 'core:login' %}">Log in</a>
-                  </li>
-                {% endif %}
-              </ul>
-            </nav>
+            {% if not user.is_authenticated %}
 
-            {% if user.is_authenticated %}
+              <form action="{% url 'core:login' %}" method="post" class="form-inline">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ next }}">
+
+                <div class="form-group">
+                  <input
+                    type="text"
+                    class="form-control input-sm"
+                    name="username"
+                    placeholder="Username"
+                    value="{{ form.username.value|default:"" }}">
+                </div>
+                <div class="form-group">
+                  <input type="password" class="form-control input-sm" name="password" placeholder="Password">
+                </div>
+                <button type="submit" class="btn btn-default btn-sm">Log in</button>
+              </form>
+
+            {% else %}
+
+              <nav>
+                <ul>
+                    <li>
+                      {{ user.username }}
+                    </li>
+                    <li>
+                      <a href="{% url 'core:logout' %}">Log out</a>
+                    </li>
+                </ul>
+              </nav>
+
               <form action="{% url 'core:search' %}" method="get" class="search form-inline">
                 <div class="input-group">
                   <input
@@ -64,6 +79,12 @@
         </div>
       </div>
     </header>
+
+    {% if form.errors %}
+      <div class="alert alert-danger">
+        Your username and password didn't match. Please try again.
+      </div>
+    {% endif %}
 
     {% block body %}{% endblock %}
 
