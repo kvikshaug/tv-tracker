@@ -21,4 +21,6 @@ COPY . /app
 RUN SECRET_KEY='4&o4wx)z4l3=zk85p(h)q08^2fvfjg^fpkmhjy=i%iu^azboig' \
     RAVEN_DSN='' \
     TVDB_API_KEY='' \
+    RECAPTCHA_PUBLIC_KEY='' \
+    RECAPTCHA_PRIVATE_KEY='' \
     ./manage.py collectstatic --noinput

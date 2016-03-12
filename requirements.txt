@@ -1,4 +1,5 @@
 Django>=1.9.4,<1.10
+django-recaptcha>=1.0.5,<1.1
 gunicorn>=19.4.5,<20
 raven>=5.11,<6
 requests>=2.9.1,<3

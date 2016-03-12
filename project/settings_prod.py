@@ -24,6 +24,10 @@ RAVEN_CONFIG = {
     'dsn': os.environ['RAVEN_DSN'],
 }
 
+NOCAPTCHA = True
+RECAPTCHA_PUBLIC_KEY = os.environ['RECAPTCHA_PUBLIC_KEY']
+RECAPTCHA_PRIVATE_KEY = os.environ['RECAPTCHA_PRIVATE_KEY']
+
 TVDB_API_KEY = os.environ['TVDB_API_KEY']
 TVDB_API_ENDPOINT = "http://thetvdb.com/api"
 
@@ -76,6 +80,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'raven.contrib.django',
+    'captcha',
 
     'core',
     'thetvdb',
