@@ -9,6 +9,7 @@ urlpatterns = [
     url(r'^$', views.intro, name='intro'),
 
     url('^demo/', views.demo_login, name='demo_login'),
+    url('^register/', views.register, name='register'),
     url('^login/', auth_views.login, name='login', kwargs={'template_name': 'login.html'}),
     url('^logout/', auth_views.logout, name='logout', kwargs={'next_page': '/'}),
 

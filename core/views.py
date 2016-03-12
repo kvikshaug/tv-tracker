@@ -4,10 +4,10 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
-import re
 
-from core import demo
-from core.models import Watching, Series
+from . import demo
+from .forms import CaptchaForm
+from .models import Watching, Series
 from thetvdb import tvdb
 from thetvdb.exceptions import TVDBIDDoesNotExist
 
@@ -22,6 +22,30 @@ def demo_login(request):
     auth_user = authenticate(username=demo.USERNAME, password=demo.PASSWORD)
     login(request, auth_user)
     return redirect('core:dashboard')
+
+def register(request):
+    username = request.POST.get('username', '').strip()
+    if username == '' or User.objects.filter(username=username).exists():
+        messages.info(request, 'invalid_username')
+        return redirect('core:intro')
+
+    if 'captcha' not in request.POST:
+        # Username accepted, now give nocaptcha input
+        context = {'form': CaptchaForm(), 'username': username}
+        return render(request, 'register-captcha.html', context)
+    else:
+        # nocaptcha posted; validate and create user
+        form = CaptchaForm(request.POST)
+        if not form.is_valid():
+            messages.info(request, 'invalid_captcha')
+            return redirect('core:intro')
+        else:
+            user = User.objects.create(username=username)
+            user.set_password('')
+            user.save()
+            user = authenticate(username=user.username, password='')
+            login(request, user)
+            return redirect('core:dashboard')
 
 @login_required
 def dashboard(request):

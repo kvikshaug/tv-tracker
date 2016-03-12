@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+  <form action="{% url 'core:register' %}" method="post" class="recaptcha text-center">
+    {% csrf_token %}
+    <input type="hidden" name="captcha" value="1">
+    <input type="hidden" name="username" value="{{ username }}">
+
+    <h2>Please prove that you're human</h2>
+    <div class="recaptcha-center">
+      {{ form.captcha }}
+    </div>
+
+    <button class="btn btn-sm btn-default" type="submit">Ok, I clicked the box</button>
+  </form>
+
+{% endblock %}
