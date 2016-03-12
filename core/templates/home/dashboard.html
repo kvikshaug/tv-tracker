@@ -14,4 +14,36 @@
   {% include 'home/table.html' with table_header="Series" watches=default_watches %}
   {% include 'home/table.html' with table_header="Archive" watches=archived_watches %}
 
+  {% if active_watches|length == 0 and default_watches|length == 0 and archived_watches|length == 0 %}
+    <h3>Welcome!</h3>
+    <p>
+      Search for your favorite series in the upper right to start following them. You can then categorize your series
+      into:
+    </p>
+
+    <div class="row">
+      <div class="col-md-4">
+        <dt>Active</dt>
+        <dl>
+          The series you're currently watching. Displayed with a large poster, and makes it easy to increase which
+          episode you last saw.
+        </dl>
+      </div>
+      <div class="col-md-4">
+        <dt>Default</dt>
+        <dl>
+          Other series you like, but you're not currently watching. Maybe you're waiting for the next episode to air, or
+          you're just taking a break for now.
+        </dl>
+      </div>
+      <div class="col-md-4">
+        <dt>Archive</dt>
+        <dl>
+          Series you've finished. Placing them here instead of removing them completely lets you keep a list of those
+          classic series you liked. Perhaps it's time to re-watch <em>The Wire</em>?
+        </dl>
+      </div>
+    </div>
+  {% endif %}
+
 {% endblock %}
