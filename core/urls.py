@@ -6,7 +6,7 @@ from . import views
 app_name = "core"
 
 urlpatterns = [
-    url(r'^$', views.index, name='index'),
+    url(r'^$', views.intro, name='intro'),
 
     url('^demo/', views.demo_login, name='demo_login'),
     url('^login/', auth_views.login, name='login', kwargs={'template_name': 'login.html'}),

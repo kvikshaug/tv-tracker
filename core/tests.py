@@ -9,6 +9,6 @@ class ViewsTestCase(TestCase):
         self.client = Client()
         LastUpdate.objects.create(datetime=datetime(2016, 1, 1, 12, 0, 0))
 
-    def test_get_index(self):
+    def test_get_root(self):
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)

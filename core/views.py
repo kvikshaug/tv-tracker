@@ -11,11 +11,11 @@ from core.models import Watching, Series
 from thetvdb import tvdb
 from thetvdb.exceptions import TVDBIDDoesNotExist
 
-def index(request):
+def intro(request):
     if request.user.is_authenticated():
         return redirect('core:dashboard')
 
-    return render(request, 'index.html')
+    return render(request, 'intro.html')
 
 def demo_login(request):
     demo.reset_demouser() # Reset the demo data anytime someone tries to access it
