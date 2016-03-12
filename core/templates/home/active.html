@@ -1,7 +1,7 @@
 {% load grouper %}
 
 <div class="active-series">
-  {% for group in active_series|grouper:4 %}
+  {% for group in active_watches|grouper:4 %}
     <div class="row">
       {% for watching in group %}
         <div class="col-md-3">

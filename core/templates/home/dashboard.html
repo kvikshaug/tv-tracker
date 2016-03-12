@@ -11,7 +11,7 @@
   {% endfor %}
 
   {% include 'home/active.html' %}
-  {% include 'home/table.html' with table_header="Series" watches=default_series %}
-  {% include 'home/table.html' with table_header="Archive" watches=archived_series %}
+  {% include 'home/table.html' with table_header="Series" watches=default_watches %}
+  {% include 'home/table.html' with table_header="Archive" watches=archived_watches %}
 
 {% endblock %}

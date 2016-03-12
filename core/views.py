@@ -49,13 +49,13 @@ def register(request):
 @login_required
 def dashboard(request):
     watches = request.user.watches.select_related('series').prefetch_related('series__episodes').all()
-    active_series = [s for s in watches if s.status == 'active']
-    default_series = [s for s in watches if s.status == 'default']
-    archived_series = [s for s in watches if s.status == 'archived']
+    active_watches = [s for s in watches if s.status == 'active']
+    default_watches = [s for s in watches if s.status == 'default']
+    archived_watches = [s for s in watches if s.status == 'archived']
     context = {
-        'active_series': active_series,
-        'default_series': default_series,
-        'archived_series': archived_series,
+        'active_watches': active_watches,
+        'default_watches': default_watches,
+        'archived_watches': archived_watches,
     }
     return render(request, 'home/dashboard.html', context)
 
