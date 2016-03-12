@@ -1,0 +1,39 @@
+.lede {
+  padding: 40px 200px;
+  text-align: center;
+  font-size: 22px;
+}
+
+.action {
+  padding-top: 40px;
+
+  .demo {
+    width: 300px;
+  }
+
+  .or {
+    padding-right: 30px;
+    padding-left: 30px;
+  }
+
+  .register {
+    display: inline-block;
+
+    .username {
+      width: 300px;
+    }
+  }
+}
+
+.features {
+  padding-top: 40px;
+
+  h2 {
+    font-size: 16px;
+  }
+
+  ul {
+    padding-left: 0;
+    list-style-type: none;
+  }
+}

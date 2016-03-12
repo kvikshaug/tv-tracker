@@ -2,10 +2,63 @@
 
 {% block body %}
 
-  <h2>Introduction</h2>
+  <div class="lede">
+    Keep track of the TV series you're watching, what episodes you've seen and when the next one is coming out.
+  </div>
 
-  <p>
-    <a href="{% url 'core:demo_login' %}">Try demo</a>
-  </p>
+  {% for message in messages %}
+    {% if message.message == 'invalid_username' %}
+      <div class="alert alert-warning">
+        Sorry, that username seems to be taken. Please try again with a different name.
+      </div>
+    {% elif message.message == 'invalid_captcha' %}
+      <div class="alert alert-warning">
+        Sorry, you didn't prove that you are a human. Please try again.
+      </div>
+    {% endif %}
+  {% endfor %}
+
+  <div class="action text-center">
+    <a class="btn btn-default demo" href="{% url 'core:demo_login' %}">Try a random demo</a>
+    <span class="or">- or -</span>
+    <form action="{% url 'core:register' %}" method="post" class="form-inline register">
+      {% csrf_token %}
+      <div class="input-group username">
+        <input type="text" class="form-control" name="username" placeholder="Username...">
+        <span class="input-group-btn">
+          <button type="submit" class="btn btn-default">Register for free</button>
+        </span>
+      </div>
+      {{ register_form.captcha }}
+    </form>
+  </div>
+
+  <div class="features">
+    <div class="row">
+      <div class="col-md-offset-4 col-md-8">
+        <h2>Features</h2>
+
+        <ul>
+          <li>
+            Add all your favorite series
+          </li>
+          <li>
+            Easily track which episode you last saw
+          </li>
+          <li>
+            How many episodes left until I catch up with TV?
+          </li>
+          <li>
+            When is the next episode airing?
+          </li>
+          <li>
+            Data is retrieved from <a href="http://thetvdb.com">TheTVDB</a>'s
+            <a href="http://thetvdb.com/wiki/index.php/Programmers_API">API</a>
+          </li>
+        </ul>
+
+      </div>
+    </div>
+  </div>
 
 {% endblock %}
