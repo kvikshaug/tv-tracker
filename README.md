@@ -7,6 +7,14 @@ Keep track of the TV series you're watching, what episodes you've seen and when 
 
 ## Development
 
+### Environment
+
+* `SECRET_KEY`: [Django's SECRET_KEY setting](https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-SECRET_KEY)
+* `RAVEN_DSN`: [Raven DSN](https://docs.getsentry.com/hosted/clients/python/integrations/django/)
+* `TVDB_API_KEY`: [TheTVDB API key](http://thetvdb.com/?tab=apiregister)
+* `RECAPTCHA_PUBLIC_KEY`: [Recaptcha public key](https://www.google.com/recaptcha/intro/index.html)
+* `RECAPTCHA_PRIVATE_KEY`: [Recaptcha private key](https://www.google.com/recaptcha/intro/index.html)
+
 ### Start development server
 
 ```
