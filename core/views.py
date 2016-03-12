@@ -32,7 +32,7 @@ def register(request):
     if 'captcha' not in request.POST:
         # Username accepted, now give nocaptcha input
         context = {'form': CaptchaForm(), 'username': username}
-        return render(request, 'register-captcha.html', context)
+        return render(request, 'register.html', context)
     else:
         # nocaptcha posted; validate and create user
         form = CaptchaForm(request.POST)
@@ -40,10 +40,9 @@ def register(request):
             messages.info(request, 'invalid_captcha')
             return redirect('core:intro')
         else:
-            user = User.objects.create(username=username)
-            user.set_password('')
-            user.save()
-            user = authenticate(username=user.username, password='')
+            password = request.POST.get('password', '').strip()
+            User.objects.create_user(username=username, password=password)
+            user = authenticate(username=username, password=password)
             login(request, user)
             return redirect('core:dashboard')
 

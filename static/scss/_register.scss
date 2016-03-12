@@ -1,10 +1,17 @@
 .recaptcha {
+  $recaptcha-width: 304px; // Magic size of recaptcha box
+
   h2 {
-    font-size: 26px;
+    font-size: 20px;
   }
 
   .recaptcha-center {
-    margin: 15px auto 15px auto;
-    width: 304px; // Magic size of recaptcha box
+    margin: 10px auto 0 auto;
+    width: $recaptcha-width;
+  }
+
+  input, button {
+    margin: 10px auto 0 auto;
+    width: $recaptcha-width;
   }
 }
