@@ -70,50 +70,61 @@ def watching_start(request):
 
 @login_required
 def watching(request, watching_id):
-    watching = Watching.objects.select_related(
-        'series',
-    ).prefetch_related(
-        'series__episodes',
-    ).get(id=watching_id)
-    context = {'watching': watching}
-    return render(request, 'home/series.html', context)
+    try:
+        watching = Watching.objects.select_related(
+            'series',
+        ).prefetch_related(
+            'series__episodes',
+        ).get(id=watching_id, user=request.user)
+        context = {'watching': watching}
+        return render(request, 'home/series.html', context)
+    except Watching.DoesNotExist:
+        return redirect('core:dashboard')
 
 @login_required
 def watching_seen(request, watching_id):
-    watching = Watching.objects.get(id=watching_id)
-
-    if 'increment' in request.GET:
-        watching.move_seen('next')
-        return redirect('core:dashboard')
-    elif 'decrement' in request.GET:
-        watching.move_seen('previous')
-        return redirect('core:dashboard')
-    elif 'last-seen' in request.POST:
-        try:
-            last_seen = request.POST['last-seen'].strip()
-            if last_seen != '':
-                season, episode = last_seen.split('x')
-                last_seen = "%sx%02d" % (int(season), int(episode))
-            watching.last_seen = last_seen
-            watching.save()
-        except ValueError:
-            messages.info(request, 'invalid_seen')
-        return redirect('core:watching', watching.id)
-    else:
+    try:
+        watching = Watching.objects.get(id=watching_id, user=request.user)
+        if 'increment' in request.GET:
+            watching.move_seen('next')
+            return redirect('core:dashboard')
+        elif 'decrement' in request.GET:
+            watching.move_seen('previous')
+            return redirect('core:dashboard')
+        elif 'last-seen' in request.POST:
+            try:
+                last_seen = request.POST['last-seen'].strip()
+                if last_seen != '':
+                    season, episode = last_seen.split('x')
+                    last_seen = "%sx%02d" % (int(season), int(episode))
+                watching.last_seen = last_seen
+                watching.save()
+            except ValueError:
+                messages.info(request, 'invalid_seen')
+            return redirect('core:watching', watching.id)
+        else:
+            return redirect('core:dashboard')
+    except Watching.DoesNotExist:
         return redirect('core:dashboard')
 
 @login_required
 def watching_status(request, watching_id):
-    status = request.GET.get('status', '')
-    if status not in [s[0] for s in Watching.STATUS_CHOICES]:
-        raise PermissionDenied
+    try:
+        status = request.GET.get('status', '')
+        if status not in [s[0] for s in Watching.STATUS_CHOICES]:
+            raise PermissionDenied
 
-    watching = Watching.objects.get(id=watching_id)
-    watching.status = status
-    watching.save()
-    return redirect('core:dashboard')
+        watching = Watching.objects.get(id=watching_id, user=request.user)
+        watching.status = status
+        watching.save()
+        return redirect('core:dashboard')
+    except Watching.DoesNotExist:
+        return redirect('core:dashboard')
 
 @login_required
 def watching_stop(request, watching_id):
-    Watching.objects.get(id=watching_id).delete()
-    return redirect('core:dashboard')
+    try:
+        Watching.objects.get(id=watching_id, user=request.user).delete()
+        return redirect('core:dashboard')
+    except Watching.DoesNotExist:
+        return redirect('core:dashboard')
