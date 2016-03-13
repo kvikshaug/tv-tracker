@@ -1,5 +1,7 @@
 {% extends 'layout.html' %}
 
+{% load watching %}
+
 {% block body %}
 
   <div class="search-results">
@@ -46,9 +48,17 @@
             {% endif %}
 
             <p>
-              <a href="{% url 'core:watching_start' %}?tvdbid={{ series.tvdbid }}"class="btn btn-default">
-                Start following {{ series.name }}
-              </a>
+              {% with user|watching:series.tvdbid as watching %}
+                {% if watching %}
+                  <a class="btn btn-default" href="{% url 'core:watching' watching.id %}">
+                    Go to {{ series.name }}
+                  </a>
+                {% else %}
+                  <a class="btn btn-default" href="{% url 'core:watching_start' %}?tvdbid={{ series.tvdbid }}">
+                    Start following {{ series.name }}
+                  </a>
+                {% endif %}
+              {% endwith %}
             </p>
 
           </div>
