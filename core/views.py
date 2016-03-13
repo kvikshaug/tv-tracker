@@ -76,7 +76,25 @@ def dashboard(request):
 
 @login_required
 def account(request):
-    return render(request, 'home/account.html')
+    if request.method == 'GET':
+        return render(request, 'home/account.html')
+    elif request.method == 'POST':
+        username = request.POST.get('username', '').strip()
+        password = request.POST.get('password', '').strip()
+
+        if username == '' or User.objects.filter(username=username).exclude(id=request.user.id).exists():
+            messages.info(request, 'invalid_username')
+            return redirect('core:account')
+
+        request.user.username = username
+        request.user.set_password(password)
+        request.user.save()
+        messages.info(request, 'account_updated')
+        user = authenticate(username=username, password=password)
+        login(request, user)
+        return redirect('core:account')
+    else:
+        raise PermissionDenied
 
 @login_required
 def search(request):
