@@ -15,6 +15,10 @@
           <div class="alert alert-warning">
             Sorry, that username seems to be taken. Please try again with a different name.
           </div>
+        {% elif message.message == 'cannot_change_demo_username' %}
+          <div class="alert alert-warning">
+            Sorry, you can't change the username for <strong>demouser</strong>.
+          </div>
         {% endif %}
       {% endfor %}
 

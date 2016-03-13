@@ -82,6 +82,10 @@ def account(request):
         username = request.POST.get('username', '').strip()
         password = request.POST.get('password', '').strip()
 
+        if request.user.username == demo.USERNAME and username != demo.USERNAME:
+            messages.info(request, 'cannot_change_demo_username')
+            return redirect('core:account')
+
         if username == '' or User.objects.filter(username=username).exclude(id=request.user.id).exists():
             messages.info(request, 'invalid_username')
             return redirect('core:account')
