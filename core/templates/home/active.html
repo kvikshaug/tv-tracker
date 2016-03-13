@@ -18,33 +18,36 @@
                 href="{% url 'core:watching_status' watching.id %}?status=default">
                 <i class="glyphicon glyphicon-remove"></i>
               </a>
-
             </p>
-            <p class="next">
-              {% if watching.unseen_available.count > 0 %}
-                Next episode: {{ watching.unseen_available.first.episode_number }}
-                ({{ watching.unseen_available.count }} left)
-              {% else %}
-                {# None available, then we want to know if something's about to air #}
 
-                {% if not watching.series.has_next_episode_on_air and watching.series.status|lower == 'ended' %}
-                  Series has ended
+            <p class="next">
+              {% if watching.has_next_episode %}
+                Next episode: {{ watching.next_episode.episode_number }}
+
+                {% if watching.unseen_available.count > 0 %}
+                  ({{ watching.unseen_available.count }} left)
                 {% else %}
-                  {% if not watching.series.has_next_episode_on_air %}
-                    Next episode TBA (seen: {{ watching.last_seen }})
+                  {% if watching.next_episode.air_date %}
+                    (airs in {{ watching.next_episode.days_remaining }} days)
                   {% else %}
-                    Next episode: {{ watching.series.next_episode_on_air.episode_number }}
-                    (airs in {{ watching.series.next_episode_on_air.days_remaining }} days)
+                    (air date TBA)
                   {% endif %}
                 {% endif %}
 
+              {% else %}
+                {% if watching.series.status|lower == 'ended' %}
+                  Series has ended
+                {% else %}
+                  Next episode TBA (seen: {{ watching.last_seen }})
+                {% endif %}
               {% endif %}
             </p>
+
             <p class="input">
-              {% if watching.unseen_available.count > 0 %}
+              {% if watching.has_next_episode %}
                 <a href="{% url 'core:watching_seen' watching.id %}?increment">Watch</a>
               {% endif %}
-              {% if watching.unseen_available.count > 0 and watching.has_last_seen %}
+              {% if watching.has_next_episode and watching.has_last_seen %}
                 or
               {% endif %}
               {% if watching.has_last_seen %}

@@ -35,6 +35,20 @@ class Watching(models.Model):
         season, episode = self.last_seen.split('x')
         return (int(season), int(episode))
 
+    def has_next_episode(self):
+        try:
+            self.next_episode()
+            return True
+        except Episode.DoesNotExist:
+            return False
+
+    def next_episode(self):
+        if not self.has_last_seen():
+            return self.series.first_episode()
+        else:
+            season, episode = self.get_last_seen()
+            return self.series.episode_after(season, episode)
+
     def unseen_available(self):
         """Returns a dict of unseen aired episodes; the first and last in the range (or None if 0) and the count"""
         aired_episodes = [
@@ -124,6 +138,12 @@ class Series(models.Model):
             for group in reversed(self.episodes_by_season())
         ]
 
+    def first_episode(self):
+        return list(self.episodes.all())[0]
+
+    def last_episode(self):
+        return list(self.episodes.all())[-1]
+
     def unaired_episodes(self):
         return [e for e in self.episodes.all() if e.air_date is not None and e.air_date > date.today()]
 
@@ -132,9 +152,6 @@ class Series(models.Model):
 
     def next_episode_on_air(self):
         return self.unaired_episodes()[0]
-
-    def last_episode(self):
-        return list(self.episodes.all())[-1]
 
     def episode_before(self, season, episode_number):
         if episode_number == 1:
