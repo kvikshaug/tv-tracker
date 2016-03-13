@@ -51,7 +51,7 @@
               <nav>
                 <ul>
                     <li>
-                      {{ user.username }}
+                      <a href="{% url 'core:account' %}">{{ user.username }}</a>
                     </li>
                     <li>
                       <a href="{% url 'core:logout' %}">Log out</a>

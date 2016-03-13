@@ -75,6 +75,10 @@ def dashboard(request):
     return render(request, 'home/dashboard.html', context)
 
 @login_required
+def account(request):
+    return render(request, 'home/account.html')
+
+@login_required
 def search(request):
     query = request.GET.get('query', '').strip()
     if len(query) < 3:

@@ -13,6 +13,7 @@ urlpatterns = [
     url('^logout/', auth_views.logout, name='logout', kwargs={'next_page': '/'}),
 
     url(r'^dashboard/$', views.dashboard, name='dashboard'),
+    url(r'^account/$', views.account, name='account'),
     url(r'^search/$', views.search, name='search'),
 
     url(r'^series/start/$', views.watching_start, name='watching_start'),
