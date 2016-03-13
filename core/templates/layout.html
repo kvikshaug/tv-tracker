@@ -28,7 +28,7 @@
           <div class="user-header text-right">
             {% if not user.is_authenticated %}
 
-              <form action="{% url 'core:login' %}" method="post" class="form-inline">
+              <form action="{% url 'core:intro' %}" method="post" class="form-inline">
                 {% csrf_token %}
                 <input type="hidden" name="next" value="{{ next }}">
 
@@ -80,11 +80,13 @@
       </div>
     </header>
 
-    {% if form.errors %}
-      <div class="alert alert-danger">
-        Your username and password didn't match. Please try again.
-      </div>
-    {% endif %}
+    {% for message in messages %}
+      {% if message.message == 'invalid_authentication' %}
+        <div class="alert alert-danger">
+          Your username and password didn't match. Please try again.
+        </div>
+      {% endif %}
+    {% endfor %}
 
     {% block body %}{% endblock %}
 

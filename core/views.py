@@ -15,7 +15,22 @@ def intro(request):
     if request.user.is_authenticated():
         return redirect('core:dashboard')
 
-    return render(request, 'intro.html')
+    if request.method == 'GET':
+        return render(request, 'intro.html')
+    elif request.method == 'POST':
+        # This is the custom login view which also accepts the case of an empty password
+        user = authenticate(
+            username=request.POST.get('username', '').strip(),
+            password=request.POST.get('password', '').strip(),
+        )
+        if user is None:
+            messages.info(request, 'invalid_authentication')
+            return redirect('core:intro')
+        else:
+            login(request, user)
+            return redirect('core:dashboard')
+    else:
+        raise PermissionDenied
 
 def demo_login(request):
     demo.reset_demouser() # Reset the demo data anytime someone tries to access it
