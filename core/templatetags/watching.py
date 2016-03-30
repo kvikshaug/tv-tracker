@@ -1,5 +1,3 @@
-from datetime import date
-
 from django.template import Library
 
 from core.models import Watching
