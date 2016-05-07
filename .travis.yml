@@ -22,6 +22,3 @@ before_install:
 script:
   - docker-compose run --rm app flake8 --config=flake8.cfg .
   - docker-compose run --rm app ./manage.py test
-
-notifications:
-  irc: "chat.freenode.net#kvikshaug"
