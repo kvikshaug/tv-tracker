@@ -20,5 +20,4 @@ before_install:
   - sudo pip install docker-compose==${DOCKER_COMPOSE_VERSION}
 
 script:
-  - docker-compose run --rm app flake8 --config=flake8.cfg .
-  - docker-compose run --rm app ./manage.py test
+  - make qa
