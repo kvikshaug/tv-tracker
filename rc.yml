@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: web
-        image: eu.gcr.io/monkey-island-1227/nginx-django:latest
+        image: eu.gcr.io/monkey-island-1227/nginx:latest
         volumeMounts:
         - name: static
           mountPath: /mnt/static
@@ -31,6 +31,7 @@ spec:
               command:
               - "cp"
               - "-a"
+              - "-T"
               - "/app/static/build/"
               - "/mnt/static/"
         volumeMounts:
